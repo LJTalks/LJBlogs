@@ -24,3 +24,17 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="comments"
+    )
+    # I don't think I want the comments to delete if user deletes themselves?
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="Commenter"
+    )
+    # What should comments max length be?
+    body = models.TextField(max_length=500)
+    approved = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
