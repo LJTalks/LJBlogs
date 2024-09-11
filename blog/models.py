@@ -22,8 +22,9 @@ class Post(models.Model):
         blank=True, help_text="Add your SEO keywords, separated by commas")
     # Foreign key to link blog posts directly to services offered
     # (Commented out until service model is added)
-    # service = models.ForeignKey(
-    # Service, on_delete=models.SET_NULL, null=True, blank=True)
+    service = models.ForeignKey(
+        'services.Service', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="posts")
 
     class Meta:
         ordering = ["-created_on"]
