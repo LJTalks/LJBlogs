@@ -18,8 +18,8 @@ class Post(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS, default=0)
     # SEO Tags for the blog post (Commented out until the tags model is made)
-    # seo_tags = models.TextField(
-    # blank=True, help_text="Add SEO keywords, separated by commas")
+    seo_tags = models.TextField(
+        blank=True, help_text="Add your SEO keywords, separated by commas")
     # Foreign key to link blog posts directly to services offered
     # (Commented out until service model is added)
     # service = models.ForeignKey(
