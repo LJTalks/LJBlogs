@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+<!-- do we want to change the metatags for the blog index page? Need to add the 
+ correct term so it will overwrite if there is data in the db-->
+{% block seo_tags %}
+
+{% endblock seo_tags %}
 
 {% block content %}
 
@@ -50,3 +55,7 @@
 
 <!-- index.html content ends here -->
 {% endblock %}
+
+{% block copyright %}
+2024 LJTalks
+{% endblock copyright %}
