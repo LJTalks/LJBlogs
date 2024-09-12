@@ -1,6 +1,25 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+
 {% load static %}
 
+<!-- do we want to change the metatags for the blog index page? Need to add the 
+ correct term so it will overwrite if there is data in the db-->
+{% block seo_tags %}
+<!-- If excerpt exists, use it in the meta description -->
+<!-- Else, default to site-wide SEO tags from base.html -->
+{% if post.excerpt %}
+<meta name="description" content="{{ post.excerpt }}">
+{% endif %}
+<!-- If seo-tags exist, use them in the meta description -->
+<!-- Else, default to site-wide SEO tags from base.html -->
+{% if post.seo_tags %}
+<meta name="keywords" content="{{ post.seo_tags }}">
+{% endif %}
+
+{% endblock seo_tags %}
+
+
+{% block content %}
 <div class="masthead">
     <div class="container">
         <div class="row g-0">
