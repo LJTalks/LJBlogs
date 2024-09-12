@@ -14,14 +14,10 @@ class PostList(generic.ListView):
 def post_detail(request, slug):
     """
     Display an individual :model:`blog.Post`.
-
     **Context**
-
     ``post``
         An instance of :model:`blog.Post`.
-
     **Template:**
-
     :template:`blog/post_detail.html`
     """
 

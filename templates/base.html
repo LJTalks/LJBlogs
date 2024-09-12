@@ -9,15 +9,15 @@
     <title>LJ Blogs</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- I'm not sure this is correct, I think maybe the defaults need 
-     to be inside the seo block? -->
-    <!-- Default SEO meta tags (UPDATE THESE)-->
+    <!-- Default SEO meta tags (THESE ARE NOT DEFAULTING FGOR SOME REASON - MORE CURLY BRACES NEEDED? )-->
+    {% block excerpt %}
     <meta name="description" content="Adventures of a software developer">
-    <meta name="keywords" content="coding, software development, blog, tutorials">
-
+    {% endblock excerpt %}
     <!-- Block for custom SEO tags (to be overridden in post_detail) -->
-    {% block seo_tags %}{% endblock seo_tags %}
-
+    {% block seo_tags %}
+    <meta name="keywords" content="coding, software development, blog, tutorials">
+    {% endblock seo_tags %}
+    
     <!-- Google Fonts CSS -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
