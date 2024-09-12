@@ -44,7 +44,6 @@ class Comment(models.Model):
     )
     # What should comments max length be?
     body = models.TextField(max_length=500)
-
     approved = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
