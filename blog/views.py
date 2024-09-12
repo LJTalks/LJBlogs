@@ -18,6 +18,7 @@ def post_detail(request, slug):
     ``post``
         An instance of :model:`blog.Post`.
     **Template:**
+
     :template:`blog/post_detail.html`
     """
 

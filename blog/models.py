@@ -50,7 +50,7 @@ class Comment(models.Model):
     class Meta:
         ordering = ["created_on"]
 
-    # Display firt 50 characters in the admin panel. Check if this string
+    # Display first 50 characters in the admin panel. Check if this string
     # supplies the comment in other views
     def __str__(self):
         return f"{self.author} | {self.body[:50]}..."
