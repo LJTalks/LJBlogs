@@ -8,6 +8,8 @@ class Service(models.Model):
     description = models.TextField()
     price = models.DecimalField(
         max_digits=10, decimal_places=2, default=97.00, blank=True)
+    # To manage availability of services
+    available = models.BooleanField(default=False)
 # should the default price be a string? it shouldn't... does it specify the pound sign?
 
     def __str__(self):
