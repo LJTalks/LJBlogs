@@ -21,5 +21,18 @@ class PostAdmin(SummernoteModelAdmin):
     seo_tags_status.short_description = 'SEO Tags'
 
 
-# Register your models here.
-admin.site.register(Comment)
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('author', 'body', 'post', 'approved',
+                    'created_on')  # Columns in the comment list
+    # Add filters for approval status and creation date
+    list_filter = ('approved', 'created_on')
+    # Allow searching by username and comment content
+    search_fields = ('author_username', 'body')
+    actions = ['approve_comments']  # Custom action to bulk approve comments
+
+    # Custom action to approve selected comments
+    def approve_comments(self, request, queryset):
+        queryset.update(approved=True)
+
+    approve_comments.short_description = "Approve selected comments"

@@ -19,8 +19,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('summernote/', include('django_summernote.urls')),
-    path("", include("blog.urls"), name="blog-urls"),
+    path('booking/', include('booking.urls')),
     # Include the URLs from the services app
     path('services/', include('services.urls')),
+    path('summernote/', include('django_summernote.urls')),
+    path("", include("blog.urls"), name="blog-urls"),
 ]
