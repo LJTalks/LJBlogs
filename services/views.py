@@ -1,18 +1,18 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Service
+# from django.shortcuts import render, get_object_or_404
+# from .models import Service
 
-# Create your views here.
+# # Create your views here.
 
-# Existing Service listing view
-
-
-def service_list(request):
-    services = Service.objects.all()
-    return render(request, 'services/service_list.html', {'services': services})
-
-# New Service detail view
+# # Existing Service listing view
 
 
-def service_detail(request, id):
-    service = get_object_or_404(Service, id=id)
-    return render(request, 'services/service_detail.html', {'service': service})
+# def service_list(request):
+#     services = Service.objects.all()
+#     return render(request, 'services/service_list.html', {'services': services})
+
+# # New Service detail view
+
+
+# def service_detail(request, id):
+#     service = get_object_or_404(Service, id=id)
+#     return render(request, 'services/service_detail.html', {'service': service})

@@ -1,13 +1,13 @@
-from django.contrib import admin
-from .models import Booking
+# from django.contrib import admin
+# from .models import Booking
 
-# Register your models here.
-
-
-class BookingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'service', 'date')
-    list_filter = ('service', 'date')  # Filter in side bar
-    search_fields = ('user_username', 'service_name')
+# # Register your models here.
 
 
-admin.site.register(Booking)
+# class BookingAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'service', 'date')
+#     list_filter = ('service', 'date')  # Filter in side bar
+#     search_fields = ('user_username', 'service_name')
+
+
+# admin.site.register(Booking)
