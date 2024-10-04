@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 # Create the post (Post Detail) models here.
 
@@ -12,12 +13,13 @@ class Post(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="post_detail"
     )
+    featured_image = CloudinaryField('image', default='placeholder', null=True, blank=True)
     content = models.TextField()
     excerpt = models.TextField(blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS, default=0)
-    # SEO Tags for the blog post (Commented out until the tags model is made)
+    # SEO Tags for the blog post
     seo_tags = models.TextField(
         blank=True, help_text="Add your SEO keywords, separated by commas")
     # Foreign key to link blog posts directly to services offered
