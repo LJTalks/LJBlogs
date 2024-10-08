@@ -7,9 +7,11 @@ from django_summernote.admin import SummernoteModelAdmin
 class PostAdmin(SummernoteModelAdmin):
 
     # Added seo_list status to see if it has data
-    list_display = ('title', 'slug', 'status', 'created_on', 'seo_tags_status')
+    # fields to display in the admin panel for the Post model 
+    list_display = ('title', 'slug', 'status', 'created_on', 'publish_date',
+                    'seo_tags_status')
     search_fields = ['title', 'content', 'seo_tags']
-    list_filter = ('status', 'created_on',)
+    list_filter = ('status', 'created_on', 'publish_date')
     prepopulated_fields = {'slug': ('title',)}
     summernote_fields = ('content',)
 
@@ -20,13 +22,21 @@ class PostAdmin(SummernoteModelAdmin):
     # Adding a short description for the list view column
     seo_tags_status.short_description = 'SEO Tags'
 
+    # Manually set publish date in admin panel
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'slug', 'author', 'featured_image',
+                       'content', 'excerpt', 'status', 'publish_date')
+        }),
+    )
 
-@admin.register(Comment)
+
+# @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('author', 'body', 'post', 'approved',
-                    'created_on')  # Columns in the comment list
+                    'created_on', 'updated_on')  # Cols in the comment list
     # Add filters for approval status and creation date
-    list_filter = ('approved', 'created_on')
+    list_filter = ('approved', 'created_on', 'status')
     # Allow searching by username and comment content
     search_fields = ('author_username', 'body')
     actions = ['approve_comments']  # Custom action to bulk approve comments

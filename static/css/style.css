@@ -1,39 +1,51 @@
+/* Color Variables */
+:root {
+    --bg-color-main: #F9FAFC;
+    --bg-color-light: #fff;
+    --bg-color-dark: #445261;
+    --brand-color: #4A4A4F;
+    --accent-color: #FF0077; /* Signature Pink */
+    --secondary-color: #FFC107; /* Muted Yellow-Gold */
+    --link-hover-color: #FF4FA6; /* A lighter pink for hover effects */
+    --text-muted-color: rgb(172, 175, 175);
+    --approval-color: rgb(222, 146, 168);
+}
+
+/* Base Styling */
 body {
-    background-color: #F9FAFC;
+    background-color: var(--bg-color-main);
 }
 
 .brand {
     font-family: Lato, sans-serif;
     font-size: 1.4rem;
     font-weight: 700;
-    color: #4A4A4F;
+    color: var(--brand-color);
 }
 
-.red-o {
-    color: #E84610;
-}
-
-.thin {
-    font-weight: 300;
+.navbar-brand {
+    font-size: 2rem;
 }
 
 .light-bg {
-    background-color: #fff;
+    background-color: var(--bg-color-light);
 }
 
 .dark-bg {
-    background-color: #445261;
+    background-color: var(--bg-color-dark);
 }
 
 .main-bg {
-    background-color: #F9FAFC;
+    background-color: var(--bg-color-main);
 }
 
+/* Cards */
 .card {
     border: none;
     background-color: transparent;
 }
 
+/* Image containers */
 .image-container {
     position: relative;
 }
@@ -43,7 +55,7 @@ body {
     bottom: 5%;
     min-width: 30%;
     left: -2px;
-    background-color: #188181;
+    background-color: var(--secondary-color);
 }
 
 .scale {
@@ -51,12 +63,14 @@ body {
     height: auto;
 }
 
+/* Author styling */
 .author {
     color: white;
     margin: 4px;
     text-transform: uppercase;
 }
 
+/* Masthead */
 .masthead {
     margin-top: 10px;
     overflow: hidden;
@@ -67,7 +81,7 @@ body {
 }
 
 .masthead-text {
-    background-color: #445261;
+    background-color: var(--bg-color-dark);
     color: white;
     position: relative;
 }
@@ -84,23 +98,23 @@ body {
     right: 90%;
     height: 100%;
     width: 150%;
-    background: #445261;
-    -webkit-transform: skew(15deg);
-    -moz-transform: skew(15deg);
+    background: var(--bg-color-dark);
     transform: skew(15deg);
     z-index: 100;
 }
 
+/* Post Links */
 .post-link {
     text-decoration: none;
-    color: #445261;
+    color: var(--bg-color-dark);
 }
 
 .post-link:hover,
 .page-link {
-    color: #E84610;
+    color: var(--accent-color);
 }
 
+/* Post Title and Subtitle */
 .post-title {
     margin-top: 10%;
     margin-left: 5%;
@@ -111,51 +125,58 @@ body {
     color: lightgray;
 }
 
+/* Buttons */
 .btn-signup,
 .btn-edit {
-    background-color: #188181;
+    background-color: var(--secondary-color);
     color: #fff;
 }
 
 .btn-signup:hover,
 .btn-signup:active {
     background-color: #fff;
-    color: #23BBBB;
+    color: var(--link-hover-color);
 }
 
 .link {
-    color: #23BBBB;
+    color: var(--link-hover-color);
     text-decoration: none;
 }
 
 .link:hover,
 .link:active {
-    color: #445261;
+    color: var(--bg-color-dark);
     text-decoration: underline;
 }
 
 .btn-like {
-    color: #E84610;
+    color: var(--accent-color);
     border: none;
     background: transparent;
 }
 
 .btn-delete {
     color: #fff;
-    background: #E84610;
+    background: var(--accent-color);
 }
 
 .btn-like:hover,
 .btn-like:active {
-    color: #E84610;
+    color: var(--accent-color);
     background: transparent;
     border: none;
 }
 
+/* Other Styling */
 .faded {
-    color: rgb(172, 175, 175);
+    color: var(--text-muted-color);
 }
 
 .approval {
-    color: rgb(222, 146, 168);
+    color: var(--approval-color);
+}
+
+/* Navbar Text Size */
+.navbar-text {
+    font-size: 1.5rem; /* Adjusted for slightly bigger menu text */
 }

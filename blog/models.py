@@ -13,12 +13,13 @@ class Post(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="post_detail"
     )
-    featured_image = CloudinaryField('image', default='placeholder', null=True, blank=True)
+    featured_image = CloudinaryField('image', null=True, blank=True)
     content = models.TextField()
     excerpt = models.TextField(blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS, default=0)
+    publish_date = models.DateTimeField(blank=True, null=True)
     # SEO Tags for the blog post
     seo_tags = models.TextField(
         blank=True, help_text="Add your SEO keywords, separated by commas")
@@ -42,7 +43,8 @@ class Comment(models.Model):
     # If the commenter deletes their profile, their comments will remain but
     # author field will be null
     author = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, related_name="comments_author"
+        User, on_delete=models.SET_NULL, null=True,
+        related_name="comments_author"
     )
 
     body = models.TextField(max_length=500)
