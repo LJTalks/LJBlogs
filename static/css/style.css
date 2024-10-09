@@ -39,6 +39,11 @@ body {
     background-color: var(--bg-color-main);
 }
 
+main {
+    align-self: center;
+    max-width: 95%;
+}
+
 /* Cards */
 .card {
     border: none;
