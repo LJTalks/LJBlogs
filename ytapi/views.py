@@ -14,18 +14,14 @@ def mask_key(key):
 
 
 def get_current_youtube_api_key():
-    YOUTUBE_API_KEYS = [os.getenv(
-        "YOUTUBE_API_KEY_1"), os.getenv("YOUTUBE_API_KEY_2")]
-    current_key_index = 0  # Start with the first key
-    YOUTUBE_API_KEY = YOUTUBE_API_KEYS[current_key_index]  # Set initial API key
-
-    # Fallback to ensure an API key is set
+    YOUTUBE_API_KEY = os.getenv(
+        "YOUTUBE_API_KEY_1")
     if not YOUTUBE_API_KEY:
-        raise ValueError("YOUTUBE_API_KEY is not set in the environment")
-
-    # Print the masked initial API key to check which one we're starting with
-    print(f"Starting with API Key: {mask_key(YOUTUBE_API_KEY)}")
-
+        raise ValueError(
+            "YOUTUBE_API_KEY is not set in the environment"
+        )
+    # Print the masked API key
+    print(f"Using API Key: {mask_key(YOUTUBE_API_KEY)}")
     return YOUTUBE_API_KEY
 
 
@@ -40,31 +36,17 @@ def youtube_info_view(request):
 BASE_URL = 'https://www.googleapis.com/youtube/v3/'
 
 
-# Function to switch API keys
-def switch_api_key():
-    global current_key_index, YOUTUBE_API_KEY
-    YOUTUBE_API_KEYS = [os.getenv("YOUTUBE_API_KEY_1"), os.getenv("YOUTUBE_API_KEY_2")]
-
-    # Cycle through keys
-    current_key_index = (current_key_index + 1) % len(YOUTUBE_API_KEYS)
-    # Update global API key
-    YOUTUBE_API_KEY = YOUTUBE_API_KEYS[current_key_index]
-
-    # Check which key is currently in use
-    print(f"Switched to API Key: {mask_key(YOUTUBE_API_KEY)}")
-    return YOUTUBE_API_KEY
-
-    # check which key is currently in use
-    print(f"Switching to API Key: {mask_key(YOUTUBE_API_KEY)}")
-
-
-# Helper function to fetch channel details (e.g., name)
-def get_channel_details(channel_id):
+def get_channel_details(channel_id, YOUTUBE_API_KEY):
     url = f'{BASE_URL}channels?key={YOUTUBE_API_KEY}&id={
         channel_id}&part=snippet'
     response = requests.get(url)
     if response.status_code == 200:
-        return response.json().get('items', [])[0]
+        items = response.json().get('items', [])
+        if items:
+            return items[0]  # Return the first item if present
+        else:
+            print(f"No Channel details found for channel ID: {channel_id}")
+            return {}
     else:
         print(f"Error fetching channel details: {response.content}")  # DEBUG
         return {}
@@ -228,11 +210,7 @@ def get_channel_details_by_name(channel_name, YOUTUBE_API_KEY):
     response = requests.get(url)
     
     if response.status_code == 403 and "quotaExceeded" in response.text:
-        print("Quota exceeded, switching API key...")
-        switch_api_key()  # Switch the global key
-        url = f'{BASE_URL}search?key={YOUTUBE_API_KEY}&q={
-            channel_name}&type=channel&part=snippet'
-        response = requests.get(url)
+        print("Quota exceeded, please update your API key...")
         
     if response.status_code == 200:
         channels = response.json().get('items', [])
@@ -248,6 +226,7 @@ def get_channel_details_by_name(channel_name, YOUTUBE_API_KEY):
 
 # Helper function to fetch comments for a video
 def fetch_comments(video_id):
+    YOUTUBE_API_KEY = get_current_youtube_api_key()
     url = f'{BASE_URL}commentThreads?key={YOUTUBE_API_KEY}&videoId={
         video_id}&part=snippet&maxResults=50'
     response = requests.get(url)
@@ -263,7 +242,7 @@ def strip_html_tags(text):
     return re.sub(clean, '', html.unescape(text))
 
 
-# New view to export data to CSV
+# View to export data to CSV
 def export_to_csv(request):
     # Retrieve 'video_details_list' and 'channel_name' from session
     video_details_list = request.session.get('video_details_list', [])
@@ -271,6 +250,9 @@ def export_to_csv(request):
 
     if not video_details_list:
         return HttpResponse("No data to export.", content_type='text/plain')
+    
+    # # Get the current YouTube API key
+    # YOUTUBE_API_KEY = get_current_youtube_api_key()
 
     # Create the HTTP response with content type for CSV
     response = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -290,19 +272,26 @@ def export_to_csv(request):
 
     # Write data rows
     for video in video_details_list:
+        # Safely get the video details
+        video_id = video.get('id', None)
+        
         # Fetch the comments for the video
-        comments_data = fetch_comments(video['id'])
-        comments_text = ' | '.join([strip_html_tags(comment['snippet'][
+        if video_id:
+            comments_data = fetch_comments(video_id)
+            comments_text = ' | '.join([strip_html_tags(comment['snippet'][
             'topLevelComment']['snippet'][
                 'textDisplay']) for comment in comments_data])
-
+        else:
+            comments_text = "No video ID found."
+            
+        # Use getto safely access dictionary keys
         writer.writerow([
-            video['snippet']['title'],
-            video['formatted_published_date'],
-            video['statistics']['viewCount'],
-            video['statistics']['likeCount'],
-            video['statistics'].get('CommentCount', 'N/A'),
-            f"{video['total_engagement_rate']:.2f}",
+            video.get('snippet', {}).get('title', 'Unknown Title'),
+            video.get('formatted_published_date', 'Unknown Date'),
+            video.get('statistics', {}).get('viewCount', 'N/A'),
+            video.get('statistics', {}).get('likeCount', 'N/A'),
+            video.get('statistics', {}).get('commentCount', 'N/A'),
+            f"{video.get('total_engagement_rate', 0):.2f}",
             comments_text
         ])
 
