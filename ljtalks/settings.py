@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+# import sys
+# from django.contrib.messages import constants as messages
 import dj_database_url
 if os.path.isfile('env.py'):
     import env
@@ -22,7 +24,6 @@ import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -31,11 +32,20 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+
+# if os.path.isfile("env.py"):
+#     DEBUG = True
+# else:
+#     DEBUG = False
 
 ALLOWED_HOSTS = [
-    '8000-ljtalks-ljblogs-t9mq9pisk68.ws.codeinstitute-ide.net', '.herokuapp.com']
+    '.codeinstitute-ide.net', '.herokuapp.com']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.codeinstitute-ide.net/",
+    "https://*.herokuapp.com"
+]
 
 # Application definition
 
@@ -45,15 +55,32 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    # Statics; should be before apps that manage static files
     'django.contrib.staticfiles',
-    'django_summernote',
+    # 'django.contrib.sites', # anywhere for multiple
+    # sites & django-allauth integration
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    'django_summernote',  # Rich text editor for admin
     'cloudinary_storage',
-    'cloudinary',
-    'blog',
+    'cloudinary',  # Image mgmnt. After cloudinary_storage
+    # 'crispy_forms',
+    # 'crispy_bootstrap5',
+    'blog',  # Custom apps after django then third-party apps
     'ytapi',
     # 'services',
     # 'booking',
 ]
+
+# CRISPY_ALLOWED_TEMPLATE_PACKs = 'bootstrap5'
+# CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# Site framework ID - required for django.contrib.sites
+SITE_ID = 1  # Django can handle multiple sites from one db
+# LOGIN_REDIRECT_URL = '/'  # returns user to home page after login
+# LOGOUT_REDIRECT_URL = '/'  # returns user to home page after logout
+# ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # Unless redirected with Next
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,9 +91,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # additional functionality to the projects account user authentication
+    # 'allauth.account.middleware.AccountMiddleware', 
 ]
 
 ROOT_URLCONF = 'ljtalks.urls'
+
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 TEMPLATES = [
     {
@@ -102,11 +133,6 @@ DATABASES = {
     dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.codeinstitute-ide.net/",
-    "https://*.herokuapp.com"
-]
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -125,6 +151,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# ACCOUNT_EMAIL_VERIFICATION = 'none' # Not using email verification
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -137,6 +164,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+# MESSAGE_TAGS = {
+#     messages.SUCCESS: "alert-success",
+#     messages.ERROR: "alert-danger",
+# }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -145,8 +176,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # for collectstatic
 
+# Configure Whitenoise to handle static files
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Media file handling (Images and uploads)
+# MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

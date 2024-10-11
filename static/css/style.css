@@ -13,7 +13,13 @@
 
 /* Base Styling */
 body {
-    background-color: var(--bg-color-main);
+    /* background-color: var(--bg-color-main); CHECKING CSS IS CONNECTED*/
+    background-color: black;
+}
+
+.navbar-brand .logo {
+    font-size: xx-large;
+    color: #FF0077;
 }
 
 .brand {
@@ -43,6 +49,11 @@ main {
     align-self: center;
     max-width: 95%;
 }
+
+/* .footer .mt-auto .py-3 {
+    background-color: var(--bg-color-dark) !important;  /*This doesn't work */
+    /* color: #F9FAFC;  just in case it does! */
+/* } */ */
 
 /* Cards */
 .card {
@@ -151,6 +162,7 @@ main {
 .link:hover,
 .link:active {
     color: var(--bg-color-dark);
+    font-weight: bold;
     text-decoration: underline;
 }
 
