@@ -52,9 +52,13 @@
                             href="{% url 'home' %}">Home</a>
                     </li>
                     <!-- Put this behind password login -->
-                    <li nav-item>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page"
                         href="{% url 'youtube-info-view' %}">You Tube Data Checker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == about_me_url %}active{% endif %}" aria-current="page"
+                        href="{% url 'about_me' %}">About</a>
                     </li>
                 </ul>
                 <span class="navbar-text text-muted">
@@ -76,7 +80,7 @@
     <!-- Footer -->
     <footer class="footer bg-secondary mt-auto py-3 text-center">
         <p class="m-0 text-center text-white">2024 LJTalks</p>
-            <a href="#" id="emailLink" class="text-white">Email Me</a>
+            <a href="#" id="emailLinkDark" class="text-white">Email Me</a>
         <div class="d-flex justify-content-center">
             <a class="text-white mx-4" href="https://www.facebook.com/profile.php?id=100072008119981"
                 target="_blank">

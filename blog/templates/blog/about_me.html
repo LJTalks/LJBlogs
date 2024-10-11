@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- do we want to change the metatags for the blog index page? Need to add the 
+ correct term so it will overwrite if there is data in the db-->
+{% block seo_tags %}
+
+{% endblock seo_tags %}
+
+{% block content %}
+
+<!-- post_list.html content starts here -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <p>Here's a <strong>cool tool</strong> I found while poking around looking at how to display my GitHub streak!</p>
+            <!-- Centering the image -->
+            <div class="text-center">
+                <img src="https://github-readme-streak-stats.herokuapp.com/?user=ljtalks" alt="LJ Talks GitHub Streak" class="img-fluid">
+            </div>
+            <br>
+            <p><strong>Readme Stats:</strong> This project, <a href="https://github.com/anuraghazra/github-readme-stats">Anuraghazra Repo</a> uses the GitHub API to fetch and display contribution streaks in your README file. You can embed it in your website as well.</p>
+            <p>Example of the URL for a streak:</p>
+            <!-- Terminal-like style using pre and code -->
+            <pre class="bg-dark text-light p-3 rounded"><code>https://github-readme-streak-stats.herokuapp.com/?user=yourusername</code></pre>
+            <p>This service automatically updates every day, and you can customize it with parameters for appearance.</p>
+            <p>For more information on my ever-evolving site, take a look at <a href="https://github.com/LJTalks/LJBlogs/blob/main/README.md">my README</a> which exposes some of my plans!</p>
+            <p>I have so many ideas, you'll often find me running around like a headless chicken doing all sorts of things all over the place.</p>
+            <p>I love problem solving.</p>
+            <!-- Center the button -->
+            <div class="text-center">
+                <a href="#" id="emailLinkLight" class="btn btn-primary">Get in touch</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

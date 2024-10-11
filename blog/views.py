@@ -8,6 +8,10 @@ from .forms import CommentForm
 # Create your views here.
 
 
+def about_me(request):
+    return render(request, 'blog/about_me.html')  # My About Me page
+
+
 class PostList(generic.ListView):
     queryset = Post.objects.filter(status=1).order_by("-created_on")
     template_name = "blog/post_list.html"

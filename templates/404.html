@@ -1,0 +1,41 @@
+<!-- templates/404.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container text-center">
+    <h1>Oops! Page Not Found</h1>
+    <p>It looks like the page you want doesn't exist right now!</p>
+    <p><a href="{% url 'about_me' %}">Contact me</a> to let me know what you were hoping to see...</p>
+    <p>Hit the back button, or head back to the page you were on</p>
+    
+    <!-- Back Button with JavaScript fallback -->
+    <button id="goBackButton" class="btn btn-primary" onclick="goBack()">Go back to the previous page</button>
+
+    <br><br>
+
+    <!-- Link to go to homepage if no referrer -->
+    <a href="{% url 'home' %}" id="homeLink" class="btn btn-secondary" style="display:none;">Go back to the homepage</a>
+</div>
+
+<script>
+    function goBack() {
+        // Check if the referrer is from the same site (by comparing hostnames)
+        if (document.referrer && document.referrer.includes(window.location.hostname)) {
+            // Go back to the previous page
+            window.history.back();
+        } else {
+            // Show "Go back to the homepage" link if no valid referrer
+            document.getElementById('goBackButton').style.display = 'none'; // Hide the back button
+            document.getElementById('homeLink').style.display = 'inline';  // Show homepage button
+        }
+    }
+
+    // Immediately check if the user has a valid referrer and adjust buttons
+    if (!document.referrer || !document.referrer.includes(window.location.hostname)) {
+        // If no referrer or external referrer, hide the "Go back" button
+        document.getElementById('goBackButton').style.display = 'none';
+        // Show the homepage link instead
+        document.getElementById('homeLink').style.display = 'inline';
+    }
+</script>
+{% endblock %}
