@@ -11,3 +11,11 @@ You're receiving this email because user {{ user_display }} has given your email
 
 To confirm this is correct, go to {{ activate_url }}{% endblocktrans %}{% endautoescape %}{% endblock content %}
 
+How to comment out in md
+chat gp replyto add contact deets and unsub in each text email 
+Hello {{ user.username }},
+
+Thank you for signing up for LJ Talks. Please click the link below to verify your email:
+{{ activate_url }}
+
+If you no longer wish to receive these emails, you can unsubscribe here: {{ unsubscribe_url }}

@@ -1,3 +1,51 @@
+## Current status
+
+**Working on setting up email functionality**
+Have set up email auth for secure login. Need to determine and test edge cases.
+
+**Working on templates** to confirm actions in html and by email (txt and html files). account/base_message.txt and account/base.html could be used for common elements.
+
+e.g. base_message.txt
+
+```
+{% block body %}{% endblock %}
+
+--
+LJ Talks
+{% block footer %}
+If you no longer wish to receive these emails, you can unsubscribe here: {{ unsubscribe_url }}
+{% endblock %}
+```
+
+e.g. email_confirmation_message.txt:
+
+```
+{% extends "base_message.txt" %}
+
+{% block body %}
+Hello {{ user.username }},
+
+Please click the link below to confirm your email:
+
+{{ activate_url }}
+{% endblock %}
+```
+
+Need to **ensure contact details and unsubscribe options** happen in each instance.
+
+Have set up emails to potentially keep my email list database within this project.
+
+**Can send and receive emails** from within this project but that can be explanded to be more intuitive and user friedly, with a **front end** for admin.
+
+Likely need to **add a "User profile"** type app for recording user actions, interactions, messages set, products purchased, posts liked, comments etc. It could become a bit of a monster!
+
+**Next Steps** for Automating Email Subscribe/Unsubscribe:
+Automate the management of the email list and unsubscribed users by storing subscription statuses in the database and building an admin interface to manage email subscriptions.
+
+Looks likely that a **profile app (user perspective)** would be relevant, and also an** email management app (admin perspective)**...
+
+**Unsubscribe** view is currently in **blog app**. This should be moved and separated when the profile or emailmanagement app exists.
+
 ## Tools Used
 
 [JPG To webp converter Convertio.co](https://convertio.co/)
