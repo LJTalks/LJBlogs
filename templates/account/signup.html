@@ -5,11 +5,19 @@
 {% block head_title %}{% trans "Signup" %}{% endblock head_title %}
 
 {% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h1 class="mb-4">{% trans "Sign Up" %}</h1>
             <p>Join in to get exclusive content, mini guides, and more!</p>
+            <p>{% blocktrans %}Join our site to gain access to exclusive resources and features! To get started, please sign up with your email address, and don't forget to verify your email to access everything.{% endblocktrans %}</p>
 
             <p>{% blocktrans %}Already have an account? Please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
