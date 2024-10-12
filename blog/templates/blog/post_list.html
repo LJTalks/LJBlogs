@@ -28,7 +28,7 @@
                                  out before it becomes an issue 😁 
                                   -->
                                  {% if post.featured_image and post.featured_image.url %}
-                                <img class="card-img-top" src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                                <img class="card-img-top" src=" {{ post.featured_image.url }}" alt="{{ post.title }}">                                
                                 {% else %}
                                 <img class="card-img-top" src="{% static 'images/default.jpg' %}" alt="placeholder image">
                                 {% endif %}
