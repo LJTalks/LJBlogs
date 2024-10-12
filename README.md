@@ -16,6 +16,22 @@ This service automatically updates every day, and you can customize it with para
 
 ## Future Ideas
 
+### Add email authentication
+
+I think I've almost done this!
+
+### Add a welcome email
+
+<!-- This is TBA in templates/welcome_email.html -->
+
+It's only right to offer an Opt-Out of receiving "list" emails _Without Losing Energy_:
+
+I want to maintain the excitement even when providing users with an easy opt-out option. Something like this:
+
+```
+<p>We’re excited to have you on board, but if for any reason you’d prefer to stop receiving emails, you can <a href="unsubscribe-link">unsubscribe here</a>. Don’t worry, you can always rejoin later!</p>
+```
+
 ### This section may need it's own page!
 
 I'm documenting some of my future feature ideas for this project as they happen.

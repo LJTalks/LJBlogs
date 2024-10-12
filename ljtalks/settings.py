@@ -32,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # if os.path.isfile("env.py"):
 #     DEBUG = True
@@ -57,11 +57,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     # Statics; should be before apps that manage static files
     'django.contrib.staticfiles',
-    # 'django.contrib.sites', # anywhere for multiple
+    'django.contrib.sites',  # anywhere for multiple
     # sites & django-allauth integration
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'django_summernote',  # Rich text editor for admin
     'cloudinary_storage',
     'cloudinary',  # Image mgmnt. After cloudinary_storage
@@ -78,8 +78,8 @@ INSTALLED_APPS = [
 
 # Site framework ID - required for django.contrib.sites
 SITE_ID = 1  # Django can handle multiple sites from one db
-# LOGIN_REDIRECT_URL = '/'  # returns user to home page after login
-# LOGOUT_REDIRECT_URL = '/'  # returns user to home page after logout
+LOGIN_REDIRECT_URL = '/'  # returns user to home page after login
+LOGOUT_REDIRECT_URL = '/'  # returns user to home page after logout
 # ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # Unless redirected with Next
 
 MIDDLEWARE = [
@@ -92,7 +92,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # additional functionality to the projects account user authentication
-    # 'allauth.account.middleware.AccountMiddleware', 
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'ljtalks.urls'
@@ -151,7 +151,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# ACCOUNT_EMAIL_VERIFICATION = 'none' # Not using email verification
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # We def want this
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

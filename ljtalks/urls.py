@@ -23,6 +23,7 @@ from django.shortcuts import render
 #     return render(request, 'maintenance.html')
 
 urlpatterns = [
+    path('accounts/', include("allauth.urls")),
     path('admin/', admin.site.urls),
     # path('booking/', include('booking.urls')),
     # Include the URLs from the services app
