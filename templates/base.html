@@ -61,7 +61,13 @@
                     <!-- Behind password login -->
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page" href="{% url 'account_logout' %}">Logout</a>
+                        <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page"
+                        href="{% url 'account_logout' %}">Logout</a>
+                    </li>
+                    <!-- check the youtibe thing comes back when authenticated (or move it) -->
+                    <li class="nav-item"></li>
+                        <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page"
+                        href="{% url 'youtube-info-view' %}">You Tube Data Checker</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
@@ -69,12 +75,8 @@
                             href="{% url 'account_signup' %}">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == login_url %}active{% endif %}" aria-current="page" href="{% url 'account_login' %}">Login</a>
-                    </li>
-                    <!-- check the youtibe thing comes back when authenticated (or move it) -->
-                    <li class="nav-item"></li>
-                        <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page"
-                        href="{% url 'youtube-info-view' %}">You Tube Data Checker</a>
+                        <a class="nav-link {% if request.path == login_url %}active{% endif %}" aria-current="page"
+                            href="{% url 'account_login' %}">Login</a>
                     </li>
                     {% endif %}
                 </ul>

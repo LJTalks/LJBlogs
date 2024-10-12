@@ -1,46 +1,66 @@
-{% extends "account/base.html" %}
-
+{% extends "base.html" %}
 {% load i18n %}
 {% load account socialaccount %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock head_title %}
+{% block head_title %}{% trans "Log In" %}{% endblock %}
 
 {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mt-3 offset-md-2">
+            <h3>{% trans "Log In" %}</h3>
+            <p>{% blocktrans %}Log In to your account.{% endblocktrans %}</p>
+        </div>
+    </div>
 
-<h1>{% trans "Sign In" %}</h1>
+    <div class="row">
+        <div class="col-md-8 mt-3 offset-md-2">
+            <form class="signup" method="POST" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_login">{% trans "Username or Email" %}</label>
+                    {{ form.login }}
+                </div>
 
-{% get_providers as socialaccount_providers %}
+                <div class="form-group">
+                    <label for="id_password">{% trans "Password" %}</label>
+                    {{ form.password }}
+                    <input type="checkbox" onclick="togglePassword()"> {% trans "Show Password" %}
+                </div>
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+                <!-- Forgot password link -->
+                <p><a href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a></p>
 
-<div class="socialaccount_ballot">
+                <!-- Add the yellow button back -->
+                <button class="btn btn-warning right" type="submit">{% trans "Log In" %}</button>
+            </form>
+        </div>
+    </div>
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
-
-  <div class="login-or">{% trans 'or' %}</div>
-
+    <!-- Optionally include social login options -->
+    {% get_providers as socialaccount_providers %}
+    {% if socialaccount_providers %}
+    <div class="row">
+        <div class="col-md-8 mt-3 offset-md-2">
+            <h3>{% trans "Or Log In with a Social Account" %}</h3>
+            <ul class="socialaccount_providers">
+                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
-{% include "socialaccount/snippets/login_extra.html" %}
+<script>
+  function togglePassword() {
+    var passwordField = document.getElementById("id_password");
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+    } else {
+      passwordField.type = "password";
+    }
+  }
+</script>
 
-{% else %}
-<p>{% blocktrans %}If you have not created an account yet, then please
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-{% endif %}
+{% endblock %}
 
-<form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
-</form>
-
-{% endblock content %}

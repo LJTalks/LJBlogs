@@ -153,10 +153,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # We def want this
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # Login with email/username
 # (again CHATGPT down below)
 ACCOUNT_USERNAME_REQUIRED = True  # We want usernames
 
+# Optional: Prevent login until email is verified
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 
 # BEWARE ChatGpt asked me to add this when adding auth and email verification
 AUTHENTICATION_BACKENDS = (
@@ -165,14 +168,20 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Another Chat Gpt add on 
-# you can use Django’s console backend for development (this will print the 
+# you can use Django’s console backend for development (this will print the
 # email content to the terminal instead of sending it)
 # Use console email backend for development
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # With this, any emails will appear in your terminal instead of attempting
 # to send them, which avoids connection issues during development.
 # For production, you’ll need to set up a proper email backend, like
 # SendGrid, Mailgun, or any other SMTP service.
+EMAIL_HOST = 'smtp.privateemail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')  # This can remain as your email
 
 
 # Internationalization
