@@ -164,6 +164,17 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+# Another Chat Gpt add on 
+# you can use Django’s console backend for development (this will print the 
+# email content to the terminal instead of sending it)
+# Use console email backend for development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# With this, any emails will appear in your terminal instead of attempting
+# to send them, which avoids connection issues during development.
+# For production, you’ll need to set up a proper email backend, like
+# SendGrid, Mailgun, or any other SMTP service.
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

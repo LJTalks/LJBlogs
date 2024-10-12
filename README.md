@@ -20,6 +20,10 @@ This service automatically updates every day, and you can customize it with para
 
 I think I've almost done this!
 
+But we need to make this prettier
+
+![EMail verification checker](static/images/email_verification.png)
+
 ### Add a welcome email
 
 <!-- This is TBA in templates/welcome_email.html -->
