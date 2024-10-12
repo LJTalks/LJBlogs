@@ -46,6 +46,16 @@ Looks likely that a **profile app (user perspective)** would be relevant, and al
 
 **Unsubscribe** view is currently in **blog app**. This should be moved and separated when the profile or emailmanagement app exists.
 
+## Future User Profile
+
+Provide a User Profile as a central space for users to manage their personal information and interactions on the site, such as comments, posts, and purchases, making the user experience more engaging and personalized.
+
+Add features over time like avatars, social links, or activity history.
+
+Extend the user model and add fields for a bio, subscriptions, comments, subscriptions. Let users edit their profiles and track their activity.
+
+Move unsubscribe view (currentlyin blog) into here and give more options to select interests.
+
 ## Tools Used
 
 [JPG To webp converter Convertio.co](https://convertio.co/)

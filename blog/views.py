@@ -1,11 +1,23 @@
-from django.shortcuts import render, get_object_or_404, reverse
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import generic
 from django.contrib import messages
 from .models import Post, Comment
 from django.http import HttpResponseRedirect
 from .forms import CommentForm
+from django.contrib.auth.models import User
 
-# Create your views here.
+
+# Unsubscribe view, maybe not the best app for it?
+def unsubscribe(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+        # Logic to remove user from email lists or mark them as unsubscribed
+        user.profile.is_subscribed = False
+        user.profile.save()
+        messages.success(request, 'You have been unsubscribed successfully.')
+    except User.DoesNotExist:
+        messages.error(request, 'User not found.')
+    return redirect('homepage')
 
 
 def about_me(request):
