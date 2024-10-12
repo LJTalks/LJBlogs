@@ -58,6 +58,9 @@ Future plans - Use JavaScript to Check the Referrer: Add a button that will eith
 
 ### Display my GitHub Streak
 
+Like this, but in real time
+![GitHub Streak for LJTalks](<static/images/githubstreak2024-10-12 012534.png>)
+
 (which I am rather proud of, as I was scared to look up "WHat is GitHub" before I started my course in June 2024!).
 
 Check out [my current streak](https://github.com/LJTalks)!
