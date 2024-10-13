@@ -211,10 +211,17 @@ DATETIME_FORMAT = 'd/m/Y H:i'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # for collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
 
 # Configure Whitenoise to handle static files
+# this is for Djago versions olderthan 4.2
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# for Django 4.2+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
