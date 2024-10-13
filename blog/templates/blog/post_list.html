@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load static %}
 
 <!-- do we want to change the metatags for the blog index page? Need to add the 
  correct term so it will overwrite if there is data in the db-->
@@ -8,6 +7,7 @@
 {% endblock seo_tags %}
 
 {% block content %}
+{% load static %}
 
 <!-- post_list.html content starts here -->
 <div class="container-fluid">
@@ -20,17 +20,10 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="image-container">
-                                <!-- DEBUG: Display the values to inspect them -->
-                                 <!-- <p>Featured Image Object: {{ post.featured_image }}</p>
-                                 <p>Featured Image URL: {{ post.featured_image.url }}</p> -->
-                                 <!-- My default image doesn't work right atm, but we can add individual 
-                                 images so I'm going to let it slide for now and hope I work it
-                                 out before it becomes an issue 😁 
-                                  -->
-                                 {% if post.featured_image and post.featured_image.url %}
-                                <img class="card-img-top" src=" {{ post.featured_image.url }}" alt="{{ post.title }}">                                
-                                {% else %}
-                                <img class="card-img-top" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+                                 {% if "placeholder" in post.featured_image.url %}
+                                 <img class="card-img-top" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+                                 {% else %}
+                                <img class="card-img-top" src="{{ post.featured_image.url }}" alt="{{ post.title }}">
                                 {% endif %}
                                 <div class="image-flash">
                                     <p class="author">{{ post.author }}</p>
