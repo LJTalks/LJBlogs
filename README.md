@@ -1,6 +1,13 @@
 ## Current status
 
-My project is not currently connecting to some staic files, like css and images. It does seem to beconnecting to JS scripts in the same directory. Odd. Maybe a links/directory positionthing? Shouldn't be whitenoise as I'm testing in gitpod/local. Cloudinary images appear to work... odd.
+### Issues
+
+![Sign in verify email flow](static/images/signinverify.png)
+
+![Confirm your email address email](static/images/confirm_your_email_address.png)
+
+**Static files **
+My project is not currently connecting to some static files, like css and images. It does seem to be connecting to JS scripts in the same directory. Odd. Maybe a links/directory position thing? Shouldn't be whitenoise as I'm testing in gitpod/local. Cloudinary images appear to work... odd.
 
 **Special access to Experimental Features/Beta testing**
 Request to Access test and Feedback on Future Features (e.g the Youtube Data Checker)
