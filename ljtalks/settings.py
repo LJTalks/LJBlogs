@@ -32,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # if os.path.isfile("env.py"):
 #     DEBUG = True
@@ -211,17 +211,21 @@ DATETIME_FORMAT = 'd/m/Y H:i'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
+# Is this the line that broke it?
+# STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
+# This is previous. It didn't help yet so this may need reverting.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # for collectstatic
 
 # Configure Whitenoise to handle static files
-# this is for Djago versions olderthan 4.2
+# this is for Django versions olderthan 4.2
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # for Django 4.2+
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+
+# STORAGES = {
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
