@@ -7,7 +7,7 @@ from django_summernote.admin import SummernoteModelAdmin
 class PostAdmin(SummernoteModelAdmin):
 
     # Added seo_list status to see if it has data
-    # fields to display in the admin panel for the Post model 
+    # fields to display in the admin panel for the Post model
     list_display = ('title', 'slug', 'status', 'created_on', 'publish_date',
                     'seo_tags_status')
     search_fields = ['title', 'content', 'seo_tags']

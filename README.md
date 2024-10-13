@@ -1,5 +1,7 @@
 ## Current status
 
+We are keeping each section of the prooject seperate so they can be exported in vaius combinations in future. So the main project level app handles sitewide functions, and each app looks after it's own concerns as as far as possible.
+
 ### Issues
 
 ![Sign in verify email flow](static/images/signinverify.png)
@@ -17,7 +19,7 @@ Must be logged in to request access, and must be accepted for special priviledge
 Add a simple form where users can request access to experimental features. This could be a basic contact form where users submit their interest.
 
 **Working on setting up email functionality**
-Have set up email auth for secure login. Need to determine and test edge cases.
+Have set up email auth for secure login. Need to determine and test edge cases for email confirmations and messages.
 
 **Working on templates** to confirm actions in html and by email (txt and html files). account/base_message.txt and account/base.html could be used for common elements.
 

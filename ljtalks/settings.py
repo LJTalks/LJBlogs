@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     # 'crispy_forms',
     # 'crispy_bootstrap5',
     'blog',  # Custom apps after django then third-party apps
+    'ljtalks',
     'ytapi',
     # 'services',
     # 'booking',
@@ -194,6 +195,11 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+# Custom date and time formats
+DATE_FORMAT = 'd/m/Y'
+TIME_FORMAT = 'H:i'
+DATETIME_FORMAT = 'd/m/Y H:i'
 
 # MESSAGE_TAGS = {
 #     messages.SUCCESS: "alert-success",
