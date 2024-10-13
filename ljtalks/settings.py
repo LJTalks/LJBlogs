@@ -65,8 +65,8 @@ INSTALLED_APPS = [
     'django_summernote',  # Rich text editor for admin
     'cloudinary_storage',
     'cloudinary',  # Image mgmnt. After cloudinary_storage
-    # 'crispy_forms',
-    # 'crispy_bootstrap5',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'blog',  # Custom apps after django then third-party apps
     'ljtalks',
     'ytapi',
@@ -74,8 +74,8 @@ INSTALLED_APPS = [
     # 'booking',
 ]
 
-# CRISPY_ALLOWED_TEMPLATE_PACKs = 'bootstrap5'
-# CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKs = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Site framework ID - required for django.contrib.sites
 SITE_ID = 1  # Django can handle multiple sites from one db
@@ -212,15 +212,16 @@ DATETIME_FORMAT = 'd/m/Y H:i'
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # Is this the line that broke it?
-# STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
 # This is previous. It didn't help yet so this may need reverting.
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # for collectstatic
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # for collectstatic
 
 # Configure Whitenoise to handle static files
 # this is for Django versions olderthan 4.2
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # for Django 4.2+
 
+# This from whitenoise docs throws settings_ALLOWED_HOSTS error
 # STORAGES = {
 #     "staticfiles": {
 #         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",

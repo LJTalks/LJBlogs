@@ -22,6 +22,7 @@ class Post(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS, default=0)
     publish_date = models.DateTimeField(blank=True, null=True)
+    views = models.IntegerField(default=0)  # New field for tracking post views
     # SEO Tags for the blog post
     seo_tags = models.TextField(
         blank=True, help_text="Add your SEO keywords, separated by commas")
