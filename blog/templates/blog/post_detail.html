@@ -16,6 +16,7 @@
 {% endblock seo_tags %}
 
 {% block content %}
+<!-- Post Details -->
 <div class="masthead">
     <div class="container">
         <div class="row g-0">
@@ -25,18 +26,19 @@
                 <!-- Post author goes before the | the post's created date goes after I removed the {{ post.author }} | -->
                 <p class="post-subtitle">{{ post.created_on }}</p>
             </div>
+            <!-- Post Mastehead Image -->
             <div class="d-none d-md-block col-md-6 masthead-image">
                 {% if "placeholder" in post.featured_image.url %}
                 <!-- Display a default image if there is no featured image -->
-                <img src="{% static 'images/blogplaceholder.webp' %}" class="scale" alt="placeholder">
-                {% else %}
                 <img src="{% static 'images/default.jpg' %}" class="scale" alt="placeholder">
+                {% else %}
+                <img src="{{ post.featured_image.url }}" class="scale" alt="{{ post.title }}">
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
-
+<!-- Post content -->
 <div class="container">
     <div class="row">
         <div class="col card mb-4  mt-3 left  top">
@@ -49,125 +51,126 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Displaying count of post views -->
-    <div class="row">
-        <div class="col-6 text-left">
-            <strong class="text-secondary">
-                <i class="far fa-eye"></i> {{ post.views }} Views
-            </strong>
-        </div>
-        <!-- Displaying count of comments -->
-        <div class="col-6 text-right">
-            <strong class="text-secondary">
-                <i class="far fa-comments"></i> {{ comment_count }} Comments
-            </strong>
-        </div>
-        <div class="col-12">
-            <hr />
-        </div>
+<!-- Displaying count of post views -->
+<div class="row">
+    <div class="col-6 text-left">
+        <strong class="text-secondary">
+            <i class="far fa-eye"></i> {{ post.views }} Views
+        </strong>
     </div>
-        <!-- Displaying Comments -->
-        <div class="row">
-            <div class="col-md-8 card mb-4 mt-3 ">
-                <h3>Comments:</h3>
-                <!-- Check if there are any comments -->
-                {% if comments %}
-                <div class="card-body">
-                    <!-- We want a for loop inside the empty control tags
-                    to iterate through each comment in comments -->
-                    {% for comment in comments %}
-                    <div class="p-2 comments
-                    {% if not comment.approved and comment.author == user %}
-                    faded{% elif not comment.approved %} d-none{% endif %}">
-                        <p class="font-weight-bold">
-                            {{ comment.author }}
-                            <span class="font-weight-normal">
-                                {{ comment.created_on }}
-                            </span> wrote:
-                        </p>
-                        <div id="comment{{ comment.id }}">
-                            {{ comment.body | linebreaks }}
-                        </div>
-                        {% if not comment.approved and comment.author == user %}
-                        <p class="approval">
-                            This comment is awaiting approval
-                        </p>
-                        {% endif %}
-                        {% if user.is_authenticated and comment.author == user %}
-                        <button class="btn btn-delete" comment_id="{{ comment.id }}">Delete</button>
-                        <button class="btn btn-edit" comment_id="{{ comment.id }}">Edit</button>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- Our for loop ends here -->
-                {% endfor %}
-            </div>
-            {% else %}
-            <!-- Message displayed if there are no comments yet -->
-            <p>No comments yet. Be the first to comment!</p>
-            {% endif %}
-        </div>
-            <!-- Creating New Comments -->
-            <div class="col-md-4 card mb-4 mt-3">
-                <div class="card-body">
-                    {% if user.is_authenticated %}
-                    <h3>Leave a comment:</h3>
-                    <p>Posting as: {{ user.username }}</p>
-                    <form id="commentForm" method="post" style="margin-top: 1.3em;">
-                        {{ comment_form | crispy }}
-                        {% csrf_token %}
-                        <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
-                    </form>
-                    {% else %}
-                    <p>Log in to leave a comment</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+    <!-- Displaying count of comments -->
+    <div class="col-6 text-right text-end">
+        <strong class="text-secondary">
+            <i class="far fa-comments"></i> {{ comment_count }} Comments
+        </strong>
     </div>
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete comment?</h5>
-                    <button type="button" class="btn-close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete your comment?
-                    This action can not be undone.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a id="deleteConfirm" href="#" class="btn btn-danger">Delete</a>
-                </div>
-            </div>
-        </div>
+    <div class="col-12">
+        <hr />
     </div>
+</div>
+<!-- Displaying Comments -->
+<div class="row">
+    <!-- Comments Section - 2/3 of the page on larger screens -->
+    <div class="col-md-8 card mb-4 mt-3">
+        <h3>Comments:</h3>
+        <!-- Check if there are any comments -->
+        {% if comments %}
+        <div class="card-body">
+            <!-- We want a for loop inside the empty control tags
+            to iterate through each comment in comments -->
+            {% for comment in comments %}
+            <div class="p-2 comments
+            {% if not comment.approved and comment.author == user %}
+            faded{% elif not comment.approved %} d-none{% endif %}">
+                <p class="font-weight-bold">
+                    {{ comment.author }}
+                    <span class="font-weight-normal">
+                        {{ comment.created_on }}
+                    </span> wrote:
+                </p>
+                <div id="comment{{ comment.id }}">
+                    {{ comment.body | linebreaks }}
+                </div>
+                {% if not comment.approved and comment.author == user %}
+                <p class="approval">
+                    This comment is awaiting approval
+                </p>
+                {% endif %}
+                {% if user.is_authenticated and comment.author == user %}
+                <button class="btn btn-delete" comment_id="{{ comment.id }}">Delete</button>
+                <button class="btn btn-edit" comment_id="{{ comment.id }}">Edit</button>
+                {% endif %}
+            </div>
+            <!-- Closing div for each comment -->
+        </div>
+        <!-- Our for loop ends here -->
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Message displayed if there are no comments yet -->
+    <p>No comments yet. Be the first to comment!</p>
+    {% endif %}
+</div>
+<!-- Creating New Comments -->
+<div class="col-md-4 card md-4 mt-3">
+    <div class="card-body">
+    {% if user.is_authenticated %}
+        <h3>Leave a comment:</h3>
+        <p>Posting as: {{ user.username }}</p>
+        <form id="commentForm" method="post" style="margin-top: 1.3em;">
+            {{ comment_form | crispy }}
+            {% csrf_token %}
+            <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
+        </form>
+    {% else %}
+        <p>Log in to leave a comment</p>
+    {% endif %}
+    </div>
+</div>
 
-    <!-- Add navigation buttons here -->
-    <div class="row">
-        <div class="col text-center">
-            <nav aria-label="Post navigation">
-                <ul class="pagination justify-content-center">
-                    {% if previous_post %}
-                        <li class="page-item">
-                            <a class="page-link" href="{% url 'post_detail' previous_post.slug %}">
-                                &laquo; Prev Post
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if next_post %}
-                        <li class="page-item">
-                            <a class="page-link" href="{% url 'post_detail' next_post.slug %}">
-                                Next Post &raquo;
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete comment?</h5>
+                <button type="button" class="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your comment?
+                This action can not be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="deleteConfirm" href="#" class="btn btn-danger">Delete</a>
+            </div>
         </div>
+    </div>
+</div>
+
+<!-- Add navigation buttons here -->
+<div class="row">
+    <div class="col text-center">
+        <nav aria-label="Post navigation">
+            <ul class="pagination justify-content-center">
+                {% if previous_post %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'post_detail' previous_post.slug %}">
+                            &laquo; Prev Post
+                        </a>
+                    </li>
+                {% endif %}
+                {% if next_post %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'post_detail' next_post.slug %}">
+                            Next Post &raquo;
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 </div>
 

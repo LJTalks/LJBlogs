@@ -197,3 +197,12 @@ main {
 .navbar-text {
     font-size: 1.5rem; /* Adjusted for slightly bigger menu text */
 }
+
+/*  custom styles for screens bigger than tablet size  */
+/* not sure this is helping!
+The comment form needs to stay in 3/3 of large screens,
+or near the top in momobile  */
+.comment-form {
+    position: sticky;
+    top: 10px;
+}
