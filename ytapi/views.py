@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 import requests
 import os
 from datetime import datetime
@@ -6,30 +6,10 @@ import csv
 from django.http import HttpResponse
 import html
 import re
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
 
 
-def is_tester(user):
-    return user.groups.filter(name='testers').exists()
-
-@user_passes_test(is_tester)
-def api_view(request):
-    # API Logic here
-    return render(request, 'api_app.html')
-
-
-@login_required
-def youtube_checker_view(request):
-    if request.user.groups.filter(name='testers').exists():
-        # Allow access to the feature
-        return render(request, 'youtube_checker.html')
-    else:
-        # show invitation to apply for access
-        return render(request, 'apply_for_tester_access.html')
-
-
+# User access determined by group (testers), managed in ljtalks app
+# YouTube Data Checker Specific Code
 # Function to mask API keys (show only the first and last 4 characters)
 def mask_key(key):
     return key[:4] + '*' * (len(key) - 8) + key[-4:]
@@ -306,7 +286,7 @@ def export_to_csv(request):
         else:
             comments_text = "No video ID found."
             
-        # Use getto safely access dictionary keys
+        # Use get to safely access dictionary keys
         writer.writerow([
             video.get('snippet', {}).get('title', 'Unknown Title'),
             video.get('formatted_published_date', 'Unknown Date'),

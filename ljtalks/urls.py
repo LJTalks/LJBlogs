@@ -27,6 +27,10 @@ urlpatterns = [
     path('accounts/', include("allauth.urls")),
     path('admin/', admin.site.urls),
     # Restricted to testers
+    path('apply_for_special_access/',
+         views.apply_for_special_access,
+         name='apply_for_special_access'),
+    path('contact/', views.contact_view, name='contact'),
     # path('info/', views.youtube_info_view, name='youtube-info-view'),
     # path('booking/', include('booking.urls')),
     # Include the URLs from the services app
