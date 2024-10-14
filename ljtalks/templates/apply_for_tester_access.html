@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+
+<h2>Exclusive Feature Access</h2>
+<p>This feature is available to testers who are helping us shape the future 
+    of LJTalks.</p>
+<p>If you're interested in getting early access and contributing 
+    to the journey, <a href="{% url 'contact' %}">apply here</a>
+     or reach out directly!</p>
+<p>I appreciate your feedback! If you spot any issues or have suggestions,
+    feel free to visit our 
+    <a href="https://github.com/your-github-repo" target="_blank">GitHub repo</a>
+    to contribute or report bugs.</p>
+
+</div>
+</div>
+
+{% endblock %}

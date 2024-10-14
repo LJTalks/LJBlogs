@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 import os
 from datetime import datetime
@@ -6,6 +6,28 @@ import csv
 from django.http import HttpResponse
 import html
 import re
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+
+
+def is_tester(user):
+    return user.groups.filter(name='testers').exists()
+
+@user_passes_test(is_tester)
+def api_view(request):
+    # API Logic here
+    return render(request, 'api_app.html')
+
+
+@login_required
+def youtube_checker_view(request):
+    if request.user.groups.filter(name='testers').exists():
+        # Allow access to the feature
+        return render(request, 'youtube_checker.html')
+    else:
+        # show invitation to apply for access
+        return render(request, 'apply_for_tester_access.html')
 
 
 # Function to mask API keys (show only the first and last 4 characters)

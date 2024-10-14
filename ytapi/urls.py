@@ -8,6 +8,7 @@ urlpatterns = [
     # in the original app this was the home page 
     
     # original URL
+    path('info/', views.youtube_info_view, name="youtube-info-view"),
     path('fetch-data/', views.fetch_data, name='fetch_data'),
     path('export-csv/', views.export_to_csv, name='export_csv'),
     ]

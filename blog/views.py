@@ -53,7 +53,7 @@ def post_detail(request, slug):
     next_post = Post.objects.filter(
         created_on__gt=post.created_on, status=1).order_by(
             'created_on').first()
-        
+
     # Comments
     comments = post.comments.all().order_by("-created_on")
     comment_count = post.comments.filter(approved=True).count()
@@ -92,14 +92,14 @@ def comment_edit(request, slug, comment_id):
     """
     view to edit comments
     """
-    
+   
     if request.method == "POST":
-        
+       
         queryset = Post.objects.filter(status=1)
         post = get_object_or_404(queryset, slug=slug)
         comment = get_object_or_404(Comment, pk=comment_id)
         comment_form = CommentForm(data=request.POST, instance=comment)
-        
+       
         if comment_form.is_valid() and comment.author == request.user:
             comment = comment_form.save(commit=False)
             comment.post = post

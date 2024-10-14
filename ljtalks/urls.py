@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import render
+from . import views
 
 # Function to render the maintenance view (if needed)
 # def maintenance_view(request):
@@ -25,10 +26,15 @@ from django.shortcuts import render
 urlpatterns = [
     path('accounts/', include("allauth.urls")),
     path('admin/', admin.site.urls),
+    # Restricted to testers
+    # path('info/', views.youtube_info_view, name='youtube-info-view'),
     # path('booking/', include('booking.urls')),
     # Include the URLs from the services app
     # path('services/', include('services.urls')),
+    path('youtube/', include('ytapi.urls')),
     path('summernote/', include('django_summernote.urls')),
     path("", include("blog.urls"), name="blog-urls"),
-    path('youtube/', include('ytapi.urls'), name="youtube-info-view"),
+    # Think we replaced this with the restricted tester only api path above
+    # Public or other features (different to the api path, not sure how!)
+    # path('youtube/', include('ytapi.urls'), name="youtube-info-view")
 ]
