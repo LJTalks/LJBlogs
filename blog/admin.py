@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Comment
+from .models import Post, BlogComment
 from django_summernote.admin import SummernoteModelAdmin
 
 
@@ -32,22 +32,22 @@ class PostAdmin(SummernoteModelAdmin):
 
 
 # Register your models here.
-admin.site.register(Comment)
+admin.site.register(BlogComment)
 
 
 # I think this doesn't work because we used a CBV for comment model?
-# @admin.register(Comment)
-# class CommentAdmin(admin.ModelAdmin):
+# @admin.register(BlogComment)
+# class BlogCommentAdmin(admin.ModelAdmin):
 #     list_display = ('author', 'body', 'post', 'approved',
 #                     'created_on', 'updated_on')  # Cols in the comment list
 #     # Add filters for approval status and creation date
 #     list_filter = ('approved', 'created_on', 'status')
-#     # Allow searching by username and comment content
+#     # Allow searching by username and blogcomment content
 #     search_fields = ('author_username', 'body')
-#     actions = ['approve_comments']  # Custom action to bulk approve comments
+#     actions = ['approve_blog_comments']  # Custom action to bulk approve comments
 
 #     # Custom action to approve selected comments
-#     def approve_comments(self, request, queryset):
+#     def approve_blog_comments(self, request, queryset):
 #         queryset.update(approved=True)
 # /workspace/LJBlogs/static/images
-#     approve_comments.short_description = "Approve selected comments"
+#     approve_blog_comments.short_description = "Approve selected comments"

@@ -1,6 +1,6 @@
 const editButtons = document.getElementsByClassName("btn-edit");
-const commentText = document.getElementById("id_body");
-const commentForm = document.getElementById("commentForm");
+const blogCommentText = document.getElementById("id_body");
+const blogCommentForm = document.getElementById("blogCommentForm");
 const submitButton = document.getElementById("submitButton");
 
 const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
@@ -19,11 +19,11 @@ const deleteConfirm = document.getElementById("deleteConfirm");
  */
 for (let button of editButtons) {
     button.addEventListener("click", (e) => {
-        let commentId = e.target.getAttribute("comment_id");
-        let commentContent = document.getElementById(`comment${commentId}`).innerText;
-        commentText.value = commentContent;
+        let blogCommentId = e.target.getAttribute("blog_comment_id");
+        let blogCommentContent = document.getElementById(`blog_comment${blogCommentId}`).innerText;
+        blogCommentText.value = blogCommentContent;
         submitButton.innerText = "Update";
-        commentForm.setAttribute("action", `edit_comment/${commentId}`);
+        blogCommentForm.setAttribute("action", `edit_blog_comment/${blog_commentId}`);
     });
 }
 
@@ -39,8 +39,8 @@ for (let button of editButtons) {
  */
 for (let button of deleteButtons) {
     button.addEventListener("click", (e) => {
-        let commentId = e.target.getAttribute("comment_id");
-        deleteConfirm.href = `delete_comment/${commentId}`;
+        let blogCommentId = e.target.getAttribute("blog_comment_id");
+        deleteConfirm.href = `delete_blog_comment/${blog_commentId}`;
         deleteModal.show();
     });
 }

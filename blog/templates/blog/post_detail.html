@@ -38,6 +38,23 @@
         </div>
     </div>
 </div>
+<!-- Displaying count of post views -->
+<div class="row">
+    <div class="col-6 text-left">
+        <strong class="text-secondary">
+            <i class="far fa-eye"></i> {{ post.views }} Views
+        </strong>
+    </div>
+    <!-- Displaying count of comments -->
+    <div class="col-6 text-right text-end">
+        <strong class="text-secondary">
+            <i class="far fa-comments"></i> {{ blog_comment_count }} Comments
+        </strong>
+    </div>
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
 <!-- Post content -->
 <div class="container">
     <div class="row">
@@ -53,54 +70,37 @@
     </div>
 </div>
 
-<!-- Displaying count of post views -->
-<div class="row">
-    <div class="col-6 text-left">
-        <strong class="text-secondary">
-            <i class="far fa-eye"></i> {{ post.views }} Views
-        </strong>
-    </div>
-    <!-- Displaying count of comments -->
-    <div class="col-6 text-right text-end">
-        <strong class="text-secondary">
-            <i class="far fa-comments"></i> {{ comment_count }} Comments
-        </strong>
-    </div>
-    <div class="col-12">
-        <hr />
-    </div>
-</div>
 <!-- Displaying Comments -->
 <div class="row">
     <!-- Comments Section - 2/3 of the page on larger screens -->
     <div class="col-md-8 card mb-4 mt-3">
         <h3>Comments:</h3>
         <!-- Check if there are any comments -->
-        {% if comments %}
+        {% if blog_comments %}
         <div class="card-body">
             <!-- We want a for loop inside the empty control tags
             to iterate through each comment in comments -->
-            {% for comment in comments %}
+            {% for blog_comment in blog_comments %}
             <div class="p-2 comments
-            {% if not comment.approved and comment.author == user %}
-            faded{% elif not comment.approved %} d-none{% endif %}">
+            {% if not blog_comment.approved and blog_comment.author == user %}
+            faded{% elif not blog_comment.approved %} d-none{% endif %}">
                 <p class="font-weight-bold">
-                    {{ comment.author }}
+                    {{ blog_comment.author }}
                     <span class="font-weight-normal">
-                        {{ comment.created_on }}
+                        {{ blog_comment.created_on }}
                     </span> wrote:
                 </p>
-                <div id="comment{{ comment.id }}">
-                    {{ comment.body | linebreaks }}
+                <div id="blog_comment{{ blog_comment.id }}">
+                    {{ blog_comment.body | linebreaks }}
                 </div>
-                {% if not comment.approved and comment.author == user %}
+                {% if not blog_comment.approved and blog_comment.author == user %}
                 <p class="approval">
                     This comment is awaiting approval
                 </p>
                 {% endif %}
-                {% if user.is_authenticated and comment.author == user %}
-                <button class="btn btn-delete" comment_id="{{ comment.id }}">Delete</button>
-                <button class="btn btn-edit" comment_id="{{ comment.id }}">Edit</button>
+                {% if user.is_authenticated and blog_comment.author == user %}
+                <button class="btn btn-delete" blog_comment_id="{{ blog_comment.id }}">Delete</button>
+                <button class="btn btn-edit" blog_comment_id="{{ blog_comment.id }}">Edit</button>
                 {% endif %}
             </div>
             <!-- Closing div for each comment -->
@@ -119,8 +119,8 @@
     {% if user.is_authenticated %}
         <h3>Leave a comment:</h3>
         <p>Posting as: {{ user.username }}</p>
-        <form id="commentForm" method="post" style="margin-top: 1.3em;">
-            {{ comment_form | crispy }}
+        <form id="blogCommentForm" method="post" style="margin-top: 1.3em;">
+            {{ blog_comment_form | crispy }}
             {% csrf_token %}
             <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
         </form>
@@ -177,5 +177,5 @@
 
 {% endblock content %}
 {% block extras %}
-<script src="{% static 'js/comments.js' %}"></script>
+<script src="{% static 'js/blog_comments.js' %}"></script>
 {% endblock %}

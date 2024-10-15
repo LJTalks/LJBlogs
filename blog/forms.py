@@ -1,11 +1,11 @@
-from .models import Comment
+from .models import BlogComment
 from django import forms
 
 
-class CommentForm(forms.ModelForm):
+class BlogCommentForm(forms.ModelForm):
 
     class Meta:
-        model = Comment
+        model = BlogComment
         fields = ('body',)
         labels = {
             'body': '',  # Removes the label

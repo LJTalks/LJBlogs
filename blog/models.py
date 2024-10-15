@@ -2,10 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
-# Create the post (Post Detail) models here.
 
+# Blog post (Post Detail) models here.
 STATUS = ((0, "Draft"), (1, "Published"))
-
 
 class Post(models.Model):
     title = models.CharField(max_length=200, unique=True)
@@ -39,24 +38,27 @@ class Post(models.Model):
         return f"{self.title} | {self.author}"
 
 
-class Comment(models.Model):
+# BlogComments (in blog Post Detail) models here.
+BLOG_COMMENT_STATUS = ((0, "Submitted"), (1, "Approved"))
+
+class BlogComment(models.Model):
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name="comments"
+        Post, on_delete=models.CASCADE, related_name="blog_comments"
     )
     # If the commenter deletes their profile, their comments will remain but
     # author field will be null - maybe need to give a "deleted user" name?
     author = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True,
-        related_name="comments_author"
+        related_name="blog_comments_author"
     )
-
     body = models.TextField(max_length=500)
-    approved = models.BooleanField(default=False)
+    # approved = models.BooleanField(default=False)
+    status = models.IntegerField(choices=BLOG_COMMENT_STATUS, default=0) 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["created_on"]
+        ordering = ["-created_on"]
 
     # Display first 50 characters in the admin panel. Check if this string
     # supplies the comment in other views
