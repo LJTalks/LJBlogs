@@ -6,7 +6,6 @@ from .models import Post, BlogComment
 from django.http import HttpResponseRedirect
 from .forms import BlogCommentForm
 from django.contrib.auth.models import User
-from .forms import BlogCommentForm  # crispy
 
 
 # Unsubscribe view, maybe not the best app for it?
@@ -33,16 +32,6 @@ class PostList(generic.ListView):
 
 
 def post_detail(request, slug):
-    """
-    Display an individual :model:`blog.Post`.
-    **Context**
-    ``post``
-        An instance of :model:`blog.Post`.
-    **Template:**
-
-    :template:`blog/post_detail.html`
-    """
-
     queryset = Post.objects.filter(status=1)
     # Get the current post
     post = get_object_or_404(queryset, slug=slug)
@@ -81,15 +70,12 @@ def post_detail(request, slug):
         created_on__gt=post.created_on, status=1).order_by(
             'created_on').first()
 
-    # BlogComments - We changed approved true to status 1
+    # Get comments
     blog_comments = post.blog_comments.all().order_by("-created_on")
     blog_comment_count = post.blog_comments.filter(status=1).count()
- 
 
     if request.method == "POST":
-        # print("received a POST request")  # DEBUG
         blog_comment_form = BlogCommentForm(data=request.POST)
-
         if blog_comment_form.is_valid():
             blog_comment = blog_comment_form.save(commit=False)
             blog_comment.author = request.user
@@ -99,10 +85,12 @@ def post_detail(request, slug):
                 request,
                 messages.SUCCESS, "Comment submitted and awaiting approval"
             )
-
-    blog_comment_form = BlogCommentForm()
-    # print("about to render template")  # Debug
-
+        # Redirect after seccessful POST to avoid resumbit
+        return HttpResponseRedirect(reverse('post_detail', args=[slug]))
+    
+    else:
+        blog_comment_form = BlogCommentForm()
+        # print("about to render template")  # Debug
     return render(
         request,
         "blog/post_detail.html",
@@ -134,7 +122,7 @@ def blog_comment_edit(request, slug, blog_comment_id):
         ):
             blog_comment = blog_comment_form.save(commit=False)
             blog_comment.post = post
-            blog_comment.approved = False
+            blog_comment.status = 0
             blog_comment.save()
             messages.add_message(request, messages.SUCCESS, 'Comment Updated!')
         else:

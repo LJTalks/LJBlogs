@@ -52,7 +52,6 @@ class BlogComment(models.Model):
         related_name="blog_comments_author"
     )
     body = models.TextField(max_length=500)
-    # approved = models.BooleanField(default=False)
     status = models.IntegerField(choices=BLOG_COMMENT_STATUS, default=0) 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Change the submit button text to 'Update'
             submitButton.innerText = "Update";
             // Update the form's action URL to point to the edit view
-            blogCommentForm.setAttribute("action", `edit_blog_comment/${blog_commentId}`);
+            blogCommentForm.setAttribute("action", `edit_blog_comment/${blogCommentId}`);
         });
     }
 

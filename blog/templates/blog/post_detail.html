@@ -78,33 +78,35 @@
         <!-- Check if there are any comments -->
         {% if blog_comments %}
         <div class="card-body">
-            <!-- We want a for loop inside the empty control tags
-            to iterate through each comment in comments -->
+            <!-- loop through the comments -->
             {% for blog_comment in blog_comments %}
-            <div class="p-2 comments
-            {% if not blog_comment.approved and blog_comment.author == user %}
-            faded{% elif not blog_comment.approved %} d-none{% endif %}">
-                <p class="font-weight-bold">
-                    {{ blog_comment.author }}
-                    <span class="font-weight-normal">
+                <div class="p-2 comments
+                {% if blog_comment.status == 0 and blog_comment.author == user %}
+                    faded
+                {% elif blog_comment.status == 0 %}
+                    d-none
+                {% endif %}">
+                    <p class="font-weight-bold">
+                        {{ blog_comment.author }}
+                        <span class="font-weight-normal">
                         {{ blog_comment.created_on }}
-                    </span> wrote:
-                </p>
-                <div id="blog_comment{{ blog_comment.id }}">
-                    {{ blog_comment.body | linebreaks }}
+                        </span> wrote:
+                    </p>
+                    <div id="blog_comment{{ blog_comment.id }}">
+                        {{ blog_comment.body | linebreaks }}
+                    </div>
+                    {% if blog_comment.status == 0 and blog_comment.author == user %}
+                        <p class="approval">
+                        This comment is awaiting approval
+                        </p>
+                    {% endif %}
+                    {% if user.is_authenticated and blog_comment.author == user %}
+                        <button class="btn btn-delete" blog_comment_id="{{ blog_comment.id }}">Delete</button>
+                        <button class="btn btn-edit" blog_comment_id="{{ blog_comment.id }}">Edit</button>
+                    {% endif %}
                 </div>
-                {% if not blog_comment.approved and blog_comment.author == user %}
-                <p class="approval">
-                    This comment is awaiting approval
-                </p>
-                {% endif %}
-                {% if user.is_authenticated and blog_comment.author == user %}
-                <button class="btn btn-delete" blog_comment_id="{{ blog_comment.id }}">Delete</button>
-                <button class="btn btn-edit" blog_comment_id="{{ blog_comment.id }}">Edit</button>
-                {% endif %}
-            </div>
             <!-- Closing div for each comment -->
-        </div>
+            </div>
         <!-- Our for loop ends here -->
         {% endfor %}
     </div>
@@ -114,7 +116,7 @@
     {% endif %}
 </div>
 <!-- Creating New Comments -->
-<div class="col-md-4 card md-4 mt-3">
+<div class="col-md-4 card mb-4 mt-3">
     <div class="card-body">
     {% if user.is_authenticated %}
         <h3>Leave a comment:</h3>
