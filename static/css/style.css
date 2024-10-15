@@ -199,7 +199,7 @@ main {
 }
 
 /*  custom styles for screens bigger than tablet size  */
-/* not sure this is helping!
+/* not sure this is helping! is it comment-form? comment_form? 
 The comment form needs to stay in 3/3 of large screens,
 or near the top in momobile  */
 .comment-form {

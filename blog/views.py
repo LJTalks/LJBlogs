@@ -1,11 +1,11 @@
+import datetime
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import generic
 from django.contrib import messages
-from .models import Post, Comment
+from .models import Post, BlogComment
 from django.http import HttpResponseRedirect
-from .forms import CommentForm
+from .forms import BlogCommentForm
 from django.contrib.auth.models import User
-from .forms import CommentForm  # crispy
 
 
 # Unsubscribe view, maybe not the best app for it?
@@ -32,20 +32,36 @@ class PostList(generic.ListView):
 
 
 def post_detail(request, slug):
-    """
-    Display an individual :model:`blog.Post`.
-    **Context**
-    ``post``
-        An instance of :model:`blog.Post`.
-    **Template:**
-
-    :template:`blog/post_detail.html`
-    """
-
     queryset = Post.objects.filter(status=1)
     # Get the current post
     post = get_object_or_404(queryset, slug=slug)
-    # Get the previous post
+    
+    # View count logic
+    session_key = f"viewed_post_{post.id}"
+    now = datetime.datetime.now()
+    timeout_hours = 2  # Time limit for session based counting
+    
+    # Retrieve last viewed time from the session
+    last_viewed = request.session.get(session_key)
+    
+    # Check if last_viewed value is valid (datetime), if not reset it
+    if last_viewed:
+        try:
+            last_viewed = datetime.datetime.fromisoformat(last_viewed)
+        except (ValueError, TypeError):
+            last_viewed = None
+            
+    # If last viewed in None or timeoout has passed, increment view count
+    if (
+        not last_viewed or
+        (now - last_viewed).total_seconds() / 3600 >= timeout_hours
+    ):
+        post.views += 1
+        post.save()
+        # Store the currenttime in the session
+        request.session[session_key] = now.isoformat()
+    
+    # Get the previous post    
     previous_post = Post.objects.filter(
         created_on__lt=post.created_on, status=1).order_by(
             '-created_on').first()
@@ -54,27 +70,27 @@ def post_detail(request, slug):
         created_on__gt=post.created_on, status=1).order_by(
             'created_on').first()
 
-    # Comments
-    comments = post.comments.all().order_by("-created_on")
-    comment_count = post.comments.filter(approved=True).count()
+    # Get comments
+    blog_comments = post.blog_comments.all().order_by("-created_on")
+    blog_comment_count = post.blog_comments.filter(status=1).count()
 
     if request.method == "POST":
-        print("received a POST request")
-        comment_form = CommentForm(data=request.POST)
-
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.author = request.user
-            comment.post = post
-            comment.save()
+        blog_comment_form = BlogCommentForm(data=request.POST)
+        if blog_comment_form.is_valid():
+            blog_comment = blog_comment_form.save(commit=False)
+            blog_comment.author = request.user
+            blog_comment.post = post
+            blog_comment.save()
             messages.add_message(
                 request,
                 messages.SUCCESS, "Comment submitted and awaiting approval"
             )
-
-    comment_form = CommentForm()
-    # print("about to render template")  # Debug
-
+        # Redirect after seccessful POST to avoid resumbit
+        return HttpResponseRedirect(reverse('post_detail', args=[slug]))
+    
+    else:
+        blog_comment_form = BlogCommentForm()
+        # print("about to render template")  # Debug
     return render(
         request,
         "blog/post_detail.html",
@@ -82,29 +98,32 @@ def post_detail(request, slug):
             "post": post,
             "previous_post": previous_post,
             "next_post": next_post,
-            "comments": comments,
-            "comment_count": comment_count,
-            "comment_form": comment_form,
+            "blog_comments": blog_comments,
+            "blog_comment_count": blog_comment_count,
+            "blog_comment_form": blog_comment_form,
         },
     )
 
-def comment_edit(request, slug, comment_id):
+def blog_comment_edit(request, slug, blog_comment_id):
     """
-    view to edit comments
+    view to edit blog_comments
     """
    
     if request.method == "POST":
        
         queryset = Post.objects.filter(status=1)
         post = get_object_or_404(queryset, slug=slug)
-        comment = get_object_or_404(Comment, pk=comment_id)
-        comment_form = CommentForm(data=request.POST, instance=comment)
+        blog_comment = get_object_or_404(BlogComment, pk=blog_comment_id)
+        blog_comment_form = BlogCommentForm(
+            data=request.POST, instance=blog_comment)
        
-        if comment_form.is_valid() and comment.author == request.user:
-            comment = comment_form.save(commit=False)
-            comment.post = post
-            comment.approved = False
-            comment.save()
+        if blog_comment_form.is_valid() and (
+            blog_comment.author == request.user
+        ):
+            blog_comment = blog_comment_form.save(commit=False)
+            blog_comment.post = post
+            blog_comment.status = 0
+            blog_comment.save()
             messages.add_message(request, messages.SUCCESS, 'Comment Updated!')
         else:
             messages.add_message(
@@ -113,16 +132,16 @@ def comment_edit(request, slug, comment_id):
     return HttpResponseRedirect(reverse('post_detail', args=[slug]))
 
 
-def comment_delete(request, slug, comment_id):
+def blog_comment_delete(request, slug, blog_comment_id):
     """
     view to delete comment
     """
     queryset = Post.objects.filter(status=1)
     post = get_object_or_404(queryset, slug=slug)
-    comment = get_object_or_404(Comment, pk=comment_id)
+    blog_comment = get_object_or_404(BlogComment, pk=blog_comment_id)
     
-    if comment.author == request.user:
-        comment.delete()
+    if blog_comment.author == request.user:
+        blog_comment.delete()
         messages.add_message(request, messages.SUCCESS, 'Comment deleted!')
     else:
         messages.add_message(
