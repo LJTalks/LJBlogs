@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- special Features menu starts here -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <h1>Special Features</h1>
+            <p>Welcome to the Special Features Area</p>
+            <p>Here you will find apps that I am currently testing.</p>
+            <p>Please feel freeto have a look around.</p>
+            <p>Don't be shy, get involved! Make comments, suggestions, let me know if you find errors or bugs.</p>
+            <p>If you have an idea for an app you would find useful, let me know!</p>
+        </div>
+        <ul>
+            <li class="link">
+                <h2>The YouTube Data Checker</h2>
+                <p>This project is designed to help you keep tags on your YouTube Channel data</p>
+                <a href="{% url 'youtube-data-checker' %}">YouTube Data Checker</a>
+            </li>
+            <li>Space here for the next special app</li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

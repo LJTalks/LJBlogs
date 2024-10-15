@@ -22,7 +22,7 @@ def unsubscribe(request, user_id):
 
 
 def about_me(request):
-    return render(request, 'blog/about_me.html')  # My About Me page
+    return render(request, 'about_me.html')  # My About Me page
 
 
 class PostList(generic.ListView):

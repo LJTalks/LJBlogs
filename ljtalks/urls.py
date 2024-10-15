@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import render
+# from django.shortcuts import render
 from . import views
 
 # Function to render the maintenance view (if needed)
@@ -31,14 +31,17 @@ urlpatterns = [
          views.apply_for_special_access,
          name='apply_for_special_access'),
     path('contact/', views.contact_view, name='contact'),
-    # path('info/', views.youtube_info_view, name='youtube-info-view'),
+    # path('info/', views.youtube_info_view, name='youtube-data-checker'),
     # path('booking/', include('booking.urls')),
     # Include the URLs from the services app
     # path('services/', include('services.urls')),
     path('youtube/', include('ytapi.urls')),
+    path('special_features/',
+         views.special_features_view,
+         name='special_features'),
     path('summernote/', include('django_summernote.urls')),
     path("", include("blog.urls"), name="blog-urls"),
     # Think we replaced this with the restricted tester only api path above
     # Public or other features (different to the api path, not sure how!)
-    # path('youtube/', include('ytapi.urls'), name="youtube-info-view")
+    # path('youtube/', include('ytapi.urls'), name="youtube-data-checker")
 ]
