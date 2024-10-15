@@ -126,9 +126,12 @@ def blog_comment_edit(request, slug, blog_comment_id):
         queryset = Post.objects.filter(status=1)
         post = get_object_or_404(queryset, slug=slug)
         blog_comment = get_object_or_404(BlogComment, pk=blog_comment_id)
-        blog_comment_form = BlogCommentForm(data=request.POST, instance=blog_comment)
+        blog_comment_form = BlogCommentForm(
+            data=request.POST, instance=blog_comment)
        
-        if blog_comment_form.is_valid() and blog_comment.author == request.user:
+        if blog_comment_form.is_valid() and (
+            blog_comment.author == request.user
+        ):
             blog_comment = blog_comment_form.save(commit=False)
             blog_comment.post = post
             blog_comment.approved = False

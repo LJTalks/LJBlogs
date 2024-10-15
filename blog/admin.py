@@ -31,23 +31,20 @@ class PostAdmin(SummernoteModelAdmin):
     )
 
 
-# Register your models here.
-admin.site.register(BlogComment)
+# Customise the BlogComment admin interface
+@admin.register(BlogComment)
+class BlogCommentAdmin(admin.ModelAdmin):
+    list_display = ('author', 'body', 'post', 'status',
+                    'created_on', 'updated_on')  # Cols in the comment list
+    # Filters for approval status and creation date
+    list_filter = ('created_on', 'status')
+    # Allow searching by username and blogcomment content
+    search_fields = ('author__username', 'body')
+    # Custom action to bulk approve comments
+    actions = ['approve_blog_comments']
 
-
-# I think this doesn't work because we used a CBV for comment model?
-# @admin.register(BlogComment)
-# class BlogCommentAdmin(admin.ModelAdmin):
-#     list_display = ('author', 'body', 'post', 'approved',
-#                     'created_on', 'updated_on')  # Cols in the comment list
-#     # Add filters for approval status and creation date
-#     list_filter = ('approved', 'created_on', 'status')
-#     # Allow searching by username and blogcomment content
-#     search_fields = ('author_username', 'body')
-#     actions = ['approve_blog_comments']  # Custom action to bulk approve comments
-
-#     # Custom action to approve selected comments
-#     def approve_blog_comments(self, request, queryset):
-#         queryset.update(approved=True)
-# /workspace/LJBlogs/static/images
-#     approve_blog_comments.short_description = "Approve selected comments"
+    # Custom action to approve selected comments
+    def approve_blog_comments(self, request, queryset):
+        queryset.update(status=1)
+    # Custom action short description 
+    approve_blog_comments.short_description = "Approve selected comments"
