@@ -55,7 +55,7 @@
                             href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="nav-item"></li>
-                        <a class="nav-link {% if request.path == about_me_url %}active{% endif %}" aria-current="page"
+                        <a class="nav-link {% if request.path == 'about_me_url' %}active{% endif %}" aria-current="page"
                         href="{% url 'about_me' %}">About</a>
                     </li>
                     <li class="nav-item"></li>
