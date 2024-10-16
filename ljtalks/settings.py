@@ -32,19 +32,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = False
 
-# if os.path.isfile("env.py"):
-#     DEBUG = True
-# else:
-#     DEBUG = False
+if os.path.isfile("env.py"):
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = [
-    '.codeinstitute-ide.net', '.herokuapp.com']
+    '.codeinstitute-ide.net',
+    '.herokuapp.com',
+    'ljtalks.com',
+    'www.ljtalks.com'
+]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.codeinstitute-ide.net/",
-    "https://*.herokuapp.com"
+    "https://*.herokuapp.com",
+    "https://ljtalks.com",
+    "https://www.ljtalks.com"
 ]
 
 # Application definition
