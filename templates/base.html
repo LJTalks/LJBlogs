@@ -54,11 +54,11 @@
                         <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page"
                             href="{% url 'home' %}">Home</a>
                     </li>
-                    <li class="nav-item"></li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.path == 'about_me_url' %}active{% endif %}" aria-current="page"
-                        href="{% url 'about_me' %}">About</a>
+                        href="{% url 'about_me' %}">About Me</a>
                     </li>
-                    <li class="nav-item"></li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.path == contact_url %}active{% endif %}" aria-current="page"
                         href="{% url 'contact' %}">Contact Me</a>
                     </li>                    
@@ -69,19 +69,21 @@
                         href="{% url 'account_logout' %}">Logout</a>
                     </li>
                         {% if is_tester %}
-                            <!-- Display Special Features link -->
+                            <!-- Display Beta Features link if user is tester -->
                              <!-- We've replaced the YouTube Channel Checker Menu item but will need to re-add You Tube Data Checker  -->
-                            <li class="nav-item"></li>
-                                <a class="nav-link {% if request.path == special_features_url %}active{% endif %}" aria-current="page"
-                                href="{% url 'special_features' %}">Special Features</a>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == beta_features_url %}active{% endif %}" aria-current="page"
+                                href="{% url 'beta_features' %}">Beta Features</a>
                             </li>
                         {% else %}
-                            <!-- Invite to apply for access -->
-                             <li class="nav-item"></li>
-                             <a class="nav-link {% if request.path == apply_for_special_access_url %}active{% endif %}" aria-current="page"
-                             href="{% url 'apply_for_special_access' %}">Apply for Special Access</a></li>
+                            <!-- Logged in but not tester: Invite to apply for access -->
+                             <li class="nav-item">
+                             <a class="nav-link {% if request.path == apply_for_beta_access_url %}active{% endif %}" aria-current="page"
+                             href="{% url 'apply_for_beta_access' %}">Apply for Beta Access</a>
+                            </li>
                         {% endif %}
                     {% else %}
+                    <!-- User not logged in, show register and login links -->
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == signup_url %}active{% endif %}" aria-current="page"
                             href="{% url 'account_signup' %}">Register</a>

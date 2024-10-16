@@ -15,8 +15,16 @@ urlpatterns = [
     path('apply_for_beta_access/',
          views.apply_for_beta_access,
          name='apply_for_beta_access'),
-    path('contact/', views.contact_view, name='contact'),
-    # path('contact/', views.contact_view, name='contact'),
+    # General Contact URL (for anyone)
+    path('contact/', views.contact_submit, name='contact'),  # form
+    # Beta Contact URL (Checks if user is in "testers" group)
+    path(
+        'beta-contact/', views.beta_contact_view, name='beta_contact'
+        ),  # form submit
+    # Apply for Beta Access (logged in users only)
+    path('apply-for-beta-access/', views.apply_for_beta_access, name='apply_for_beta_access'),
+    # Beta Features (for testers)
+    path('beta-features/', views.beta_features_view, name='beta_features'),
     # path('info/', views.youtube_info_view, name='youtube-data-checker'),
     # path('booking/', include('booking.urls')),
     # Include the URLs from the services app

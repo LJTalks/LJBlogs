@@ -1,11 +1,18 @@
+<!-- apply_for_beta_access_form.html -->
 {% extends "base.html" %}
 {% load static %}
 
-<h2>Apply for Special Access</h2>
-<form method="post">
-    {% csrf_token %}
-    <p>Submit your request to gain access to special features.</p>
-    <button type="submit">Apply Now</button>
-</form>
+{% block content %}
+<div class="container mt-5">
+    <h1>Apply for Beta Access</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="why" class="form-label">Why do you want to be a tester?</label>
+            <textarea class="form-control" id="why" name="why" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Application</button>
+    </form>
+</div>
 
 {% endblock %}

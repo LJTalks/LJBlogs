@@ -8,8 +8,9 @@
 
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form method="post" action="{% url 'contact_submit' %}">
+            <form method="post" action="{% url 'contact' %}">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.META.HTTP_REFERER }}">
                 <div class="mb-3">
                     <label for="name" class="form-label">Your Name</label>
                     <input type="text" class="form-control" id="name" name="name" required>
