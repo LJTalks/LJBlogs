@@ -117,7 +117,10 @@
                 <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
             </form>
             {% else %}
-            <p>Log in to leave a comment</p>
+            <p>You must log in to leave a comment</p>
+            <!-- Sign In and Register buttons -->
+            <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg mb-2">Sign In</a>
+            <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Register</a>
             {% endif %}
         </div>
     </div>

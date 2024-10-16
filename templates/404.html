@@ -1,20 +1,22 @@
-<!-- templates/404.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container text-center">
-    <h1>Oops! Page Not Found</h1>
-    <p>It looks like the page you want doesn't exist right now!</p>
-    <p><a href="{% url 'about_me' %}">Contact me</a> to let me know what you were hoping to see...</p>
-    <p>Hit the back button, or head back to the page you were on</p>
+<div class="container text-center mt-5">
+    <h1 class="display-4 text-danger">Whoops! My bad...</h1>
+    <p class="lead">It looks like the page you're trying to access doesn't exist right now.</p>
     
-    <!-- Back Button with JavaScript fallback -->
-    <button id="goBackButton" class="btn btn-primary" onclick="goBack()">Go back to the previous page</button>
+    <p class="mt-4">You can <a href="{% url 'contact' %}" class="text-primary">contact me</a> to let me know what you were hoping to see, or...</p>
+    <p>Use the button below to go back to where you were.</p>
 
-    <br><br>
+    <!-- Buttons for navigation -->
+    <div class="mt-3">
+        <!-- Back Button with JavaScript fallback -->
+        <button id="goBackButton" class="btn btn-primary btn-lg" onclick="goBack()">Return to the previous page</button>
 
-    <!-- Link to go to homepage if no referrer -->
-    <a href="{% url 'home' %}" id="homeLink" class="btn btn-secondary" style="display:none;">Go back to the homepage</a>
+        <!-- Link to go to homepage if no referrer -->
+        <a href="{% url 'home' %}" id="homeLink" class="btn btn-secondary btn-lg" style="display:none;">Go to the Homepage</a>
+    </div>
 </div>
 
 <script>
@@ -38,4 +40,13 @@
         document.getElementById('homeLink').style.display = 'inline';
     }
 </script>
+{% endblock %}
+
+{% block meta %}
+<!-- Prevent indexing of the 404 page -->
+<meta name="robots" content="noindex, follow">
+{% endblock %}
+
+{% block meta_description %}
+<meta name="description" content="Whoops! My bad...">
 {% endblock %}

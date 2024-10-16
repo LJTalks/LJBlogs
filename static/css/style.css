@@ -13,8 +13,13 @@
 
 /* Base Styling */
 body {
-    /* background-color: var(--bg-color-main); CHECKING CSS IS CONNECTED*/
-    background-color: black;
+    background-color: var(--bg-color-main);  CHECKING CSS IS CONNECTED
+
+}
+
+.body {
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .navbar-brand .logo {

@@ -9,17 +9,18 @@
 <html class="h-100" lang="en">
 
 <head>
-    <title>LJ Talks</title>
+    <title>{% block title %}LJ Talks{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Default SEO meta tags (THESE ARE NOT DEFAULTING FOR SOME REASON - MORE CURLY BRACES NEEDED? )-->
-    {% block excerpt %}
+    <!-- Default meta description -->
+    {% block meta_description %}
     <meta name="description" content="A Full Stack Adventure!">
-    {% endblock excerpt %}
-    <!-- Block for custom SEO tags (to be overridden in post_detail) -->
-    {% block seo_tags %}
+    {% endblock %}
+
+    <!-- Default SEO tags (to be overridden on specific pages) -->
+    {% block meta %}
     <meta name="keywords" content="coding, software development, blog, tutorials">
-    {% endblock seo_tags %}
+    {% endblock %}
     
     <!-- Google Fonts CSS -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -48,7 +49,13 @@
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarText">
+            
+    </nav>
+
+        <!-- displaying Django messages -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2"><div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page"
@@ -99,12 +106,6 @@
                 </span>
             </div>
         </div>
-    </nav>
-
-        <!-- displaying Django messages -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
                 {% for message in messages %}
                 <div class="alert {{ message.tags }} alert-dismissible fade show" id="msg" role="alert">
                     {{ message | safe }}
@@ -130,8 +131,8 @@
 
 <!-- Footer -->
 <footer class="footer bg-secondary mt-auto py-3 text-center">
-    <p class="m-0 text-center text-white">2024 LJTalks</p>
-    <a href="{% url 'contact' %}" id="emailLinkDark" class="text-white">Email Me</a>
+    <p class="m-0 text-center text-white">2024 LJTalks | All rights reserved</p>
+    <a href="{% url 'contact' %}" id="emailLinkDark" class="text-white">Get in Touch</a>
     
     <!-- Social Media Links -->
     <div class="d-flex justify-content-center">

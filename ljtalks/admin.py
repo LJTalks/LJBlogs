@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.utils.dateformat import format
 
 
@@ -24,6 +24,17 @@ class CustomUserAdmin(UserAdmin):
             return 'Never logged in'
 
     previous_last_login.short_description = 'Previous Login'
+    # Display is tester
+    def is_tester(self, obj):
+        return obj.groups.filter(name='testers').exists()
+    
+    # Add bolean indicator tothe admin list
+    is_tester.boolean = True
+    is_tester.short_description = "Tester Group"
+    
+    # Add is tester to list
+    list_display = UserAdmin.list_display + ("is_tester",)
+    
 
 
 # Unregister the old UserAdmin

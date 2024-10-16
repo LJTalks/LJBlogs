@@ -1,7 +1,6 @@
 import datetime
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import generic
-from django.views.generic import ListView
 from django.contrib import messages
 from .models import Post, BlogComment
 from django.http import HttpResponseRedirect
