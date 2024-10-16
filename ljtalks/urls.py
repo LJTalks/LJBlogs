@@ -1,23 +1,8 @@
-"""
-URL configuration for ljtalks project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 # from django.shortcuts import render
 from . import views
+from django.views.generic import TemplateView
 
 # Function to render the maintenance view (if needed)
 # def maintenance_view(request):
@@ -27,18 +12,25 @@ urlpatterns = [
     path('accounts/', include("allauth.urls")),
     path('admin/', admin.site.urls),
     # Restricted to testers
-    path('apply_for_special_access/',
-         views.apply_for_special_access,
-         name='apply_for_special_access'),
+    path('apply_for_beta_access/',
+         views.apply_for_beta_access,
+         name='apply_for_beta_access'),
     path('contact/', views.contact_view, name='contact'),
+    # path('contact/', views.contact_view, name='contact'),
     # path('info/', views.youtube_info_view, name='youtube-data-checker'),
     # path('booking/', include('booking.urls')),
     # Include the URLs from the services app
     # path('services/', include('services.urls')),
     path('youtube/', include('ytapi.urls')),
-    path('special_features/',
-         views.special_features_view,
-         name='special_features'),
+    path('beta_features/',
+         views.beta_features_view,
+         name='beta_features'),
+    path('privacy/', TemplateView.as_view(
+        template_name="ljtalks/privacy.html"), name='privacy_policy'),
+    path('terms/', TemplateView.as_view(
+        template_name="ljtalks/terms.html"), name='terms_conditions'),
+    path('disclaimer/', TemplateView.as_view(
+        template_name="ljtalks/disclaimer.html"), name='disclaimer'),
     path('summernote/', include('django_summernote.urls')),
     path("", include("blog.urls"), name="blog-urls"),
     # Think we replaced this with the restricted tester only api path above

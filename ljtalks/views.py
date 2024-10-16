@@ -1,13 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 # from django.contrib.auth.models import Group
 import logging
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
 
 
 logger = logging.getLogger(__name__)
 
+
+def contact_submit(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        message = request.POST['message']
+        # Prepare the email content
+        subject = f"New message from {name}"
+        content = f"Message: {message}\n\nFrom: {name}\nEmail: {email}"
+        # Send the email
+        send_mail(subject, content, email, [settings.DEFAULT_FROM_EMAIL])
+        # Show a success message
+        messages.success(request, 'Your message has been sent!')
+
+        return redirect('contact')
+    
 
 # View to handle the generic contact form
 # We include is_tester validation but after authentication is checked 
