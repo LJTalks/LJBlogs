@@ -69,10 +69,6 @@
                         href="{% url 'account_logout' %}">Logout</a>
                     </li>
                         {% if is_tester %}
-                        <!-- Delete the next two DEBUG lines -->
-                        <!-- <p>You are a tester!</p>
-                        <p>Is tester: {% if is_tester %} Yes {% else %} No {% endif %}</p> -->
-
                             <!-- Display Special Features link -->
                              <!-- We've replaced the YouTube Channel Checker Menu item but will need to re-add You Tube Data Checker  -->
                             <li class="nav-item"></li>
@@ -80,8 +76,6 @@
                                 href="{% url 'special_features' %}">Special Features</a>
                             </li>
                         {% else %}
-                        <p>You are not a tester.</p>
-                        <p>Is tester: {% if is_tester %} Yes {% else %} No {% endif %}</p>
                             <!-- Invite to apply for access -->
                              <li class="nav-item"></li>
                              <a class="nav-link {% if request.path == apply_for_special_access_url %}active{% endif %}" aria-current="page"
