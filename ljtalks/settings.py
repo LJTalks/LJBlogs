@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'blog',  # Custom apps after django then third-party apps
+    'emails',
     'ljtalks',
     'ytapi',
     # 'services',

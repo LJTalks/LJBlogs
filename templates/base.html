@@ -96,9 +96,9 @@
                     </li>
                     {% endif %}
                 </ul>
-                <span class="navbar-text text-muted">
-                    It's A Full Stack Adventure!
-                </span>
+                <div class="navbar-text nav-link text-muted">
+                    <a href="{% url 'email_signup' %}?next={{ request.path }}">It's A Full Stack Adventure! Stay informed!</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -128,6 +128,14 @@
          
         {% endblock content %}
 
+
+        <div class="subscribe-section text-center mt-4 p-4 bg-light">
+            {% if not request.path == '/emails/signup/' %} 
+            <h4>Want to stay updated on my Full Stack Adventure?</h4>
+            <p>Subscribe to receive weekly updates and exclusive content!</p>
+            <a href="{% url 'email_signup' %}?next={{ request.path }}" class="btn btn-success">Join the Journey</a>
+            {% endif %}
+        </div>
     </main>
 
     <!-- Footer -->

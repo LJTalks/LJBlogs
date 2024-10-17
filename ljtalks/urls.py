@@ -31,6 +31,7 @@ urlpatterns = [
     # Include the URLs from the services app
     path('disclaimer/', TemplateView.as_view(
         template_name="ljtalks/disclaimer.html"), name='disclaimer'),
+    path('emails/', include('emails.urls')),
     path('privacy/', TemplateView.as_view(
         template_name="ljtalks/privacy.html"), name='privacy_policy'),
     # path('services/', include('services.urls')),
