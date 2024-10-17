@@ -27,7 +27,13 @@
                         <div class="card-body">
                             <a href="{% url 'post_detail' post.slug %}" class="post-link">
                                 <h2 class="card-title">{{ post.title }}</h2>
-                                <p class="card-text">{{ post.excerpt }}</p>
+                                <p class="card-text">
+                                    {% if post.excerpt %}
+                                        {{ post.excerpt | safe }}
+                                    {% else %} 
+                                        {{ post.content|truncatechars_html:150 | safe }}
+                                    {% endif %}
+                                </p>
                             </a>
                             <hr />
                             <p class="card-text text-muted h6">{{ post.created_on }}</p>
