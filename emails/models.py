@@ -1,20 +1,22 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
-class EmailListSubscriber(models.Model):
-        EMAIL_PREFERENCE_CHOICES = [
-        ('weekly', 'Weekly Updates'),
-        ('news', 'News and Important Changes'),
-    ]
-        
-        email = models.EmailField(unique=True)
-        source = models.CharField(max_length=255, null=True, blank=True)
-        date_joined = models.DateTimeField(auto_now_add=True)
-        preferences = models.CharField(
-            max_length=10,
-            choices=EMAIL_PREFERENCE_CHOICES,
-            default='weekly'  # Default preference for new subscribers
-        )
+# ListType model representing the two distinct lists
+class ListType(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
 
-        def __str__(self):
-            return self.email
+    def __str__(self):
+        return self.name
+
+
+# EmailListSubscriber model linking a user to one or more lists
+class EmailListSubscriber(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # No need for email field, using User model
+    list_type = models.ForeignKey(ListType, on_delete=models.CASCADE)
+    source = models.CharField(max_length=255, null=True, blank=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.list_type.name}"

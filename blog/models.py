@@ -6,6 +6,17 @@ from cloudinary.models import CloudinaryField
 # Blog post (Post Detail) models here.
 STATUS = ((0, "Draft"), (1, "Published"))
 
+
+class ViewRecord(models.Model):
+    post = models.ForeignKey(
+        'Post', on_delete=models.CASCADE, related_name='view_records')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    viewed_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} viewed {self.post.title} on {self.viewed_on}"
+
+
 class Post(models.Model):
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)

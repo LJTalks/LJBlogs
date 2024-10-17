@@ -1,23 +1,19 @@
-
 {% extends "base.html" %}
 
 {% block content %}
 {% load static %}
+
 <form method="POST" action="{% url 'email_signup' %}?next={{ request.GET.next|default_if_none:'' }}">
     {% csrf_token %}
 
-    {% if request.user.is_authenticated %}
-        <p>Your registered email is {{ request.user.email }}</p>
-        <input type="hidden" name="email" value="{{ request.user.email }}">
-    {% else %}
-        {{ form.email.label_tag }}<br>
-        {{ form.email }}<br>
-    {% endif %}
+    {{ form.email.label_tag }}<br>
+    {{ form.email }}<br>
 
-    <p>Select your email preferences:</p>
-    {{ form.preferences }}<br>
+    <p>Select the types of emails you’d like to receive:</p>
+    {{ form.list_type }}  <!-- This will render the choices from ListType -->
 
     <p>We never share your data, and you can unsubscribe at any time.</p>
     <button type="submit">Join Mailing List</button>
 </form>
+
 {% endblock content %}

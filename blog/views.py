@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import generic
 from django.contrib import messages
-from .models import Post, BlogComment
+from .models import Post, BlogComment, ViewRecord
 from django.http import HttpResponseRedirect
 from .forms import BlogCommentForm
 from django.contrib.auth.models import User
@@ -36,35 +36,28 @@ def post_detail(request, slug):
     # Get the current post
     post = get_object_or_404(queryset, slug=slug)
     
-    # View count logic
-    session_key = f"viewed_post_{post.id}"
-    now = datetime.datetime.now()
-    timeout_hours = 2  # Time limit for session based counting
-    
-    # Retrieve last viewed time from the session
-    last_viewed = request.session.get(session_key)
-    
-    # Check if last_viewed value is valid (datetime), if not reset it
-    if last_viewed:
-        try:
-            last_viewed = datetime.datetime.fromisoformat(last_viewed)
-        except (ValueError, TypeError):
-            last_viewed = None
-            
-    # If last viewed in None or timeoout has passed, increment view count
-    if (
-        not last_viewed or
-        (now - last_viewed).total_seconds() / 3600 >= timeout_hours
-    ):
+    # Track views for logged-in users
+    if request.user.is_authenticated:
+        ViewRecord.objects.create(post=post, user=request.user)
         post.views += 1
-        post.save()
-        # Store the currenttime in the session
-        request.session[session_key] = now.isoformat()
-    
+        post.viewed_by.add(request.user)
+    else:
+        # Track views for annonymous users using sessions
+        session_key = f"viewed_post_{post.id}"
+        if not request.session.get(session_key, False):
+            post.views += 1
+            post.save()
+            request.session[session_key] = True
+   
+    # Increment the total view count
+    post.views += 1
+    post.save()
+ 
     # Get the previous post    
     previous_post = Post.objects.filter(
         created_on__lt=post.created_on, status=1).order_by(
             '-created_on').first()
+
     # Get the next post
     next_post = Post.objects.filter(
         created_on__gt=post.created_on, status=1).order_by(
@@ -103,6 +96,7 @@ def post_detail(request, slug):
             "blog_comment_form": blog_comment_form,
         },
     )
+    return render(request, 'blog/post_detail.html', {'post': post})
 
 
 def blog_comment_edit(request, slug, blog_comment_id):
