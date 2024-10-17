@@ -14,6 +14,15 @@ class PostAdmin(SummernoteModelAdmin):
     list_filter = ('status', 'created_on', 'publish_date')
     prepopulated_fields = {'slug': ('title',)}
     summernote_fields = ('content',)
+    # Custom action to bulk publish posts
+    actions = ['publish_blog_posts']
+
+    # Custom action to publish selected posts
+    def publish_blog_posts(self, request, queryset):
+        queryset.update(status=1)
+    # Custom action short description
+    publish_blog_posts.short_description = "Publish blog posts"
+
 
 # Custom method to display if seo_tags is empty or not
     def seo_tags_status(self, obj):
