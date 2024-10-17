@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
-<!-- do we want to change the metatags for the blog index page? Need to add the 
- correct term so it will overwrite if there is data in the db-->
+<!-- Overwrite the SEO tags for the blog index page if needed -->
 {% block seo_tags %}
-
+<!-- Add any custom meta tags here -->
 {% endblock seo_tags %}
 
 {% block content %}
@@ -17,28 +16,25 @@
             <div class="row">
                 {% for post in post_list %}
                 <div class="col-md-4">
-                    <div class="card mb-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="image-container">
+                            {% if "placeholder" in post.featured_image.url %}
+                                <img class="card-img-top img-fluid" src="{% static 'images/default.jpg' %}" alt="placeholder image" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img class="card-img-top img-fluid" src="{{ post.featured_image.url }}" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                        </div>
                         <div class="card-body">
-                            <div class="image-container">
-                                 {% if "placeholder" in post.featured_image.url %}
-                                 <img class="card-img-top" src="{% static 'images/default.jpg' %}" alt="placeholder image">
-                                 {% else %}
-                                <img class="card-img-top" src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-                                {% endif %}
-                                <div class="image-flash">
-                                    <p class="author">{{ post.author }}</p>
-                                </div>
-                            </div>
                             <a href="{% url 'post_detail' post.slug %}" class="post-link">
                                 <h2 class="card-title">{{ post.title }}</h2>
                                 <p class="card-text">{{ post.excerpt }}</p>
                             </a>
                             <hr />
-                            <p class="card-text text-muted h6">{{ post.created_on}}
-                            </p>
+                            <p class="card-text text-muted h6">{{ post.created_on }}</p>
                         </div>
                     </div>
                 </div>
+                <!-- Add a row break every 3 posts -->
                 {% if forloop.counter|divisibleby:3 %}
             </div>
             <div class="row">
@@ -47,6 +43,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Pagination -->
     <div>
         {% if is_paginated %}
         <nav aria-label="Page navigation">
@@ -66,6 +64,7 @@
         </nav>
         {% endif %}
     </div>
+</div>
 
 <!-- post_list.html content ends here -->
 {% endblock %}

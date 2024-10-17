@@ -11,11 +11,44 @@
     --approval-color: rgb(222, 146, 168);
 }
 
+.masthead-image {
+    object-fit: cover;
+    width: 100%;
+}
+
+/* Small screens - default height */
+@media (max-width: 767px) {
+    .masthead-image {A
+        height: 250px;
+    }
+}
+
+/* Medium screens */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .masthead-image {
+        height: 350px;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+    .masthead-image {
+        height: 500px;
+    }
+}
+
+
 /* Base Styling */
 body {
-    /* background-color: var(--bg-color-main); CHECKING CSS IS CONNECTED*/
-    background-color: black;
+    /* CHECKING CSS IS CONNECTED */
+    background-color: var(--bg-color-main);  
+
 }
+
+/* .body {
+    padding-left: 20px;
+    padding-right: 20px;
+} */
 
 .navbar-brand .logo {
     font-size: xx-large;

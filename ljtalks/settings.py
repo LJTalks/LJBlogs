@@ -80,7 +80,7 @@ INSTALLED_APPS = [
     # 'booking',
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKs = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Site framework ID - required for django.contrib.sites

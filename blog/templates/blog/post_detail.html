@@ -3,45 +3,38 @@
 {% load static %}
 
 <!-- Meta tags for the blog index page -->
-<!-- If excerpt exists, use it in the meta description -->
-<!-- Else, default to site-wide SEO tags from base.html -->
 {% block excerpt %}
 <meta name="description" content="{{ post.excerpt }}">
 {% endblock excerpt %}
 
-<!-- If seo-tags exist, use them in the meta description -->
-<!-- Else, default to site-wide SEO tags from base.html -->
 {% block seo_tags %}
 <meta name="keywords" content="{{ post.seo_tags }}">
 {% endblock seo_tags %}
 
 {% block content %}
 <!-- Post Details -->
-<div class="masthead">
-    <div class="container">
-        <div class="row g-0">
-            <div class="col-md-6 masthead-text">
-                <!-- Post title -->
-                <h1 class="post-title">{{ post.title }}</h1>
-                <!-- Post date -->
-                <p class="post-subtitle">{{ post.created_on }}</p>
-            </div>
-            <!-- Post Masthead Image -->
-            <div class="d-none d-md-block col-md-6 masthead-image">
-                {% if "placeholder" in post.featured_image.url %}
-                <!-- Display a default image if there is no featured image -->
-                <img src="{% static 'images/default.jpg' %}" class="scale" alt="placeholder">
-                {% else %}
-                <img src="{{ post.featured_image.url }}" class="scale" alt="{{ post.title }}">
-                {% endif %}
-            </div>
+<div class="container-fluid masthead my-3">
+    <div class="row g-0">
+        <!-- Post title and date -->
+        <div class="col-md-6">
+            <h1 class="post-title">{{ post.title }}</h1>
+            <p class="post-subtitle">{{ post.publish_date }}</p>
+        </div>
+
+        <!-- Post Masthead Image -->
+        <div class="col-md-6 d-none d-md-block">
+            {% if "placeholder" in post.featured_image.url %}
+            <img src="{% static 'images/default.jpg' %}" class="img-fluid rounded w-100" alt="placeholder" style="object-fit: cover; height: 250px;">
+            {% else %}
+            <img src="{{ post.featured_image.url }}" class="img-fluid rounded" alt="{{ post.title }}" style="object-fit: cover; height: 250px;">
+            {% endif %}
         </div>
     </div>
 </div>
 
 <!-- Displaying count of post views and comments -->
 <div class="row">
-    <div class="col-6 text-left">
+    <div class="col-6">
         <strong class="text-secondary">
             <i class="far fa-eye"></i> {{ post.views }} Views
         </strong>
@@ -59,66 +52,61 @@
 <!-- Post content -->
 <div class="container">
     <div class="row">
-        <div class="col card mb-4 mt-3 left top">
+        <div class="col-12 card mb-4 mt-3">
             <div class="card-body">
-                <!-- Post content -->
-                <p class="card-text">
-                    {{ post.content | safe }}
-                </p>
+                <p class="card-text">{{ post.content | safe }}</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Displaying Comments -->
-<div class="row">
-    <!-- Comments Section - 2/3 of the page on larger screens -->
-    <div class="col-md-8 card mb-4 mt-3">
-        <h3>Comments:</h3>
-        <!-- Check if there are any comments -->
-        {% if blog_comments %}
-        <div class="card-body">
-            <!-- Loop through the comments -->
-            {% for blog_comment in blog_comments %}
-            <div class="p-2 comments {% if blog_comment.status == 0 and blog_comment.author == user %} faded{% elif blog_comment.status == 0 %} d-none{% endif %}">
-                <p class="font-weight-bold">
-                    {{ blog_comment.author }}
-                    <span class="font-weight-normal"> {{ blog_comment.created_on }} </span> wrote:
-                </p>
-                <div id="blog_comment{{ blog_comment.id }}">
-                    {{ blog_comment.body | linebreaks }}
+<div class="container col-md-12">
+    <div class="row">
+        <div class="col-md-8 card mb-4 mt-3">
+            <h3>Comments:</h3>
+            {% if blog_comments %}
+            <div class="card-body">
+                {% for blog_comment in blog_comments %}
+                <div class="p-2 comments {% if blog_comment.status == 0 and blog_comment.author == user %} faded{% elif blog_comment.status == 0 %} d-none{% endif %}">
+                    <p class="font-weight-bold">{{ blog_comment.author }}
+                        <span class="font-weight-normal"> {{ blog_comment.created_on }} </span> wrote:
+                    </p>
+                    <div id="blog_comment{{ blog_comment.id }}">
+                        {{ blog_comment.body | linebreaks }}
+                    </div>
+                    {% if blog_comment.status == 0 and blog_comment.author == user %}
+                    <p class="approval">This comment is awaiting approval</p>
+                    {% endif %}
+                    {% if user.is_authenticated and blog_comment.author == user %}
+                    <button class="btn btn-delete btn-sm me-2" blog_comment_id="{{ blog_comment.id }}">Delete</button>
+                    <button class="btn btn-edit btn-sm me-2" blog_comment_id="{{ blog_comment.id }}">Edit</button>
+                    {% endif %}
                 </div>
-                {% if blog_comment.status == 0 and blog_comment.author == user %}
-                <p class="approval">This comment is awaiting approval</p>
-                {% endif %}
-                {% if user.is_authenticated and blog_comment.author == user %}
-                <button class="btn btn-delete me-2" blog_comment_id="{{ blog_comment.id }}">Delete</button>
-                <button class="btn btn-edit me-2" blog_comment_id="{{ blog_comment.id }}">Edit</button>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No comments yet. Be the first to comment!</p>
+            {% endif %}
+        </div>
+
+        <!-- Creating New Comments -->
+        <div class="col-md-4 card mb-4 mt-3">
+            <div class="card-body">
+                {% if user.is_authenticated %}
+                <h3>Leave a comment:</h3>
+                <p>Posting as: {{ user.username }}</p>
+                <form id="blogCommentForm" method="post">
+                    {{ blog_comment_form | crispy }}
+                    {% csrf_token %}
+                    <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
+                </form>
+                {% else %}
+                <p>You must log in to leave a comment</p>
+                <a href="{% url 'account_login' %}" class="btn btn-primary btn-sm me-2">Sign In</a>
+                <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-sm me-2">Register</a>
                 {% endif %}
             </div>
-            <!-- Closing div for each comment -->
-            <!-- End of loop -->
-            {% endfor %}
-        </div>
-        {% else %}
-        <p>No comments yet. Be the first to comment!</p>
-        {% endif %}
-    </div>
-
-    <!-- Creating New Comments -->
-    <div class="col-md-4 card mb-4 mt-3">
-        <div class="card-body">
-            {% if user.is_authenticated %}
-            <h3>Leave a comment:</h3>
-            <p>Posting as: {{ user.username }}</p>
-            <form id="blogCommentForm" method="post" style="margin-top: 1.3em;">
-                {{ blog_comment_form | crispy }}
-                {% csrf_token %}
-                <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
-            </form>
-            {% else %}
-            <p>Log in to leave a comment</p>
-            {% endif %}
         </div>
     </div>
 </div>

@@ -5,7 +5,7 @@
 **Static files **
 My project is not currently connecting to some static files, like css and images. It does seem to be connecting to JS scripts in the same directory. Odd. Maybe a links/directory position thing? Shouldn't be whitenoise as I'm testing in gitpod/local. Cloudinary images appear to work... odd.
 
-**Special access to Experimental Features/Beta testing**
+**Beta access to Experimental Features/Beta testing**
 Request to Access test and Feedback on Future Features (e.g the Youtube Data Checker)
 
 Must be logged in to request access, and must be accepted for special priviledges.

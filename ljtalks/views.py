@@ -1,36 +1,92 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 # from django.contrib.auth.models import Group
 import logging
+from django.core.mail import EmailMessage, send_mail
+from django.conf import settings
+from django.contrib import messages
 
 
 logger = logging.getLogger(__name__)
 
 
-# View to handle the generic contact form
+# General contact form (for anyone)
+def contact_submit(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        message = request.POST['message']
+        # Prepare the email content
+        subject = f"LJTalks Contact Form from {name}"
+        content = f"New Message from: {name}\nEmail: {email}\n\n{message}\n "
+        # Send the email
+        email_message = EmailMessage(
+            subject=subject,
+            body=content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[settings.DEFAULT_FROM_EMAIL],
+            reply_to=[email]
+        )
+        # Set X_Priority to flag the email as important
+        email_message.extra_headers = {'X-Priority': '1'}
+        email_message.send()
+        
+        # Show a success message
+        messages.success(request, 'Your message has been sent!')
+        
+        # Get the next parameter from form and redirect back
+        next_url = request.POST.get('next') or 'home'
+
+        return redirect(next_url)
+
+    # For a GET request, just render the contact form
+    return render(request, 'contact.html')
+
+
+# View to handle the "Tester/Beta Access" Form
 # We include is_tester validation but after authentication is checked 
 # to avoid errors for non logged in users
-def contact_view(request):
-    is_tester = is_in_group(
-        request.user, 'testers') if request.user.is_authenticated else False
-    return render(request, 'contact.html', {'is_tester': is_tester})
-
-
-# Apply for special access form (view)
+# renamed from "contact"
 @login_required
-def apply_for_special_access(request):
+def beta_contact_view(request):
+    is_tester = is_in_group(
+        request.user, 'testers')  ## removed: if request.user.is_authenticated else False
+    return render(request, 'beta_contact.html', {'is_tester': is_tester})
+
+
+# Apply for beta access form (view)
+@login_required
+def apply_for_beta_access(request):
     is_tester = is_in_group(request.user, 'testers')
+
     if request.method == 'POST':
-        # Process form submission (store application ina model,
-        # send email, etc)
+        # Process form submission (email me and store response in db)
+        reason = request.POST.get('why')
+        
+        # Send an email to notify the admin of the application
+        subject = f"{request.user} applied for Beta Access",
+        content = f"User {request.user.username} applied for beta access. Reason:\n\n{reason}"
+        
+        send_mail(
+            subject,
+            content,
+            settings.DEFAULT_FROM_EMAIL,
+            [settings.DEFAULT_FROM_EMAIL]  # Admin email
+        )
+        
+        # Thank the user and redirect
+        messages.success(request, 'Thank you for applying for Beta Access. You will be notified when your application is reviewed.')
+        return HttpResponseRedirect(reverse('beta_features'))
+    
+        # Redirect to beta features page after form submission
         # For now, we'll assume manual approval through the admin panel
         # Redirect after applying
-        return HttpResponseRedirect(reverse('special_features'))
+        return HttpResponseRedirect(reverse('beta_features'))
 
-    # Render the form for applying for access and pass is_tester
-    return render(request, 'apply_for_special_access.html', {
+    # Render the beta access form
+    return render(request, 'apply_for_beta_access.html', {
         'is_tester': is_tester})
 
 
@@ -48,21 +104,21 @@ def is_in_group(user, group_name):
     # return user.groups.filter(name=group_name).exists()
 
 
-# This is the Special Features View
+# This is the Beta Features View
 @login_required
-def special_features_view(request):
-    logger.info("Special Features View Called")
+def beta_features_view(request):
+    logger.info("Beta Features View Called")
     
     # Debug Check view is called
-    # print("Special Features View called")
+    # print("Beta Features View called")
     # Check if user is in the testers group
     is_tester = is_in_group(request.user, 'testers')
     logger.info(f"User {request.user} in in group testers: {is_tester}")
     # Display a list of apps the user has access to
-    return render(request, 'special_features.html', {'is_tester': is_tester})
+    return render(request, 'beta_features.html', {'is_tester': is_tester})
 
 
-# Special Access YouTube Data Checker View
+# Beta Access YouTube Data Checker View
 @login_required
 def youtube_checker_view(request):
     # Check if user is in the testers group

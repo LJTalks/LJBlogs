@@ -85,7 +85,7 @@ def post_detail(request, slug):
                 request,
                 messages.SUCCESS, "Comment submitted and awaiting approval"
             )
-        # Redirect after seccessful POST to avoid resumbit
+        # Redirect after successful POST to avoid resubmit
         return HttpResponseRedirect(reverse('post_detail', args=[slug]))
     
     else:
@@ -103,6 +103,7 @@ def post_detail(request, slug):
             "blog_comment_form": blog_comment_form,
         },
     )
+
 
 def blog_comment_edit(request, slug, blog_comment_id):
     """
