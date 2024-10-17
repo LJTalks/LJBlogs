@@ -103,8 +103,8 @@
                 </form>
                 {% else %}
                 <p>You must log in to leave a comment</p>
-                <a href="{% url 'account_login' %}" class="btn btn-primary btn-sm me-2">Sign In</a>
-                <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-sm me-2">Register</a>
+                <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-sm me-2">Log In</a>
+                <a href="{% url 'account_signup' %}?next={{ request.path }}" class="btn btn-secondary btn-sm me-2">Register</a>
                 {% endif %}
             </div>
         </div>

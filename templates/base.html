@@ -62,13 +62,13 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == contact_url %}active{% endif %}" aria-current="page"
-                        href="{% url 'contact' %}">Contact Me</a>
+                        href="{% url 'contact' %}?next={{ request.path }}">Contact Me</a>
                     </li>                    
                     <!-- Behind password login -->
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page"
-                        href="{% url 'account_logout' %}">Logout</a>
+                        href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a>
                     </li>
                         {% if is_tester %}
                             <!-- Display Beta Features link if user is tester -->
@@ -88,11 +88,11 @@
                     <!-- User not logged in, show register and login links -->
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == signup_url %}active{% endif %}" aria-current="page"
-                            href="{% url 'account_signup' %}">Register</a>
+                            href="{% url 'account_signup' %}?next={{ request.path }}">Register</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == login_url %}active{% endif %}" aria-current="page"
-                            href="{% url 'account_login' %}">Login</a>
+                            href="{% url 'account_login' %}?next={{ request.path }}">Login</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -133,7 +133,7 @@
     <!-- Footer -->
     <footer class="footer bg-secondary mt-auto py-3 text-center">
         <p class="m-0 text-center text-white">2024 LJTalks | All rights reserved</p>
-        <a href="{% url 'contact' %}" id="emailLinkDark" class="text-white">Get in Touch</a>
+        <a href="{% url 'contact' %}?next={{ request.path }}" id="emailLinkDark" class="text-white">Get in Touch</a>
         
         <!-- Social Media Links -->
         <div class="d-flex justify-content-center">
