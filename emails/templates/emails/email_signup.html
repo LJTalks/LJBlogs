@@ -9,17 +9,22 @@
     <!-- Display email field differently based on user authentication -->
     {% if request.user.is_authenticated %}
         <p>Email: {{ form.email.value }}</p>  <!-- Show the email as plain text for logged-in users -->
-        {{ form.list_type.label_tag }}<br>
+        <label for="{{ form.list_type.id_for_label }}">{{ form.list_type.label }}</label><br>
         {{ form.list_type }}  <!-- Render checkboxes for ListType -->
     {% else %}
-        {{ form.email.label_tag }}<br>
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label><br>
         {{ form.email }}<br>  <!-- Allow unregistered users to edit their email -->
-        {{ form.list_type.label_tag }}<br>
+        <label for="{{ form.list_type.id_for_label }}">{{ form.list_type.label }}</label><br>
         {{ form.list_type }}  <!-- Render checkboxes for ListType -->
     {% endif %}
 
-    <p>We never share your data, and you can unsubscribe at any time.</p>
-    <!-- one submit button, with text that changes based on user status -->
+    <!-- Ensure the "Unsubscribed" option is hidden but remains functional -->
+    <input type="checkbox" name="list_type" value="3" id="unsubscribedCheckbox" style="display: none;">
+
+
+    <p>We wont share your data, and you can unsubscribe at any time.</p>
+    
+    <!-- Submit button -->
     <button type="submit">
         {% if request.user.is_authenticated %}
             Update Preferences
@@ -29,4 +34,24 @@
     </button>
 </form>
 
+<!-- Unsubscribe Confirmation Modal -->
+<div class="modal fade" id="unsubscribeModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unsubscribeModalLabel">Unsubscribe from all lists?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                It looks like you're about to unsubscribe from all email lists. Do you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="confirmUnsubscribe" class="btn btn-danger">Unsubscribe</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/unsubscribe.js' %}"></script>
 {% endblock content %}

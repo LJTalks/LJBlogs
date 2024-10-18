@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<h2>Are you sure you want to unsubscribe from all email lists?</h2>
+<form method="POST" action="{% url 'confirm_unsubscribe' %}?next={{ next_url }}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Unsubscribe</button>
+    <a href="{{ next_url }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock content %}

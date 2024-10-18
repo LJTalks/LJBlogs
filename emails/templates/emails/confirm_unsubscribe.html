@@ -1,0 +1,17 @@
+# views.py
+def confirm_unsubscribe(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            subscriber = EmailListSubscriber.objects.filter(user=request.user).first()
+            if subscriber:
+                subscriber.list_type.clear()
+                messages.info(request, "You've been unsubscribed from all lists.")
+        else:
+            email = request.POST.get('email')
+            subscriber = EmailListSubscriber.objects.filter(list_email=email).first()
+            if subscriber:
+                subscriber.list_type.clear()
+                messages.info(request, "You've been unsubscribed from all lists.")
+
+    next_url = request.GET.get('next', '/')
+    return redirect(next_url)
