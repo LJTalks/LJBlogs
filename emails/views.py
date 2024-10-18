@@ -1,41 +1,55 @@
 from django.shortcuts import render, redirect
 from .forms import EmailSignupForm
 from django.contrib import messages
-from .models import ListType, EmailListSubscriber
+from .models import EmailListSubscriber
+
 
 def email_signup(request):
     next_url = request.GET.get('next', '/')
 
     if request.method == 'POST':
-        form = EmailSignupForm(request.POST, user=request.user)
-        if form.is_valid():
-            # Check if the user is logged in
-            if request.user.is_authenticated:
-                # Check if they have already signed up with this email
-                subscriber, created = EmailListSubscriber.objects.get_or_create(
-                    user=request.user, email=form.cleaned_data['email'], defaults={
-                        'list_type': form.cleaned_data['list_type'],
-                        'source': request.META.get('HTTP_REFERER'),
-                    }
-                )
-                if not created:
-                    subscriber.list_type = form.cleaned_data['list_type']
-                    subscriber.save()
-            else:
-                # If they are not logged in, just save the email and list type
-                subscriber, created = EmailListSubscriber.objects.get_or_create(
-                    email=form.cleaned_data['email'], defaults={
-                        'list_type': form.cleaned_data['list_type'],
-                        'source': request.META.get('HTTP_REFERER'),
-                    }
-                )
-                if not created:
-                    subscriber.list_type = form.cleaned_data['list_type']
-                    subscriber.save()
+        form = EmailSignupForm(request.POST, user=request.user)  # Pass the user to the form
 
-            messages.success(request, 'Thank you for subscribing!')
+        if form.is_valid():
+            list_types = form.cleaned_data['list_type']
+            source = request.META.get('HTTP_REFERER', '')
+
+            # For authenticated users, use their registered email
+            if request.user.is_authenticated:
+                subscriber, created = EmailListSubscriber.objects.get_or_create(
+                    user=request.user,  # Tied to the account
+                    defaults={'list_email': request.user.email,
+                              'source': source}
+                )
+                # Update list type preferences
+                subscriber.list_type.set(list_types)
+                subscriber.save()
+            
+            # For unauthenticated users, allow them to update preferences if they exist
+            else:
+                email = form.cleaned_data['email']  # Get email from form
+                subscriber, created = EmailListSubscriber.objects.get_or_create(
+                    list_email=email,  # Use the provided email for unregistered user
+                    defaults={'list_type': list_types, 'source': source}
+                )
+                # Update list type preferences
+                subscriber.list_type.set(list_types)
+                subscriber.save()
+                
+            messages.success(
+                request, 'Your preferences have been updated!' if not created else "Thank you for subscribing!")
             return redirect(next_url)
+
     else:
-        form = EmailSignupForm(user=request.user)
+        # Pre-fill the form if authenticated and disable the field
+        if request.user.is_authenticated:
+            try:
+                subscriber = EmailListSubscriber.objects.get(user=request.user)
+                form = EmailSignupForm(
+                    user=request.user, initial={'list_type': subscriber.list_type.all()})
+            except EmailListSubscriber.DoesNotExist:
+                form = EmailSignupForm(user=request.user)
+        else:
+            form = EmailSignupForm()  # Empty form for unregistered users
 
     return render(request, 'emails/email_signup.html', {'form': form})

@@ -6,14 +6,27 @@
 <form method="POST" action="{% url 'email_signup' %}?next={{ request.GET.next|default_if_none:'' }}">
     {% csrf_token %}
 
-    {{ form.email.label_tag }}<br>
-    {{ form.email }}<br>
-
-    <p>Select the types of emails you’d like to receive:</p>
-    {{ form.list_type }}  <!-- This will render the choices from ListType -->
+    <!-- Display email field differently based on user authentication -->
+    {% if request.user.is_authenticated %}
+        <p>Email: {{ form.email.value }}</p>  <!-- Show the email as plain text for logged-in users -->
+        {{ form.list_type.label_tag }}<br>
+        {{ form.list_type }}  <!-- Render checkboxes for ListType -->
+    {% else %}
+        {{ form.email.label_tag }}<br>
+        {{ form.email }}<br>  <!-- Allow unregistered users to edit their email -->
+        {{ form.list_type.label_tag }}<br>
+        {{ form.list_type }}  <!-- Render checkboxes for ListType -->
+    {% endif %}
 
     <p>We never share your data, and you can unsubscribe at any time.</p>
-    <button type="submit">Join Mailing List</button>
+    <!-- one submit button, with text that changes based on user status -->
+    <button type="submit">
+        {% if request.user.is_authenticated %}
+            Update Preferences
+        {% else %}
+            Join Mailing List
+        {% endif %}
+    </button>
 </form>
 
 {% endblock content %}

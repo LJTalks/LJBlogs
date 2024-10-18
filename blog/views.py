@@ -38,21 +38,20 @@ def post_detail(request, slug):
     
     # Track views for logged-in users
     if request.user.is_authenticated:
-        ViewRecord.objects.create(post=post, user=request.user)
-        post.views += 1
-        post.viewed_by.add(request.user)
-    else:
-        # Track views for annonymous users using sessions
-        session_key = f"viewed_post_{post.id}"
-        if not request.session.get(session_key, False):
+        # Check ifthe logged in user has already viewed this post
+        if not post.viewed_by.filter(id=request.user.id).exists():
+            post.viewed_by.add(request.user)
             post.views += 1
             post.save()
-            request.session[session_key] = True
-   
-    # Increment the total view count
-    post.views += 1
-    post.save()
- 
+        else:
+            # Track views for annonymous users using sessions
+            session_key = f"viewed_post_{post.id}"
+            if not request.session.get(session_key, False):
+                post.views += 1
+                post.save()
+                request.session[session_key] = True
+    
+
     # Get the previous post    
     previous_post = Post.objects.filter(
         created_on__lt=post.created_on, status=1).order_by(

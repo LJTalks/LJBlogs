@@ -45,8 +45,9 @@ class CustomUserAdmin(UserAdmin):
     
     # Method to check if user is subscribed to the email list
     def is_email_subscriber(self, obj):
-        return EmailListSubscriber.objects.filter(email=obj.email).exists()
-    
+        return EmailListSubscriber.objects.filter(
+            user=obj).exists()
+
     is_email_subscriber.boolean = True
     is_email_subscriber.short_description = "Email List Subscriber"
 
