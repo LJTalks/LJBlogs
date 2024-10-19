@@ -13,7 +13,6 @@ def email_signup(request):
         print(f"Form Data: {request.POST}")
 
         form = EmailSignupForm(request.POST, user=request.user)
-
         print(f"Is form valid? {form.is_valid()}")
 
         if form.is_valid():
@@ -23,47 +22,33 @@ def email_signup(request):
             # Fetch the 'Unsubscribed' list type for later use
             unsubscribed_type = ListType.objects.get(name="Unsubscribed")
 
-            # For authenticated users, use their registered email
+            # Determine if the user is authenticated and set subscriber data accordingly
             if request.user.is_authenticated:
                 subscriber, created = EmailListSubscriber.objects.get_or_create(
                     user=request.user,
                     defaults={'list_email': request.user.email, 'source': source}
                 )
-                # Update list type preferences
-                if list_types:
-                    if unsubscribed_type in list_types and len(list_types) > 1:
-                        # Remove 'Unsubscribed' if other lists are selected
-                        list_types = [lt for lt in list_types if lt != unsubscribed_type]
-                    subscriber.list_type.set(list_types)
-                    messages.success(request, "Your preferences have been updated!")
-                else:
-                    # No lists selected: automatically set 'Unsubscribed'
-                    subscriber.list_type.set([unsubscribed_type])
-                    messages.info(request, "You've been unsubscribed from all lists.")
-
-                subscriber.save()
-
-            # For unauthenticated users
             else:
                 email = form.cleaned_data['email']
                 subscriber, created = EmailListSubscriber.objects.get_or_create(
                     list_email=email,
-                    defaults={'list_type': list_types, 'source': source}
+                    defaults={'source': source}
                 )
-                # Update list type preferences
-                if list_types:
-                    if unsubscribed_type in list_types and len(list_types) > 1:
-                        # Remove 'Unsubscribed' if other lists are selected
-                        list_types = [lt for lt in list_types if lt != unsubscribed_type]
-                    subscriber.list_type.set(list_types)
-                    messages.success(request, "Your preferences have been updated!")
-                else:
-                    # No lists selected: automatically set 'Unsubscribed'
-                    subscriber.list_type.clear()
-                    messages.info(request, "We're sorry to see you go. You've been unsubscribed from all lists.")
 
-                subscriber.save()
+            # Update list type preferences for both authenticated and unauthenticated users
+            if list_types:
+                if unsubscribed_type in list_types and len(list_types) > 1:
+                    # Remove 'Unsubscribed' if other lists are selected
+                    list_types = [lt for lt in list_types if lt != unsubscribed_type]
+                subscriber.list_type.set(list_types)
+                messages.success(request, "Your preferences have been updated!")
+            else:
+                # No lists selected: automatically set 'Unsubscribed'
+                subscriber.list_type.clear()
+                subscriber.list_type.add(unsubscribed_type)
+                messages.info(request, "You've been unsubscribed from all lists.")
 
+            subscriber.save()
             return redirect(next_url)
 
         else:
