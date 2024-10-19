@@ -11,6 +11,10 @@
     --approval-color: rgb(222, 146, 168);
 }
 
+input[name="honeytrap"] {
+    display: none;
+}
+
 .masthead-image {
     object-fit: cover;
     width: 100%;

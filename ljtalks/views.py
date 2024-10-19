@@ -7,6 +7,7 @@ import logging
 from django.core.mail import EmailMessage, send_mail
 from django.conf import settings
 from django.contrib import messages
+from .forms import ContactForm
 
 
 logger = logging.getLogger(__name__)
@@ -15,34 +16,48 @@ logger = logging.getLogger(__name__)
 # General contact form (for anyone)
 def contact_submit(request):
     if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        message = request.POST['message']
-        # Prepare the email content
-        subject = f"LJTalks Contact Form from {name}"
-        content = f"New Message from: {name}\nEmail: {email}\n\n{message}\n "
-        # Send the email
-        email_message = EmailMessage(
-            subject=subject,
-            body=content,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[settings.DEFAULT_FROM_EMAIL],
-            reply_to=[email]
-        )
-        # Set X_Priority to flag the email as important
-        email_message.extra_headers = {'X-Priority': '1'}
-        email_message.send()
+        form = ContactForm(request.POST)
         
-        # Show a success message
-        messages.success(request, 'Your message has been sent!')
-        
-        # Get the next parameter from form and redirect back
-        next_url = request.POST.get('next') or 'home'
-
-        return redirect(next_url)
+        if form.is_valid():
+            # Check the honeypot field
+            if form.cleaned_data['honeytrap']:
+                # If field is completed it's bot's
+                # Redirect without sending any email or showing any message
+                return redirect('contact')
+            else:
+                # Process the valid form submission from a real user
+                name = form.cleaned_data['name']
+                email = form.cleaned_data['email']
+                message = form.cleaned_data['message']
+                
+                # Prepare the email content
+                subject = f"LJTalks Contact Form from {name}"
+                content = f"New Message from: {name}\nEmail: {email}\n\n{message}\n "
+                # Send the email
+                email_message = EmailMessage(
+                    subject=subject,
+                    body=content,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[settings.DEFAULT_FROM_EMAIL],
+                    reply_to=[email]
+                )
+                # Set X_Priority to flag the email as important
+                email_message.extra_headers = {'X-Priority': '1'}
+                email_message.send()
+                
+                # Show a success message
+                messages.success(request, 'Your message has been sent!')
+                
+                # Get the next parameter from form and redirect back
+                next_url = request.POST.get('next') or 'home'
+                return redirect(next_url)
+        else:
+            messages.error(request, 'There was an error in the form.')
+    else:
+        form = ContactForm()  # If it's a GET request, just render the empty form
 
     # For a GET request, just render the contact form
-    return render(request, 'contact.html')
+    return render(request, 'contact.html', {'form': form })
 
 
 # View to handle the "Tester/Beta Access" Form

@@ -15,6 +15,8 @@ class CustomUserAdmin(UserAdmin):
         'previous_last_login',
         'date_joined',
         'is_tester',
+        'is_staff',         # Added field for staff status
+        'is_superuser',      # Added field for superuser status
         'is_email_subscriber'
     )
     
