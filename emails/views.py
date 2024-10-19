@@ -59,8 +59,8 @@ def email_signup(request):
                     messages.success(request, "Your preferences have been updated!")
                 else:
                     # No lists selected: automatically set 'Unsubscribed'
-                    subscriber.list_type.set([unsubscribed_type])
-                    messages.info(request, "You've been unsubscribed from all lists.")
+                    subscriber.list_type.clear()
+                    messages.info(request, "We're sorry to see you go. You've been unsubscribed from all lists.")
 
                 subscriber.save()
 
