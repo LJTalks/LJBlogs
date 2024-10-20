@@ -74,7 +74,7 @@
             <div class="card-body">
                 {% for blog_comment in blog_comments %}
                 <div class="p-2 comments {% if blog_comment.status == 0 and blog_comment.author == user %} faded{% elif blog_comment.status == 0 %} d-none{% endif %}">
-                    <p class="font-weight-bold">{{ blog_comment.author }}
+                    <p class="font-weight-bold">{{ blog_comment.author.username if blog_comment.author else "Deleted User" }}
                         <span class="font-weight-normal"> {{ blog_comment.created_on }} </span> wrote:
                     </p>
                     <div id="blog_comment{{ blog_comment.id }}">
