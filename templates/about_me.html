@@ -6,34 +6,61 @@
 {% block seo_tags %}
 
 {% endblock seo_tags %}
-
 {% block content %}
 
 <!-- post_list.html content starts here -->
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10 col-sm-12">
-            <!-- Centering the image --><!-- TODO sort the static image links or add via cloudinary -->
-             <div>
-                <img src="{% static "images/githubstreak2024-10-12.png" %}" alt="GitHub Streak for LJ Talks">
-            </div>
-            <p>Here's a <strong>cool tool</strong> I found while poking around looking at how to display my GitHub streak!</p>
-            <div class="text-center">
-                <img src="https://github-readme-streak-stats.herokuapp.com/?user=ljtalks" alt="LJ Talks GitHub Streak" class="img-fluid">
-            </div>
-            <br>
-            <p><strong>Readme Stats:</strong> This project, <a href="https://github.com/anuraghazra/github-readme-stats">Anuraghazra Repo</a> uses the GitHub API to fetch and display contribution streaks in your README file. You can embed it in your website as well.</p>
-            <p>Example of the URL for a streak:</p>
-            <!-- Terminal-like style using pre and code -->
-            <pre class="bg-dark text-light p-3 rounded"><code>https://github-readme-streak-stats.herokuapp.com/?user=yourusername</code></pre>
-            <p>This service automatically updates every day, and you can customize it with parameters for appearance.</p>
-            <p>For more information on my ever-evolving site, take a look at <a href="https://github.com/LJTalks/LJBlogs/blob/main/README.md">my README</a> which exposes some of my plans!</p>
-            <p>I have so many ideas, you'll often find me running around like a headless chicken doing all sorts of things all over the place.</p>
-            <p>I love problem solving.</p>
-            <!-- Center the button -->
-            <div class="text-center">
-                <a href="{% url 'contact' %}?next={{ request.path }}" id="contact" class="btn btn-primary">Get in touch</a>
-            </div>
+<div class="container mt-5">
+
+    <!-- GitHub Streak Banner -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <img src="{% static 'images/githubstreak2024-10-12.png' %}" class="img-fluid" alt="GitHub Streak Banner" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+
+    <!-- About Me Section -->
+    <div class="row mt-5 justify-content-center">
+        <!-- Profile Image -->
+        <div class="col-md-4 text-center mb-4">
+            <img src="{% static 'images/mtb_laura.png' %}" 
+                 class="img-fluid rounded-circle shadow" 
+                 alt="Laura's Profile Image" 
+                 style="max-width: 200px; height: auto; 
+                        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+                        border: 4px solid #FF0077; 
+                        filter: drop-shadow(0 0 15px rgba(255, 0, 119, 0.4));">
+        </div>
+
+        <!-- About Me Text -->
+        <div class="col-md-8">
+            <h1>About Me</h1>
+            <p class="lead">
+                Hello! I’m Laura! About 18 months ago, I found myself at a major crossroads. I had to close my childcare business, 
+                which I'd run for 15 years, and suddenly I didn’t know what I was going to do next. 
+            </p>
+            <p>
+                Things were tough, and for a while I struggled to do much at all. But I knew the only one who could really change things was me. 
+            </p>
+            <p>    
+                A few years ago, I taught myself video editing as a hobby, and even started a YouTube channel (It's still around, just a bit quiet at the moment). 
+                Through that, I found a wonderful community and made lasting friendships. But when my childcare career ended, I needed work that could be flexible around my family. 
+            </p>
+        </div>
+        <div class="col-md-9"></div>
+            <p>I'd noticed lots of opportunites to make money online. I tried a few different things, some successful and some not so much, but the more I learned, the more I started to see patterns in what worked and what didn’t.
+                I discovered some amazing creators who have walked the walk, and offer valuable knowledge. They helped me to see that building an online business is definitely possible, simple even! Just not always easy. Building from nothing requires real effort, sacrifices and time. 
+            </p>
+            <p> I also noticed, the ones who are really successful share the love. There's nothing better than when someone is just a little bit further ahead of you, and passes you a nugget of informtaion that saves you masses of time on the journey.
+            </p>
+            <p>
+                Five months ago, I started a coding course. I wanted to learn how to build websites, so I could create a blog and maybe showcase some affiliate links. Little did I know, I was about to become a full stack developer, diving headfirst into Django, Python and JavaScript!
+            </p>
+            <p>
+                I’ve loved every bit of this journey so far, and now, as I focus on building this site, I’m excited to share what I’ve learned. Thanks for stopping by. This is just the beginning!
+            </p>
+        </div>
+        <div class="text-center">
+            <a href="{% url 'contact' %}?next={{ request.path }}" id="contact" class="btn btn-primary">Get in touch</a>
         </div>
     </div>
 </div>
