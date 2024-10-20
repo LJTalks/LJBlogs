@@ -31,7 +31,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-RECAPTCHA_PUBLIC_KEY = '6LdLP2YqAAAAAJ6xcB_Tk7AYQls2x78VpQ67nPn_'
 RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!

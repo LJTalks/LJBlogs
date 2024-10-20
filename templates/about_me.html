@@ -32,7 +32,7 @@
             <p>I love problem solving.</p>
             <!-- Center the button -->
             <div class="text-center">
-                <a href="#" id="emailLinkLight" class="btn btn-primary">Get in touch</a>
+                <a href="{% url 'contact' %}?next={{ request.path }}" id="contact" class="btn btn-primary">Get in touch</a>
             </div>
         </div>
     </div>
