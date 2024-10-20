@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.urls import reverse
 from .models import EmailListSubscriber, ListType  # Include ListType model
 import requests
+from django.conf import settings
 
 
 # views.py
@@ -22,7 +23,8 @@ def email_signup(request):
             'response': recaptcha_response
         }
         # Send the request to Google for verification
-        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        r = requests.post(
+            'https://www.google.com/recaptcha/api/siteverify', data=data)
         result = r.json()
 
         # If reCAPTCHA is not successful, return an error
@@ -41,7 +43,7 @@ def email_signup(request):
             # Fetch the 'Unsubscribed' list type for later use
             unsubscribed_type = ListType.objects.get(name="Unsubscribed")
 
-            # Determine if the user is authenticated and set subscriber data accordingly
+            # Determine if user is authenticated, set subscriber data
             if request.user.is_authenticated:
                 subscriber, created = EmailListSubscriber.objects.get_or_create(
                     user=request.user,

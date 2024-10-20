@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 # from django.contrib.auth.models import Group
 import logging
+import requests
 from django.core.mail import EmailMessage, send_mail
 from django.conf import settings
 from django.contrib import messages
@@ -16,6 +17,24 @@ logger = logging.getLogger(__name__)
 # General contact form (for anyone)
 def contact_submit(request):
     if request.method == 'POST':
+        # Get reCAPTCHA token from the POST data
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+
+        # Verify the reCAPTCHA token with Google
+        data = {
+            'secret': settings.RECAPTCHA_PRIVATE_KEY,  # Your private key
+            'response': recaptcha_response
+        }
+        # Send the request to Google for verification
+        r = requests.post(
+            'https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = r.json()
+
+        # If reCAPTCHA is not successful, return an error
+        if not result['success']:
+            messages.error(request, 'Invalid reCAPTCHA. Please try again.')
+            return redirect('contact')
+        
         form = ContactForm(request.POST)
         
         if form.is_valid():

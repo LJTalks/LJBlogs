@@ -3,55 +3,71 @@
 {% block content %}
 {% load static %}
 
-<form method="POST" action="{% url 'email_signup' %}?next={{ request.GET.next|default_if_none:'' }}">
-    {% csrf_token %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-5">
+            <div class="card p-4 shadow-sm">
+                <form method="POST" action="{% url 'email_signup' %}?next={{ request.GET.next|default_if_none:'' }}">
+                    {% csrf_token %}
 
-    <!-- Display email field differently based on user authentication -->
-    {% if request.user.is_authenticated %}
-        <p>Email: {{ form.email.value }}</p>  <!-- Show the email as plain text for logged-in users -->
-        <label for="{{ form.list_type.id_for_label }}">{{ form.list_type.label }}</label><br>
-        {{ form.list_type }}  <!-- Render checkboxes for ListType -->
-    {% else %}
-        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label><br>
-        {{ form.email }}<br>  <!-- Allow unregistered users to edit their email -->
-        <label for="{{ form.list_type.id_for_label }}">{{ form.list_type.label }}</label><br>
-        {{ form.list_type }}  <!-- Render checkboxes for ListType -->
-    {% endif %}
+                    <!-- Display email field differently based on user authentication -->
+                    <div class="form-group mb-3">
+                        {% if request.user.is_authenticated %}
+                            <p>Email: <strong>{{ form.email.value }}</strong></p>  <!-- Show the email as plain text for logged-in users -->
+                        {% else %}
+                            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                            {{ form.email }}<br>  <!-- Allow unregistered users to edit their email -->
+                        {% endif %}
+                    </div>
 
-    <!-- Ensure the "Unsubscribed" option is hidden but remains functional -->
-    <input type="checkbox" name="list_type" value="3" id="unsubscribedCheckbox" style="display: none;">
+                    <!-- List Type checkboxes -->
+                    <div class="form-group mb-3">
+                        <label for="{{ form.list_type.id_for_label }}">{{ form.list_type.label }}</label><br>
+                        {{ form.list_type }}
+                    </div>
 
+                    <!-- Ensure the "Unsubscribed" option is hidden but remains functional -->
+                    <input type="checkbox" name="list_type" value="3" id="unsubscribedCheckbox" style="display: none;">
 
-    <p>We wont share your data, and you can unsubscribe at any time.</p>
-    
-    <!-- Submit button -->
-    <button type="submit">
-        {% if request.user.is_authenticated %}
-            Update Preferences
-        {% else %}
-            Join Mailing List
-        {% endif %}
-    </button>
-</form>
+                    <p>We won't share your data, and you can unsubscribe at any time.</p>
 
-<!-- Unsubscribe Confirmation Modal -->
-<div class="modal fade" id="unsubscribeModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="unsubscribeModalLabel">Unsubscribe from all lists?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <!-- reCAPTCHA widget -->
+                     <div class="g-recaptcha" data-sitekey="6LdLP2YqAAAAAJ6xcB_Tk7AYQls2x78VpQ67nPn_"></div>
+
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-warning w-100">
+                        {% if request.user.is_authenticated %}
+                            Update Preferences
+                        {% else %}
+                            Join Mailing List
+                        {% endif %}
+                    </button>
+                </form>
+                <!-- Load the reCAPTCHA script -->
+                 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
             </div>
-            <div class="modal-body">
-                It looks like you're about to unsubscribe from all email lists. Do you want to proceed?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button id="confirmUnsubscribe" class="btn btn-danger">Unsubscribe</button>
+        </div>
+    </div>
+
+    <!-- Unsubscribe Confirmation Modal -->
+    <div class="modal fade" id="unsubscribeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="unsubscribeModalLabel">Unsubscribe from all lists?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    It looks like you're about to unsubscribe from all email lists. Do you want to proceed?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="confirmUnsubscribe" class="btn btn-danger">Unsubscribe</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script src="{% static 'js/unsubscribe.js' %}"></script>
-{% endblock content %}
+{% endblock %}

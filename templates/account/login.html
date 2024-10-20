@@ -6,56 +6,57 @@
 
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 mt-3 offset-md-2">
-            <h3>{% trans "Log In" %}</h3>
-            <p>{% blocktrans %}Welcome back to LJ Talks. Please log in to your account. If you have not created an account yet, please <a class="link" href="{{ signup_url }}">Register</a>{% endblocktrans %}</p>
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-5">
+            <div class="card p-4 shadow-sm">
+                <h3 class="text-center mb-4">{% trans "Log In" %}</h3>
+                <p class="text-center">{% blocktrans %}Welcome back to LJ Talks. Please log in to your account. If you have not created an account yet, please <a class="link" href="{{ signup_url }}">Register</a>{% endblocktrans %}</p>
+
+                <!-- Login form -->
+                <form class="login" method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    <!-- Username or Email Field -->
+                    <div class="form-group mb-3">
+                        <label for="id_login">{% trans "Username or Email" %}</label>
+                        {{ form.login }}
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group mb-3">
+                        <label for="id_password">{% trans "Password" %}</label>
+                        {{ form.password }}
+                        <input type="checkbox" onclick="togglePassword()"> {% trans "Show Password" %}
+                    </div>
+
+                    <!-- Forgot password link -->
+                    <p class="mb-3"><a href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a></p>
+
+                    <!-- Hidden input for redirect -->
+                    {% if redirect_field_value %}
+                       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+
+                    <!-- Submit button -->
+                    <button class="btn btn-warning w-100" type="submit">{% trans "Log In" %}</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-8 mt-3 offset-md-2">
-            <form class="login" method="POST" action="{% url 'account_login' %}">
-                {% csrf_token %}
-                <!-- Username or Email Field -->
-                <div class="form-group mb-3">
-                    <label for="id_login">{% trans "Username or Email" %}</label>
-                    {{ form.login }}
-                </div>
-
-                <!-- Show password -->
-                <div class="form-group mb-3">
-                    <label for="id_password">{% trans "Password" %}</label>
-                    {{ form.password }}
-                    <input type="checkbox" onclick="togglePassword()"> {% trans "Show Password" %}
-                </div>
-
-                <!-- Forgot password link -->
-                <p class="mb-3"><a href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a></p>
-
-                <!-- Hidden input for redirect -->
-                {% if redirect_field_value %}
-                   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                {% endif %}
-
-                <!-- Add the yellow button back -->
-                <button class="btn btn-warning right" type="submit">{% trans "Log In" %}</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Optionally include social login options -->
+    <!-- Optionally include social login options
     {% get_providers as socialaccount_providers %}
     {% if socialaccount_providers %}
-    <div class="row">
-        <div class="col-md-8 mt-3 offset-md-2">
-            <h3>{% trans "Or Log In with a Social Account" %}</h3>
-            <ul class="socialaccount_providers">
-                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-            </ul>
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-4">
+            <div class="card p-4 shadow-sm">
+                <h3 class="text-center mb-3">{% trans "Or Log In with a Social Account" %}</h3>
+                <ul class="list-unstyled text-center">
+                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                </ul>
+            </div>
         </div>
     </div>
-    {% endif %}
+    {% endif %} -->
 </div>
 
 <script>
@@ -70,4 +71,3 @@
 </script>
 
 {% endblock %}
-

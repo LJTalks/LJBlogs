@@ -1,6 +1,5 @@
 from django import forms
-from captcha.fields import CaptchaField
-# from captcha.widgets import ReCaptchaV2Checkbox
+# from captcha.fields import ReCaptchaField
 
 
 class ContactForm(forms.Form):
@@ -8,4 +7,4 @@ class ContactForm(forms.Form):
     email = forms.EmailField(required=True)
     message = forms.CharField(widget=forms.Textarea, required=True)
     honeytrap = forms.CharField(required=False, widget=forms.HiddenInput)
-    # recaptcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)  # Add reCAPTCHA
+    # recaptcha = ReCaptchaField()  # Add reCAPTCHA
