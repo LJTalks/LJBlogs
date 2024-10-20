@@ -26,6 +26,10 @@ class Post(models.Model):
     featured_image = CloudinaryField(
         'image', null=True, blank=True, default='placeholder'
         )
+    alt_text = models.CharField(
+        max_length=255, blank=True, help_text="Alt text for image")
+    image_credit = models.CharField(
+        max_length=255, blank=True, help_text="Credit for the image")
     content = models.TextField()
     excerpt = models.TextField(blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -53,6 +57,7 @@ class Post(models.Model):
 
 # BlogComments (in blog Post Detail) models here.
 BLOG_COMMENT_STATUS = ((0, "Submitted"), (1, "Approved"))
+
 
 class BlogComment(models.Model):
     post = models.ForeignKey(

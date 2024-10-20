@@ -26,7 +26,7 @@ def about_me(request):
 
 
 class PostList(generic.ListView):
-    queryset = Post.objects.filter(status=1).order_by("-created_on")
+    queryset = Post.objects.filter(status=1).order_by("-publish_date")
     template_name = "blog/post_list.html"
     paginate_by = 6
 
@@ -51,16 +51,15 @@ def post_detail(request, slug):
                 post.save()
                 request.session[session_key] = True
     
-
     # Get the previous post    
     previous_post = Post.objects.filter(
-        created_on__lt=post.created_on, status=1).order_by(
-            '-created_on').first()
+        publish_date__lt=post.publish_date, status=1).order_by(
+            '-publish_date').first()
 
     # Get the next post
     next_post = Post.objects.filter(
-        created_on__gt=post.created_on, status=1).order_by(
-            'created_on').first()
+        publish_date__gt=post.publish_date, status=1).order_by(
+            'publish_date').first()
 
     # Get comments
     blog_comments = post.blog_comments.all().order_by("-created_on")

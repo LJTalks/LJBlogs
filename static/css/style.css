@@ -100,7 +100,23 @@ main {
 
 /* Image containers */
 .image-container {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+.image-credit {
+    margin-top: 5px; /* Adjust spacing as needed */
+    text-align: center;
+    color: #777;
+    max-width: 100%;
+    height: auto;
 }
 
 .image-flash {

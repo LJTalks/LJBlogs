@@ -23,11 +23,14 @@
 
         <!-- Post Masthead Image -->
         <div class="col-md-6 d-none d-md-block">
-            {% if "placeholder" in post.featured_image.url %}
-            <img src="{% static 'images/default.jpg' %}" class="img-fluid rounded w-100" alt="placeholder" style="object-fit: cover; height: 250px;">
-            {% else %}
-            <img src="{{ post.featured_image.url }}" class="img-fluid rounded" alt="{{ post.title }}" style="object-fit: cover; height: 250px;">
-            {% endif %}
+            <div class="image-container">
+                {% if "placeholder" in post.featured_image.url %}
+                <img src="{% static 'images/default.jpg' %}" class="img-fluid rounded w-100" alt="placeholder" style="object-fit: cover; height: 250px;">
+                {% else %}
+                <img src="{{ post.featured_image.url }}" class="img-fluid rounded" alt="{{ post.alt_text | default:post.title }}" style="object-fit: cover; height: 250px;">
+                <small class="text-muted img-credit">{{ post.image_credit }}</small>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
@@ -40,9 +43,11 @@
         </strong>
     </div>
     <div class="col-6 text-right text-end">
-        <strong class="text-secondary">
-            <i class="far fa-comments"></i> {{ blog_comment_count }} Comments
-        </strong>
+        <a href="#comments-section" class="text-secondary">
+            <strong class="text-secondary">
+                <i class="far fa-comments"></i> {{ blog_comment_count }} Comments
+            </strong>
+        </a>
     </div>
     <div class="col-12">
         <hr />
@@ -61,7 +66,7 @@
 </div>
 
 <!-- Displaying Comments -->
-<div class="container col-md-12">
+<div class="container col-md-12" id="comments-section">
     <div class="row">
         <div class="col-md-8 card mb-4 mt-3">
             <h3>Comments:</h3>

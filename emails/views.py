@@ -3,6 +3,7 @@ from .forms import EmailSignupForm
 from django.contrib import messages
 from django.urls import reverse
 from .models import EmailListSubscriber, ListType  # Include ListType model
+import requests
 
 
 # views.py
@@ -10,8 +11,26 @@ def email_signup(request):
     next_url = request.GET.get('next', '/') or reverse('home')
 
     if request.method == 'POST':
+        
         print(f"Form Data: {request.POST}")
+        # Get reCAPTCHA token from the POST data
+        recaptcha_response = request.POST.get('g-recaptcha-response')
 
+        # Verify the reCAPTCHA token with Google
+        data = {
+            'secret': settings.RECAPTCHA_PRIVATE_KEY,  # Your private key
+            'response': recaptcha_response
+        }
+        # Send the request to Google for verification
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = r.json()
+
+        # If reCAPTCHA is not successful, return an error
+        if not result['success']:
+            messages.error(request, 'Invalid reCAPTCHA. Please try again.')
+            return redirect('email_signup')
+        
+        # Form validation and processing continues here...
         form = EmailSignupForm(request.POST, user=request.user)
         print(f"Is form valid? {form.is_valid()}")
 
