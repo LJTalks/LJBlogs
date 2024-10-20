@@ -34,7 +34,7 @@ input[name="honeytrap"] {
     }
 }
 
-/* Large screens */
+Large screens
 @media (min-width: 1200px) {
     .masthead-image {
         height: 500px;
