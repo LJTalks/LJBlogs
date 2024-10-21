@@ -18,6 +18,11 @@ class UserProfileAdmin(admin.ModelAdmin):
         'registration_ip'
     )
 
+
+admin.site.register(UserProfile, UserProfileAdmin)
+
+
+# Extend UserAdmin to include the related profile info
 class CustomUserAdmin(UserAdmin):
     list_display = (
         'username',
@@ -32,6 +37,14 @@ class CustomUserAdmin(UserAdmin):
         'is_superuser',      # Added field for superuser status
         'is_email_subscriber'
     )
+    
+    def get_source(self, obj):
+        return obj.userprofile.source
+    get_source.short_description = 'Source'
+    
+    def get_ip(self, obj):
+        return obj.userprofile.registration_ip
+    get_ip.short_description = 'Registration IP'
     
     def user_email(self, obj):
         return obj.email
@@ -71,4 +84,3 @@ class CustomUserAdmin(UserAdmin):
 admin.site.unregister(User)
 # register the custom UserAdmin
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(UserProfile, UserProfileAdmin)

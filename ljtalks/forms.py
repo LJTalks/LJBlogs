@@ -16,11 +16,15 @@ class CustomSignupForm(SignupForm):
     def save(self, request):
         user = super(CustomSignupForm, self).save(request)
         
+        # Create a UserProfile and save the source and IP
+        source = request.META.get('HTTP_REFERER', '')
+        ip_address = request.META.get('REMOTE_ADDR', '')
+        
         # After saving the user, update the profile or create a profile with
         # the tracking info
         user_profile, created = UserProfile.objects.get_or_create(user=user)
-        user_profile.source = request.META.get('HTTP_REFERER', '')
-        user_profile.registration_ip = request.META.get('REMOTE_ADDR', '')
+        user_profile.source = source
+        user_profile.registration_ip = ip_address
         user_profile.save()
         
         return user

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 # from django.contrib.auth.models import Group
 import logging
@@ -12,26 +12,37 @@ from .forms import ContactForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 from django.views.decorators.cache import never_cache
+from django_ratelimit.decorators import ratelimit
 
 
+# Limit to 5 requests per minute per IP
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def register_user(request):
+    # Check if user was rate-limited
+    was_limited = getattr(request, 'limits', False)
+    if was_limited:
+        # Custom response for rate-limited requests
+        return HttpResponse("You've made too many requests. Please try again later.", status=429)
+    
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             # Create the user
             user = form.save()
-            
-            # Capture the source and IP address
+            # Capture the source and IP address, inc behind proxies
+            ip_address = request.META.get(
+                'HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', ''))
+            # Capture the source
             source = request.META.get('HTTP_REFERER', '')
-            ip_address = request.META.get('REMOTE_ADDR', '')
-            
             # Update the UserProfile with source and IP
-            profile = UserProfile.objects.get(user=user)
+            profile = UserProfile.objects.get_or_create(user=user)[0]
             profile.source = source
             profile.registration_ip = ip_address
             profile.save()
             
             return redirect(request.META.get('HTTP_REFERER', 'home'))
+        
+    return HttpResponse("Too many requests", status=429)
 
 
 logger = logging.getLogger(__name__)
