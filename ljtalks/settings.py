@@ -175,6 +175,11 @@ ACCOUNT_USERNAME_REQUIRED = True  # We want usernames
 # Optional: Prevent login until email is verified
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 
+# Will this stop the emails coming from example@ 
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "LJ Talks "  # Customize the prefix
+DEFAULT_FROM_EMAIL = "noreply@ljtalks.com"  # Set the default email
+
+
 # BEWARE ChatGpt asked me to add this when adding auth and email verification
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
