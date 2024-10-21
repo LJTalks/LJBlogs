@@ -9,6 +9,29 @@ from django.core.mail import EmailMessage, send_mail
 from django.conf import settings
 from django.contrib import messages
 from .forms import ContactForm
+from django.contrib.auth.models import User
+from .models import UserProfile
+from django.views.decorators.cache import never_cache
+
+
+def register_user(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            # Create the user
+            user = form.save()
+            
+            # Capture the source and IP address
+            source = request.META.get('HTTP_REFERER', '')
+            ip_address = request.META.get('REMOTE_ADDR', '')
+            
+            # Update the UserProfile with source and IP
+            profile = UserProfile.objects.get(user=user)
+            profile.source = source
+            profile.registration_ip = ip_address
+            profile.save()
+            
+            return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 
 logger = logging.getLogger(__name__)
@@ -154,7 +177,18 @@ def beta_features_view(request):
 
 # Beta Access YouTube Data Checker View
 @login_required
+@never_cache
 def youtube_checker_view(request):
+    if not request.user.is_authenticated:
+        return redirect('account_login')
+    
     # Check if user is in the testers group
     is_tester = is_in_group(request.user, 'testers')
+    if not is_tester:
+        # Redirect to safe page if user is not authorised TODO they
+        # could get the permission form is they are registered
+        # or home page (or back to where they were) if not
+        messages.error(request, "You don't have access to this feature.")
+        return redirect('home')
+    
     return render(request, 'youtube_checker.html', {'is_tester': is_tester})

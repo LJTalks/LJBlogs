@@ -92,6 +92,9 @@ SITE_ID = 1  # Django can handle multiple sites from one db
 LOGIN_REDIRECT_URL = '/'  # returns user to home page after login
 LOGOUT_REDIRECT_URL = '/'  # returns user to home page after logout
 # ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # Unless redirected with Next
+ACCOUNT_FORMS = {
+    'signup': 'ljtalks.forms.CustomSignupForm',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

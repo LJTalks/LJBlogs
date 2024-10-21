@@ -3,7 +3,20 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.dateformat import format
 from emails.models import EmailListSubscriber
+from .models import UserProfile
 
+
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'source',
+        'registration_ip'
+    )
+    search_fields = (
+        'user__username',
+        'source',
+        'registration_ip'
+    )
 
 class CustomUserAdmin(UserAdmin):
     list_display = (
@@ -58,3 +71,4 @@ class CustomUserAdmin(UserAdmin):
 admin.site.unregister(User)
 # register the custom UserAdmin
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)
