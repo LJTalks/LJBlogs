@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import EmailListSubscriber, ListType
+from .models import (
+    EmailListSubscriber,
+    ListType,
+    SiteContactInfo,
+    NewsletterEmail
+)
+from django_summernote.admin import SummernoteModelAdmin
+from django.db import models
 
 
 @admin.register(EmailListSubscriber)
@@ -18,8 +25,24 @@ class EmailListSubscriberAdmin(admin.ModelAdmin):
     get_list_types.short_description = "Subscribed List Types"
 
 
+class SentEmailLog(models.Model):
+    newsletter = models.ForeignKey(NewsletterEmail, on_delete=models.CASCADE)
+    recipient = models.EmailField()
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+
+class NewsletterEmailAdmin(SummernoteModelAdmin):
+    summernote_fields = ('body',)
+
+
+admin.site.register(NewsletterEmail, NewsletterEmailAdmin)
+# Register the SiteContactInfo model in the email admin panel
+admin.site.register(SiteContactInfo)
+
+
 # Register ListType model in the admin panel
 @admin.register(ListType)
 class ListTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description')  # Show the name and description of each list type
+    # Show name and description of each list type
+    list_display = ('name', 'description')
     search_fields = ('name',)  # Allow admins to search by name

@@ -4,10 +4,13 @@
 
 {% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you for using {{ site_name }}!
 {{ site_domain }}{% endblocktrans %}
+
+{% blocktrans with unsubscribe_url=unsubscribe_url %}
+If you no longer wish to receive these emails, please unsubscribe here: {{ unsubscribe_url }}
+{% endblocktrans %}
+
+Contact us at: [Your Contact Info Here]
+
 {% endautoescape %}
 
-
-footer for base txt? Contact info and unsubscribe Optional
-like this
-If you no longer wish to receive these emails, please unsubscribe here: {{ unsubscribe_url }}
 
