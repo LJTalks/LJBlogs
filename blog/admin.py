@@ -13,7 +13,8 @@ class PostAdmin(SummernoteModelAdmin):
     # Added seo_list status to see if it has data
     # fields to display in the admin panel for the Post model
     list_display = ('title', 'slug', 'status', 'created_on', 'publish_date',
-                    'seo_tags_status')
+                    'seo_tags_status', 'meta_description',
+                    'meta_description_with_fallback')
     search_fields = ['title', 'content', 'seo_tags']
     list_filter = ('status', 'created_on', 'publish_date')
     prepopulated_fields = {'slug': ('title',)}
@@ -30,6 +31,7 @@ class PostAdmin(SummernoteModelAdmin):
     # Custom action to publish selected posts
     def publish_blog_posts(self, request, queryset):
         queryset.update(status=1)
+        
     # Custom action short description
     publish_blog_posts.short_description = "Publish blog posts"
 
@@ -60,7 +62,8 @@ class PostAdmin(SummernoteModelAdmin):
                 'excerpt',
                 'status',
                 'publish_date',
-                'seo_tags'
+                'seo_tags',
+                'meta_description',
             )
         }),
     )

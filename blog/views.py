@@ -1,11 +1,18 @@
-import datetime
-from django.shortcuts import render, get_object_or_404, reverse, redirect
+from django.shortcuts import (
+    render,
+    get_object_or_404,
+    reverse,
+    redirect,
+    HttpResponseRedirect
+)
+from django.urls import reverse
 from django.views import generic
 from django.contrib import messages
 from .models import Post, BlogComment, ViewRecord
 from django.http import HttpResponseRedirect
 from .forms import BlogCommentForm
 from django.contrib.auth.models import User
+import datetime
 
 
 # Unsubscribe view, maybe not the best app for it?
@@ -36,20 +43,18 @@ def post_detail(request, slug):
     # Get the current post
     post = get_object_or_404(queryset, slug=slug)
     
-    # Track views for logged-in users
+    # Track Total no of page views (using sessions to avoid dupes)
+    session_key = f"viewed_post_{post.id}"
+    if not request.session.get(session_key, False):
+        post.views += 1
+        post.save()
+        request.session[session_key] = True
+   
+    # Track views for logged-in users (for recommendations)
     if request.user.is_authenticated:
         # Check ifthe logged in user has already viewed this post
         if not post.viewed_by.filter(id=request.user.id).exists():
             post.viewed_by.add(request.user)
-            post.views += 1
-            post.save()
-        else:
-            # Track views for annonymous users using sessions
-            session_key = f"viewed_post_{post.id}"
-            if not request.session.get(session_key, False):
-                post.views += 1
-                post.save()
-                request.session[session_key] = True
     
     # Get the previous post    
     previous_post = Post.objects.filter(
@@ -94,7 +99,7 @@ def post_detail(request, slug):
             "blog_comment_form": blog_comment_form,
         },
     )
-    return render(request, 'blog/post_detail.html', {'post': post})
+    # return render(request, 'blog/post_detail.html', {'post': post})
 
 
 def blog_comment_edit(request, slug, blog_comment_id):

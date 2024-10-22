@@ -3,9 +3,9 @@
 {% load static %}
 
 <!-- Meta tags for the blog index page -->
-{% block excerpt %}
-<meta name="description" content="{{ post.excerpt }}">
-{% endblock excerpt %}
+{% block meta_description %}
+<meta name="description" content="{{ post.meta_description|default:post.content|truncatechars:160 }}">
+{% endblock meta_description %}
 
 {% block seo_tags %}
 <meta name="keywords" content="{{ post.seo_tags }}">

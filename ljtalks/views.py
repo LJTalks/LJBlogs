@@ -22,7 +22,10 @@ def register_user(request):
     was_limited = getattr(request, 'limits', False)
     if was_limited:
         # Custom response for rate-limited requests
-        return HttpResponse("You've made too many requests. Please try again later.", status=429)
+        return HttpResponse(
+            "You've made too many requests. Please try again later.",
+            status=429
+            )
     
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -85,7 +88,8 @@ def contact_submit(request):
                 
                 # Prepare the email content
                 subject = f"LJTalks Contact Form from {name}"
-                content = f"New Message from: {name}\nEmail: {email}\n\n{message}\n "
+                content = (
+                    f"New Message from: {name}\nEmail: {email}\n\n{message}\n")
                 # Send the email
                 email_message = EmailMessage(
                     subject=subject,
@@ -107,10 +111,10 @@ def contact_submit(request):
         else:
             messages.error(request, 'There was an error in the form.')
     else:
-        form = ContactForm()  # If it's a GET request, just render the empty form
+        form = ContactForm()  # If GET request, just render the empty form
 
     # For a GET request, just render the contact form
-    return render(request, 'contact.html', {'form': form })
+    return render(request, 'contact.html', {'form': form})
 
 
 # View to handle the "Tester/Beta Access" Form
@@ -120,7 +124,7 @@ def contact_submit(request):
 @login_required
 def beta_contact_view(request):
     is_tester = is_in_group(
-        request.user, 'testers')  ## removed: if request.user.is_authenticated else False
+        request.user, 'testers')
     return render(request, 'beta_contact.html', {'is_tester': is_tester})
 
 
@@ -135,7 +139,8 @@ def apply_for_beta_access(request):
         
         # Send an email to notify the admin of the application
         subject = f"{request.user} applied for Beta Access",
-        content = f"User {request.user.username} applied for beta access. Reason:\n\n{reason}"
+        content = (
+            f"User {request.user.username} applied for beta access.Reason:\n\n{reason}")
         
         send_mail(
             subject,

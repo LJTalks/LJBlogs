@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+from django.utils.html import strip_tags
 
 
 # Blog post (Post Detail) models here.
@@ -42,11 +43,26 @@ class Post(models.Model):
     # SEO Tags for the blog post
     seo_tags = models.TextField(
         blank=True, help_text="Add your SEO keywords, separated by commas")
+    meta_description = models.CharField(
+        max_length=160,
+        blank=True,
+        help_text="Add short, relevant SEO meta description"
+    )
+    
+    @property
+    def meta_description_with_fallback(self):
+        # Return meta description if available, or fallback to post content
+        if self.meta_description:
+            return self.meta_description
+        else:
+            # Fallback: strip html tags and truncate post content 160 chars
+            return strip_tags(self.content)[:160]
     # Foreign key to link blog posts directly to services offered
     # (Commented out until service model is added)
     # service = models.ForeignKey(
     #     'services.Service', on_delete=models.SET_NULL, null=True, blank=True,
     #     related_name="posts")
+    
 
     class Meta:
         ordering = ["-created_on"]

@@ -12,14 +12,14 @@
     <title>{% block title %}LJ Talks{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Default meta description -->
+    <!-- Meta description -->
     {% block meta_description %}
-    <meta name="description" content="A Full Stack Adventure!">
+    <meta name="description" content="{{ post.excerpt|default:"A Full Stack Adventure!" }}">
     {% endblock %}
 
-    <!-- Default SEO tags (to be overridden on specific pages) -->
+    <!-- SEO tags -->
     {% block meta %}
-    <meta name="keywords" content="coding, software development, blog, tutorials">
+    <meta name="keywords" content="{{ post.seo_tags|default:"coding, software development, blog, tutorials" }}">
     {% endblock %}
     
     <!-- Google Fonts CSS -->
