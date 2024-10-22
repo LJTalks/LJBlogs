@@ -32,6 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
+RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
@@ -127,6 +128,7 @@ TEMPLATES = [
                 # Chat GPT's idea
                 # base nav to show additional options to different groups
                 'ljtalks.context_processors.add_is_tester',
+                'ljtalks.context_processors.recaptcha_key',
             ],
         },
     },
@@ -168,6 +170,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# For recaptcha
+ACCOUNT_ADAPTER = 'ljtalks.adapters.CustomAccountAdapter'
+
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # We def want this
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
@@ -180,7 +185,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 
 # Will this stop the emails coming from example@ 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "LJ Talks "  # Customize the prefix
-DEFAULT_FROM_EMAIL = "noreply@ljtalks.com"  # Set the default email
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")  # Set the default email
 
 
 # BEWARE ChatGpt asked me to add this when adding auth and email verification
