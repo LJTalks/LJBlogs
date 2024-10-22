@@ -13,6 +13,24 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 from django.views.decorators.cache import never_cache
 from django_ratelimit.decorators import ratelimit
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
+
+# Password reset, auto log in
+@login_required
+def password_reset(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Log the user in immediately after password change
+            # Prevents logout after password change
+            update_session_auth_hash(request, user)
+            return redirect('password_change_done')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'account/change_password.html', {'form': form})
 
 
 # Limit to 5 requests per minute per IP
