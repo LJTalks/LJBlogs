@@ -8,31 +8,20 @@
 {% endblock seo_tags %}
 {% block content %}
 
-<!-- post_list.html content starts here -->
+<!-- about_me.html content starts here -->
 <div class="container mt-5">
 
-    <!-- GitHub Streak Banner -->
-    <div class="row">
-        <div class="col-12 text-center">
-            <img src="{% static 'images/githubstreak2024-10-12.png' %}" class="img-fluid" alt="GitHub Streak Banner" style="max-width: 100%; height: auto;">
-        </div>
-    </div>
-
     <!-- About Me Section -->
-    <div class="row mt-5 justify-content-center">
+    <div class="row mt-1 justify-content-center">
         <!-- Profile Image -->
         <div class="col-md-4 text-center mb-4">
             <img src="{% static 'images/mtb_laura.png' %}" 
                  class="img-fluid rounded-circle shadow" 
-                 alt="Laura's Profile Image" 
-                 style="max-width: 200px; height: auto; 
-                        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
-                        border: 4px solid #FF0077; 
-                        filter: drop-shadow(0 0 15px rgba(255, 0, 119, 0.4));">
+                 alt="Laura's Profile Image" >
         </div>
 
         <!-- About Me Text -->
-        <div class="col-md-8">
+        <div class="col-md-8 mt-1">
             <h1>About Me</h1>
             <p class="lead">
                 Hello! I’m Laura! About 18 months ago, I found myself at a major crossroads. I had to close my childcare business, 
@@ -46,7 +35,7 @@
                 Through that, I found a wonderful community and made lasting friendships. But when my childcare career ended, I needed work that could be flexible around my family. 
             </p>
         </div>
-        <div class="col-md-9"></div>
+        <div class="col-md-12">
             <p>I'd noticed lots of opportunites to make money online. I tried a few different things, some successful and some not so much, but the more I learned, the more I started to see patterns in what worked and what didn’t.
                 I discovered some amazing creators who have walked the walk, and offer valuable knowledge. They helped me to see that building an online business is definitely possible, simple even! Just not always easy. Building from nothing requires real effort, sacrifices and time. 
             </p>
@@ -61,6 +50,12 @@
         </div>
         <div class="text-center">
             <a href="{% url 'contact' %}?next={{ request.path }}" id="contact" class="btn btn-primary">Get in touch</a>
+        </div>
+        <!-- GitHub Streak Banner -->
+        <div class="row">
+            <div class="col-12 text-center">
+                <img src="{% static 'images/githubstreak2024-10-24.png' %}" class="img-fluid" alt="GitHub Streak Banner" style="max-width: 100%; height: auto;">
+            </div>
         </div>
     </div>
 </div>
