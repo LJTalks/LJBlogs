@@ -400,6 +400,11 @@ main {
 }
 
 
+/* summernote font */
+.note-editable {
+    font-family: 'Lato', sans-serif;
+}
+
 
 /* Other Styling */
 .faded {

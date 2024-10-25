@@ -28,19 +28,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Secret Key
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
-RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
+# Environment (DJANGO_ENV): Development or Production
+# Default to development
+DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')
+# To switch to production manually
+# DJANGO_ENV = os.environ.get('DJANGO_ENV', 'production')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
+# Set DEBUG & Site ID based on DJANGO_ENV
 # DEBUG = False
+DEBUG = os.environ.get('DJANGO_ENV') == 'development'
+# Set site ID dynamically
+SITE_ID = 2 if 'DJANGO_ENV' == 'development' else 1
 
-if os.path.isfile("env.py"):
-    DEBUG = True
-else:
-    DEBUG = False
+# if os.path.isfile("env.py"):
+#     DEBUG = True
+# else:
+#     DEBUG = False
 
 ALLOWED_HOSTS = [
     '.codeinstitute-ide.net',
@@ -56,8 +63,18 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.ljtalks.com"
 ]
 
-# Application definition
+# Database configuration (development v production)
+DATABASES = {
+    'default': dj_database_url.parse(
+        os.environ.get(
+            "DEV_DATABASE_URL")
+        if DJANGO_ENV == "development" 
+        else os.environ.get("DATABASE_URL")
+    )
+}
 
+
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -89,7 +106,10 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Site framework ID - required for django.contrib.sites
-SITE_ID = 1  # Django can handle multiple sites from one db
+# Django can handle multiple sites from one db
+SITE_ID = 1  # Production
+SITE_ID = 2  # Development/staging
+
 LOGIN_REDIRECT_URL = '/'  # returns user to home page after login
 LOGOUT_REDIRECT_URL = '/'  # returns user to home page after logout
 # ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # Unless redirected with Next
@@ -109,6 +129,26 @@ MIDDLEWARE = [
     # additional functionality to the projects account user authentication
     'allauth.account.middleware.AccountMiddleware',
 ]
+
+# Set up email configurations
+if DJANGO_ENV == 'development':
+    EMAIL_BACKEND = 'django.core.backends.console.EmailBackend'
+# For testing locally
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# you can use Django’s console backend for development (this will print the
+# email content to the terminal instead of sending it)
+# Use console email backend for development
+# With this, any emails will appear in your terminal instead of attempting
+# to send them, which avoids connection issues during development.
+EMAIL_HOST = 'smtp.privateemail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')  # This can remain as your email
+
 
 ROOT_URLCONF = 'ljtalks.urls'
 
@@ -147,10 +187,6 @@ WSGI_APPLICATION = 'ljtalks.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default':
-    dj_database_url.parse(os.environ.get("DATABASE_URL"))
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -193,23 +229,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-
-# Another Chat Gpt add on 
-# you can use Django’s console backend for development (this will print the
-# email content to the terminal instead of sending it)
-# Use console email backend for development
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# With this, any emails will appear in your terminal instead of attempting
-# to send them, which avoids connection issues during development.
-# For production, you’ll need to set up a proper email backend, like
-# SendGrid, Mailgun, or any other SMTP service.
-EMAIL_HOST = 'smtp.privateemail.com'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')  # This can remain as your email
-
 
 # Adding this for debugging nav group status
 LOGGING = {
@@ -259,6 +278,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
 # This is previous. It didn't help yet so this may need reverting.
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # for collectstatic
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Recaptcha and other API keys
+RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
+RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
+
+
 # Configure Whitenoise to handle static files
 # this is for Django versions olderthan 4.2
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -270,8 +296,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
 #         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
 #     },
 # }
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Media file handling (Images and uploads)
 # MEDIA_URL = '/media/'
