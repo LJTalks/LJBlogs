@@ -33,9 +33,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # Environment (DJANGO_ENV): Development or Production
 # Default to development
-DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')
+DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')  # trade
 # To switch to production manually
-# DJANGO_ENV = os.environ.get('DJANGO_ENV', 'production')
+# DJANGO_ENV = os.environ.get('DJANGO_ENV', 'production')  # bush
 
 
 # Set DEBUG & Site ID based on DJANGO_ENV
