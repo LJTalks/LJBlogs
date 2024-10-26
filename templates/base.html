@@ -128,6 +128,15 @@
                     <p class="text-end m-3">You are not logged in</p>
                 {% endif %}
             </div>
+            <!-- Banner to display the development database -->
+            <div class="dev-banner">
+                {% if DATABASE_NAME == "Development Database" %}
+                    <div style="background: #ffc; color: #333; text-align: center; padding: 5px;">
+                        <strong>⚠️ You are connected to the Development Database ⚠️</strong>
+                    </div>
+                {% endif %}
+            </div>
+            
             <!-- Content -->
             {% block content %}         
             {% endblock content %}

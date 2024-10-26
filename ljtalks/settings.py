@@ -71,13 +71,21 @@ DATABASES = {
         os.environ.get(
             "DATABASE_URL"))
 }
+DATABASE_NAME = "Production Database"
 
-# Toggle this line in Gitpod to switch to the development database
-DATABASES['default'] = (
-    dj_database_url.parse(os.environ.get("DEV_DATABASE_URL")))
 
-# # Environment indicator (only for development)
-# ENVIRONMENT_NAME = "Development" if DEBUG else "Production"
+# Set Database name for base template
+def database_context(request):
+    from django.conf import settings
+    return {'DATABASE_NAME': settings.DATABASE_NAME}
+
+
+# Uncomment this group in Gitpod to switch to the development database
+DATABASES['default'] = dj_database_url.parse(os.environ.get(
+    "DEV_DATABASE_URL"))
+DATABASE_NAME = "Development Database"
+print(f"Connected to: {DATABASE_NAME}")
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -174,6 +182,7 @@ TEMPLATES = [
                 # base nav to show additional options to different groups
                 'ljtalks.context_processors.add_is_tester',
                 'ljtalks.context_processors.recaptcha_key',
+                'ljtalks.settings.database_context',
             ],
         },
     },

@@ -17,6 +17,13 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
 
+# for banner warning to establish which database
+def database_name(request):
+    context = {
+        'DATABASE_NAME': settings.DATABASE_NAME
+    }
+    return render(request, 'base.html', context)
+
 # Password reset, auto log in
 @login_required
 def password_reset(request):
