@@ -33,34 +33,36 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # Environment (DJANGO_ENV): Development or Production
 # Default to development
-DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')  # trade
 # To switch to production manually
-# DJANGO_ENV = os.environ.get('DJANGO_ENV', 'production')  # bush
+# DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')  # trade
+DJANGO_ENV = os.environ.get('DJANGO_ENV', 'production')  # bush
 
 
 # Set DEBUG & Site ID based on DJANGO_ENV
 # DEBUG = False
-DEBUG = os.environ.get('DJANGO_ENV') == 'development'
+# DEBUG = os.environ.get('DJANGO_ENV') == 'development'
 # Set site ID dynamically
 SITE_ID = 2 if 'DJANGO_ENV' == 'development' else 1
 
-# if os.path.isfile("env.py"):
-#     DEBUG = True
-# else:
-#     DEBUG = False
+if os.path.isfile("env.py"):
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = [
     '.codeinstitute-ide.net',
-    '.herokuapp.com',
+    'ljtalksdev-61ea4d3e9223.herokuapp.com',
+    'ljblogs-fcdcaa00fdda.herokuapp.com',
     'ljtalks.com',
     'www.ljtalks.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.codeinstitute-ide.net/",
-    "https://*.herokuapp.com",
+    "https://ljtalksdev-61ea4d3e9223.herokuapp.com",
+    "https://ljblogs-fcdcaa00fdda.herokuapp.com",
     "https://ljtalks.com",
-    "https://www.ljtalks.com"
+    "https://www.ljtalks.com",
+    "https://*.codeinstitute-ide.net"
 ]
 
 # Database configuration (development v production)
