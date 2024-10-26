@@ -15,6 +15,7 @@ import os
 # import sys
 # from django.contrib.messages import constants as messages
 import dj_database_url
+# Load environment variables in Gitpod
 if os.path.isfile('env.py'):
     import env
 import cloudinary
@@ -31,23 +32,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret Key
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# Environment (DJANGO_ENV): Development or Production
-# Default to development
-# To switch to production manually
-# DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')  # trade
-DJANGO_ENV = os.environ.get('DJANGO_ENV', 'production')  # bush
-
-
-# Set DEBUG & Site ID based on DJANGO_ENV
-# DEBUG = False
-# DEBUG = os.environ.get('DJANGO_ENV') == 'development'
-# Set site ID dynamically
-SITE_ID = 2 if 'DJANGO_ENV' == 'development' else 1
-
+# Set debug based on env.py presence
 if os.path.isfile("env.py"):
     DEBUG = True
 else:
     DEBUG = False
+
+# Development or Production Environment 
+# # Switch to production manually for updates
+# # DATABASE_URL = os.environ.get('development')  # trade
+# DATABASE_URL = os.environ.get('production')  # bush
+# Toggle this line in Gitpod when needed
+# DATABASES['default'] = (dj_database_url.parse(os.environ.get("DEV_DATABASE_URL")))
+# Gitpod-specific override for DEV_DATABASE_URL
+# if os.getenv("USE_DEV_DB") == "True" and "GITPOD_WORKSPACE_URL" in os.environ:
+#     DATABASES['default'] = dj_database_url.parse(os.environ.get("DEV_DATABASE_URL"))
+
 
 ALLOWED_HOSTS = [
     '.codeinstitute-ide.net',
@@ -69,12 +69,15 @@ CSRF_TRUSTED_ORIGINS = [
 DATABASES = {
     'default': dj_database_url.parse(
         os.environ.get(
-            "DEV_DATABASE_URL")
-        if DJANGO_ENV == "development" 
-        else os.environ.get("DATABASE_URL")
-    )
+            "DATABASE_URL"))
 }
 
+# Toggle this line in Gitpod to switch to the development database
+DATABASES['default'] = (
+    dj_database_url.parse(os.environ.get("DEV_DATABASE_URL")))
+
+# # Environment indicator (only for development)
+# ENVIRONMENT_NAME = "Development" if DEBUG else "Production"
 
 # Application definition
 INSTALLED_APPS = [
@@ -133,7 +136,7 @@ MIDDLEWARE = [
 ]
 
 # Set up email configurations
-if DJANGO_ENV == 'development':
+if DEBUG:
     EMAIL_BACKEND = 'django.core.backends.console.EmailBackend'
 # For testing locally
 else:
