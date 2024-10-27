@@ -74,17 +74,18 @@ DATABASES = {
 DATABASE_NAME = "Production Database"
 
 
-# Set Database name for base template
-def database_context(request):
-    from django.conf import settings
-    return {'DATABASE_NAME': settings.DATABASE_NAME}
-
-
 # Uncomment this group in Gitpod to switch to the development database
 DATABASES['default'] = dj_database_url.parse(os.environ.get(
     "DEV_DATABASE_URL"))
 DATABASE_NAME = "Development Database"
+
 print(f"Connected to: {DATABASE_NAME}")
+
+
+# Set Database name for base template
+def database_context(request):
+    from django.conf import settings
+    return {'DATABASE_NAME': settings.DATABASE_NAME}
 
 
 # Application definition
@@ -120,7 +121,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Site framework ID - required for django.contrib.sites
 # Django can handle multiple sites from one db
-SITE_ID = 1  # Production
+# SITE_ID = 1  # Production
 SITE_ID = 2  # Development/staging
 
 LOGIN_REDIRECT_URL = '/'  # returns user to home page after login
@@ -144,11 +145,12 @@ MIDDLEWARE = [
 ]
 
 # Set up email configurations
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.backends.console.EmailBackend'
-# For testing locally
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# if DEBUG:
+#     EMAIL_BACKEND = 'django.core.backends.console.EmailBackend'
+# # For testing locally
+# else:
+#     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # you can use Django’s console backend for development (this will print the
 # email content to the terminal instead of sending it)
