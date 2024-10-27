@@ -33,10 +33,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # Set debug based on env.py presence
-if os.path.isfile("env.py"):
-    DEBUG = True
-else:
-    DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+# if os.path.isfile("env.py"):
+#     DEBUG = True
+# else:
+#     DEBUG = False
 
 # Development or Production Environment 
 # # Switch to production manually for updates
@@ -121,7 +122,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Site framework ID - required for django.contrib.sites
 # Django can handle multiple sites from one db
-# SITE_ID = 1  # Production
+SITE_ID = 1  # Production
 SITE_ID = 2  # Development/staging
 
 LOGIN_REDIRECT_URL = '/'  # returns user to home page after login
@@ -183,7 +184,7 @@ TEMPLATES = [
                 # Chat GPT's idea
                 # base nav to show additional options to different groups
                 'ljtalks.context_processors.add_is_tester',
-                'ljtalks.context_processors.recaptcha_key',
+                # 'ljtalks.context_processors.recaptcha_key',
                 'ljtalks.settings.database_context',
             ],
         },
@@ -297,8 +298,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Recaptcha and other API keys
-RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
-RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
+# RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
+# RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
 
 
 # Configure Whitenoise to handle static files

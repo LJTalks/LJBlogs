@@ -9,7 +9,7 @@ def add_is_tester(request):
     return {'is_tester': is_tester}
 
 
-def recaptcha_key(request):
-    return {
-        'RECAPTCHA_SITE_KEY': settings.RECAPTCHA_SITE_KEY
-    }
+# def recaptcha_key(request):
+#     return {
+#         'RECAPTCHA_SITE_KEY': settings.RECAPTCHA_SITE_KEY
+#     }
