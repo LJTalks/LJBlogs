@@ -9,3 +9,5 @@ node_modules/
 cloudinary_python.txt
 blog/fixtures/
 backup_db.sh
+.env
+.env.production

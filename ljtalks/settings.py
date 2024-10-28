@@ -18,13 +18,27 @@ import dj_database_url
 # Load environment variables in Gitpod
 if os.path.isfile('env.py'):
     import env
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+#     DEBUG = True  # Thank you MB!
+# from dotenv import load_dotenv
+# import cloudinary
+# import cloudinary.uploader
+# import cloudinary.api
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Project BASE directory
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Check which environment file to load
+# Default to loading .env file for development= "True" else ".env"
+# env_file = ".env.production" if os.getenv(
+#     "USE_PRODUCTION_DB") == 'True' else "Production Database"
+# load_dotenv(dotenv_path=BASE_DIR / env_file)
+
+# To switch to Production within Gitpod, load .env.production
+# if os.getenv("USE_PRODUCTION_DB") == "True":  # not sure this is wired up?
+#     env_file = ".env.production"
+
+# load_dotenv(dotenv_path=BASE_DIR / env_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -33,21 +47,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # Set debug based on env.py presence
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-# if os.path.isfile("env.py"):
-#     DEBUG = True
-# else:
-#     DEBUG = False
+# DEBUG = os.getenv('DEBUG', 'False') == 'True'
+if os.path.isfile("env.py"):
+    DEBUG = True
+else:
+    DEBUG = False
 
-# Development or Production Environment 
+# Development or Production Environment
 # # Switch to production manually for updates
 # # DATABASE_URL = os.environ.get('development')  # trade
 # DATABASE_URL = os.environ.get('production')  # bush
 # Toggle this line in Gitpod when needed
-# DATABASES['default'] = (dj_database_url.parse(os.environ.get("DEV_DATABASE_URL")))
+# DATABASES['default'] = (
+#   dj_database_url.parse(os.environ.get("DEV_DATABASE_URL")))
 # Gitpod-specific override for DEV_DATABASE_URL
-# if os.getenv("USE_DEV_DB") == "True" and "GITPOD_WORKSPACE_URL" in os.environ:
-#     DATABASES['default'] = dj_database_url.parse(os.environ.get("DEV_DATABASE_URL"))
+# if os.getenv(
+#   "USE_DEV_DB") == "True" and "GITPOD_WORKSPACE_URL" in os.environ:
+#   DATABASES['default'] = dj_database_url.parse(
+#   os.environ.get("DEV_DATABASE_URL"))
 
 
 ALLOWED_HOSTS = [
@@ -66,28 +83,34 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.codeinstitute-ide.net"
 ]
 
-# Database configuration (development v production)
+# # Database configuration (development v production)
+# This is for deliberate switch to Production DB,
+# Amend Database Name and Recaptcha too
 DATABASES = {
     'default': dj_database_url.parse(
-        os.environ.get(
+        os.getenv(
             "DATABASE_URL"))
 }
-DATABASE_NAME = "Production Database"
+print(os.getenv("DATABASE_URL"))
 
 
-# Uncomment this group in Gitpod to switch to the development database
-DATABASES['default'] = dj_database_url.parse(os.environ.get(
-    "DEV_DATABASE_URL"))
-DATABASE_NAME = "Development Database"
-
-print(f"Connected to: {DATABASE_NAME}")
+# Identify which database is connected for reference
+# DATABASE_NAME = "Development Database" if os.getenv(
+#     "DEV_DATABASE_URL") else "Production Database"
+# print(f"Connected to: {DATABASE_NAME}")
 
 
-# Set Database name for base template
-def database_context(request):
-    from django.conf import settings
-    return {'DATABASE_NAME': settings.DATABASE_NAME}
+# USE AS DEFAULT Automatic switch between remote and deployed
+# DATABASES = {
+#     'default': dj_database_url.parse(
+#         os.getenv("DEV_DATABASE_URL", os.getenv(
+#             "DATABASE_URL"))
+#     )
+# }
 
+
+# Banner display condition
+SHOW_DEV_BANNER = os.getenv("SHOW_DEV_BANNER", "False") == "True"
 
 # Application definition
 INSTALLED_APPS = [
@@ -156,14 +179,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # you can use Django’s console backend for development (this will print the
 # email content to the terminal instead of sending it)
 # Use console email backend for development
-# With this, any emails will appear in your terminal instead of attempting
+# With this, emails will appear in your terminal instead of attempting
 # to send them, which avoids connection issues during development.
 EMAIL_HOST = 'smtp.privateemail.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')  # This can remain as your email
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
 
 ROOT_URLCONF = 'ljtalks.urls'
@@ -184,8 +207,8 @@ TEMPLATES = [
                 # Chat GPT's idea
                 # base nav to show additional options to different groups
                 'ljtalks.context_processors.add_is_tester',
-                # 'ljtalks.context_processors.recaptcha_key',
-                'ljtalks.settings.database_context',
+                'ljtalks.context_processors.recaptcha_site_key',
+                # 'ljtalks.context_processors.database_context',
             ],
         },
     },
@@ -210,16 +233,28 @@ WSGI_APPLICATION = 'ljtalks.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'UserAttributeSimilarityValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'MinimumLengthValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'CommonPasswordValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'NumericPasswordValidator'
+        ),
     },
 ]
 
@@ -236,7 +271,7 @@ ACCOUNT_USERNAME_REQUIRED = True  # We want usernames
 # Optional: Prevent login until email is verified
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 
-# Will this stop the emails coming from example@ 
+# Will this stop the emails coming from example@
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "LJ Talks "  # Customize the prefix
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")  # Set the default email
 
@@ -297,14 +332,26 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# Recaptcha and other API keys
-# RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
-# RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
+# Recaptcha and other API keys (default to Dev if available)
+# RECAPTCHA_PRIVATE_KEY = os.getenv(
+#     "DEV_RECAPTCHA_PRIVATE_KEY", os.getenv(
+#         "RECAPTCHA_PRIVATE_KEY"))
+# RECAPTCHA_SITE_KEY = os.environ.get(
+#     # Comment out next line for database schema changes
+#     "DEV_RECAPTCHA_SITE_KEY", os.getenv(
+#         "RECAPTCHA_SITE_KEY"))
+
+# UnComment out for deliberate database schema changes
+RECAPTCHA_PRIVATE_KEY = os.getenv(
+    "RECAPTCHA_PRIVATE_KEY")
+RECAPTCHA_SITE_KEY = os.environ.get(
+    "RECAPTCHA_SITE_KEY")
 
 
 # Configure Whitenoise to handle static files
 # this is for Django versions olderthan 4.2
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = (
+#   'whitenoise.storage.CompressedManifestStaticFilesStorage')
 # for Django 4.2+
 
 # This from whitenoise docs throws settings_ALLOWED_HOSTS error

@@ -9,7 +9,14 @@ def add_is_tester(request):
     return {'is_tester': is_tester}
 
 
-# def recaptcha_key(request):
+def recaptcha_site_key(request):
+    return {
+        'RECAPTCHA_SITE_KEY': settings.RECAPTCHA_SITE_KEY
+    }
+
+
+# def database_context(request):
 #     return {
-#         'RECAPTCHA_SITE_KEY': settings.RECAPTCHA_SITE_KEY
+#         'DATABASE_NAME': settings.DATABASE_NAME,
+#         'SHOW_DEV_BANNER': settings.SHOW_DEV_BANNER,
 #     }
