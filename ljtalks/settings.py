@@ -75,7 +75,6 @@ ALLOWED_HOSTS = [
     'ljblogs-fcdcaa00fdda.herokuapp.com',
     'ljtalks.com',
     'www.ljtalks.com',
-    '.ui.dev',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -84,7 +83,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://ljtalks.com",
     "https://www.ljtalks.com",
     "https://*.codeinstitute-ide.net",
-    "https://*.ui.dev",
 ]
 
 # # Database configuration (development v production)
@@ -120,6 +118,7 @@ INSTALLED_APPS = [
     'cloudinary',  # Image mgmnt. After cloudinary_storage
     'crispy_forms',
     'crispy_bootstrap5',
+    'csp',
     'blog',  # Custom apps after django then third-party apps
     'emails',
     'ljtalks',
@@ -128,6 +127,10 @@ INSTALLED_APPS = [
     # 'services',
     # 'booking',
 ]
+
+CSP_DEFAULT_SRC = ["'self'"]
+CSP_IMG_SRC = ["'self'", "https://trusted-image-source.com"]
+CSP_SCRIPT_SRC = ["'self'", "'unsafe-inline'"]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
@@ -140,6 +143,7 @@ SITE_ID = 1  # Production
 LOGIN_REDIRECT_URL = '/'  # returns user to home page after login
 LOGOUT_REDIRECT_URL = '/'  # returns user to home page after logout
 # ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # Unless redirected with Next
+
 
 ACCOUNT_FORMS = {
     'signup': 'member.forms.CustomSignupForm',
@@ -156,7 +160,23 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # additional functionality to the projects account user authentication
     'allauth.account.middleware.AccountMiddleware',
+    'ljtalks.middleware.PermissionsPolicyMiddleware',
 ]
+
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Content Security Policy (CSP) settings
+CSP_DEFAULT_SRC = ["'self'"]  # Restrict default source to your own site
+# Allow images from Cloudinary
+CSP_IMG_SRC = ["'self'", "https://res.cloudinary.com"]
+# Allow scripts from Cloudinary if needed
+# CSP_SCRIPT_SRC = ["'self'", "https://res.cloudinary.com"]
+# Allow styles from Cloudinary if needed
+# CSP_STYLE_SRC = ["'self'", "https://res.cloudinary.com"]
+# Allow API calls if you're using any Cloudinary API
+# CSP_CONNECT_SRC = ["'self'", "https://res.cloudinary.com"]
 
 # Set up email configurations
 # if DEBUG:

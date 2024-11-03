@@ -19,11 +19,11 @@
 <meta property="og:description" content="Explore my portfolio of projects, built using Django, Python, JavaScript, and more. Featuring responsive designs and innovative features.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ request.build_absolute_uri|slice:':-1' }}{% url 'projects' %}">
-<meta property="og:image" content="{{ request.build_absolute_uri|slice:':-1' }}{% static 'images/portfolio_preview.jpg' %}">  <!-- Replace 'portfolio_preview.jpg' with your actual image -->
+<meta property="og:image" content="{{ request.build_absolute_uri|slice:':-1' }}{% static 'images/ljtalks.png' %}">  <!-- Replace 'portfolio_preview.jpg' with your actual image -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="My Web Development Portfolio">
 <meta name="twitter:description" content="Check out my projects built with Django, Python, and JavaScript, showcasing modern design and development skills.">
-<meta name="twitter:image" content="{{ request.build_absolute_uri|slice:':-1' }}{% static 'images/portfolio_preview.jpg' %}">  <!-- Replace 'portfolio_preview.jpg' with your actual image -->
+<meta name="twitter:image" content="{{ request.build_absolute_uri|slice:':-1' }}{% static 'images/ljtalks.png' %}">  <!-- Replace 'portfolio_preview.jpg' with your actual image -->
 {% endblock seo_tags %}
 
 {% block content %}
