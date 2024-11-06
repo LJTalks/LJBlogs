@@ -9,6 +9,7 @@ from member.views import (
     beta_contact_view,
     beta_features_view
 )
+from member.views import test_html_email
 
 
 # Function to render the maintenance view (if needed)
@@ -44,6 +45,7 @@ urlpatterns = [
     path('youtube/', include('ytapi.urls')),
     # path('info/', views.youtube_info_view, name='youtube-data-checker'),
     path('summernote/', include('django_summernote.urls')),
+    path('test-email/', test_html_email, name='test_html_email'),
     path("", include("blog.urls"), name="blog-urls"),
     # path('youtube/', include('ytapi.urls'), name="youtube-data-checker")
 ]

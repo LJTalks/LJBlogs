@@ -13,13 +13,14 @@ import requests
 from django.conf import settings
 
 
+# This is the view for newsletters to send
 def send_newsletter(list_type_name):
     # Get the list type from the database
     list_type = ListType.objects.get(name=list_type_name)
     # Get the latest newsletter
     newsletter = NewsletterEmail.objects.latest('created_at')
     contact_info = SiteContactInfo.objects.first()
-    
+
     # Prepare email recipients: Subscribers on chosen list type
     recipients = EmailListSubscriber.objects.filter(
         list_type=list_type).values_list('list_email', flat=True)
@@ -38,7 +39,7 @@ def email_signup(request):
     next_url = request.GET.get('next', '/') or reverse('home')
 
     if request.method == 'POST':
-        
+
         print(f"Form Data: {request.POST}")
         # Get reCAPTCHA token from the POST data
         recaptcha_response = request.POST.get('g-recaptcha-response')
@@ -57,7 +58,7 @@ def email_signup(request):
         if not result['success']:
             messages.error(request, 'Invalid reCAPTCHA. Please try again.')
             return redirect('email_signup')
-        
+
         # Form validation and processing continues here...
         form = EmailSignupForm(request.POST, user=request.user)
         print(f"Is form valid? {form.is_valid()}")
@@ -76,9 +77,9 @@ def email_signup(request):
                         user=request.user,
                         defaults={
                             'list_email': request.user.email, 'source': source
-                            }
-                        )
+                        }
                     )
+                )
             else:
                 email = form.cleaned_data['email']
                 subscriber, created = (
@@ -95,7 +96,8 @@ def email_signup(request):
                     list_types = [
                         lt for lt in list_types if lt != unsubscribed_type]
                 subscriber.list_type.set(list_types)
-                messages.success(request, "Your preferences have been updated!")
+                messages.success(
+                    request, "Your preferences have been updated!")
             else:
                 # No lists selected: automatically set 'Unsubscribed'
                 subscriber.list_type.clear()

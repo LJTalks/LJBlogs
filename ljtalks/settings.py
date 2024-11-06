@@ -23,7 +23,14 @@ if os.path.isfile('env.py'):
 # import cloudinary
 # import cloudinary.uploader
 # import cloudinary.api
+import logging
 
+
+# & import logging to log outgoing email content
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 # Project BASE directory
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -250,12 +257,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# For recaptcha
-ACCOUNT_ADAPTER = 'ljtalks.adapters.CustomAccountAdapter'
-
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # We def want this
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_HTML_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_TEMPLATE = (
+    "account/email/email_confirmation_message")
+ACCOUNT_EMAIL_CONFIRMATION_HTML_EMAIL = (
+    "account/email/email_confirmation_message.html")
+
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # Login with email/username
 # (again CHATGPT down below)
 ACCOUNT_USERNAME_REQUIRED = True  # We want usernames

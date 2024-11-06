@@ -17,8 +17,26 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from django_ratelimit.decorators import ratelimit
+from django.template.loader import render_to_string
 
 
+# Temp view to debug HTML Django emails
+def test_html_email(request):
+    subject = "Test HTML Email"
+    text_content = "This is a test email."
+    html_content = render_to_string(
+        "account/email/email_confirmation_message.html", {})
+    send_mail(
+        subject,
+        text_content,
+        settings.DEFAULT_FROM_EMAIL,
+        ["laura@ljtalks.com"],
+        html_message=html_content,
+    )
+    return HttpResponse("Email sent")
+
+
+# This is the view for users to register to use the site
 # Limit to 5 requests per minute per IP
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def register_user(request):
