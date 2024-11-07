@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% block robots %}
+<meta name="robots" content="index, follow">
+{% endblock robots %}
 {% block content %}
 <div class="terms container mt-4">
     <h1>Terms and Conditions</h1>
@@ -36,6 +39,18 @@
 
     <h2>Your Privacy</h2>
     <p>Please read our <a href="{% url 'privacy_policy' %}">Privacy Policy</a>.</p>
+
+    <h2>Service-Specific Policies</h2>
+    <p>For any custom services offered through LJ Talks, including web development, video editing, and digital marketing, specific terms apply:</p>
+    <ul>
+        <li><strong>Payment Terms:</strong> For custom services, a 50% upfront payment is required to secure the project. The remaining balance is due upon project completion and prior to the final handover of deliverables. All billing for custom services is handled directly, and no subscriptions are currently offered.</li>
+        <li><strong>Revisions:</strong> Each service includes up to two revisions, as specified in the project terms. Additional revisions, if requested, may incur additional fees, which will be communicated in advance.</li>
+    </ul>
+
+    <h2>Refund and Dispute Policy</h2>
+    <p><strong>Refund Policy for Digital Products:</strong> We offer refunds within 14 days if the digital product cannot be accessed or used due to technical issues on our end. Refund requests must be submitted through our contact page, specifying the issue encountered. We aim to process refund requests within 7 business days.</p>
+    <p><strong>Refund Policy for Services:</strong> Due to the nature of custom services, refunds are generally not available once work has commenced. However, if you choose to cancel before the final handover, any unused portion of your upfront payment may be refunded at our discretion, depending on the work completed up to that point. No refunds are issued once the final deliverable has been provided.</p>
+    <p><strong>Dispute Resolution Process:</strong> If you have any concerns or issues regarding your purchase, please contact us through our <a href="{% url 'contact' %}">contact page</a> to discuss a resolution. We are committed to resolving matters promptly and professionally.</p>
 
     <h2>Disclaimer</h2>
     <p>To the fullest extent permitted by applicable law, we limit our liability for any issues arising from the use of this website and the content provided within. This includes, but is not limited to, any indirect or consequential damages.</p>
