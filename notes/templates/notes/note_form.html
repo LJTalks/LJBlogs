@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block head_title %}Add/Edit Note{% endblock head_title %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 mt-3">
+            <h3>{% if note %}Edit{% else %}Add{% endif %} Note</h3>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-primary" type="submit">
+                    {% if note %}Update{% else %}Add{% endif %} Note
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

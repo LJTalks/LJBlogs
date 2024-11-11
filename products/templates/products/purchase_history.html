@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Purchase History</h1>
+
+{% if purchases %}
+<ul>
+    {% for purchase in purchases %}
+    <li>
+        <!-- Link the product title to the product detail page using the slug -->
+        <a href="{% url 'product_detail' purchase.product.slug %}">
+            <strong>{{ purchase.product.title }}</strong>
+        </a>
+        <p>{{ purchase.product.content|truncatewords:20|safe }}</p> <!-- Show a preview of the content -->
+        - {{ purchase.quantity }} purchased at £{{ purchase.price_paid }}
+        on
+        {{ purchase.purchase_date }} ({{ purchase.get_status_display }})
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You have not made any purchases yet. Visit our <a href="{% url 'product_list' %}">store</a>!</p>
+{% endif %}
+
+{% endblock content %}

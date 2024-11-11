@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>{{ product.title }}</h1>
+
+    <hr>
+    <!-- If the product is free, display full content for all users -->
+    {% if product.price == 0.00 %}
+        <p>{{ product.content | safe }}</p> <!-- Free guide content for all users -->
+
+    {% else %}
+        <!-- If the product is not free check the user is logged in -->
+        {% if user.is_authenticated %}
+
+            <!-- Check if logged in user has purchased -->
+            {% if is_purchased %}
+                <p>{{ product.content | safe }}</p> <!-- Full guide for purchased users -->
+
+            {% else %}
+                <p>You have not purchased this product.</p>
+                <a href="{% url 'fake_payment' product.id %}" class="btn btn-primary">Purchase Now!</a>
+                <!-- If user is not logged in, show excerpt and prompt to log in -->
+                <!-- Check where this shows up, we want all users except those who have
+                 logged in and purchased to see this -->
+                <h2>Public Summary</h2>
+                <p>{{ product.excerpt | safe }}</p> <!-- Public information -->
+                <!-- CTA Buy the product -->
+                <!-- This is misplaced, it should only be shown to authenticated
+                 users who haven't purchased -->
+                <p><strong>To access the full guide, please purchase the product.</strong></p>
+                <p>Price: £{{ product.price }}</p>
+                <a href="{% url 'purchase_product' product.id %}" class="btn btn-primary">Purchase Now!</a>
+
+            {% endif %}
+            <!-- is logged in and purchased -->
+
+        {% else %}
+        <!-- If user is not logged in, show excerpt and prompt to log in -->
+        <h2>Public Summary</h2>
+        <p>{{ product.excerpt | safe }}</p> <!-- Public information -->
+        <!-- CTA Log in -->
+        <p><strong>To access the full content, please
+            <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-secondary">Log in</a></strong></p>
+<p>Don't have an account?
+    <a href="{% url 'account_signup' %}?next={{ request.path }}" class="btn btn-secondary">Register</a> here</p>
+        {% endif %}
+        <!-- Is authenticated / logged in -->
+
+    {% endif %}
+    <!-- product is free -->
+
+<hr>
+<!-- Related Products Section -->
+<div class="related-products">
+    <h3>Related Products</h3>
+    <p>If you like this, you might like...</p>
+    <ul>
+        <!-- Show non-purchased related products -->
+        {% for related_product in product.related_products.all %}
+        <li>
+            <a href="{% url 'product_detail' related_product.slug %}">
+                {{ related_product.title }} -
+                {% if related_product.price > 0.00 %} £{{ related_product.price }}
+                {% else %} Free {% endif %}
+            </a>
+            {% if related_product in purchased_related_products %}
+            <span>(Already Purchased)</span>  <!-- Add label if already purchased -->
+            {% endif %}
+        </li>
+        {% empty %}
+        <li>No related products available.</li>
+        <hr>
+        {% endfor %}
+    </ul>
+</div>
+<hr />
+
+<!-- Notes Section -->
+<div class="col-md-8 card mb-4 mt-3">
+    <h3>Your Notes</h3>
+    <!-- Check if the user is authenticated -->
+    {% if user.is_authenticated %}
+        <!-- Check if there are any notes -->
+        {% if notes %}
+        <!-- Loop through each note and display it (only for the logged-in user) -->
+        <div class="card-body">
+            <ul class="list-unstyled">
+                {% for note in notes %}
+                <li class="p-2 note-item">
+                    <strong>{{ note.content }}</strong>
+                    <br>
+                    <em>{{ note.created_at }}</em>
+                    <div class="mt-2">
+                        <!-- Edit and delete buttons, since only the user sees their own notes -->
+                        <a href="{% url 'notes:edit_note' note.id %}?next={% url 'product_detail' product.slug %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'notes:delete_note' note.id %}?next={% url 'product_detail' product.slug %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this note?');">Delete</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <!-- Message displayed if there are no notes yet -->
+        <p>You have no notes for this product yet.</p>
+        {% endif %}
+        <a href="{% url 'notes:create' product.id %}" class="btn btn-primary mt-3">Add a Note</a>
+    {% else %}
+    <!-- Prompt for users to log in if they aren't authenticated -->
+    <p>You must be <a href="{% url 'account_login' %}?next={{ request.path }}">logged in</a> to view and add notes. Don't have an account? <a href="{% url 'account_signup' %}?next={{ request.path }}">Sign up here</a></p>
+    {% endif %}
+</div>
+
+
+{% endblock %}

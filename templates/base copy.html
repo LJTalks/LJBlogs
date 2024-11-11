@@ -80,76 +80,68 @@
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-light bg-white">
             <div class="container-fluid">
-                <a class="navbar-brand logo" href="{% url 'home' %}" aria-label="Go to home page">
-                    <span class="h1">LJ Talks</span>
-                </a>
+                <a class="navbar-brand logo" href="{% url 'home' %}" aria-label="Go to home page"><span class="h1">LJ Talks</span></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
                     aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
+                <!-- Collapsed menu -->
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <!-- General Links -->
-                        <!-- <li class="nav-item">
-                            <a class="nav-link {% if request.path == home_url %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                        </li> -->
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == 'about_me_url' %}active{% endif %}" href="{% url 'about_me' %}">About Me</a>
+                            <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page"
+                                href="{% url 'home' %}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == 'projects_url' %}active{% endif %}" href="{% url 'projects' %}">My Projects</a>
+                                <a class="nav-link {% if request.path == 'about_me_url' %}active{% endif %}" aria-current="page"
+                                href="{% url 'about_me' %}">About Me</a>
                         </li>
-                        
-                        <!-- Dropdown for Extra Links -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Explore
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{% url 'contact' %}?next={{ request.path }}">Contact Me</a></li>
-                                {% if request.user.is_authenticated %}
-                                    <li><a class="dropdown-item" href="{% url 'product_list' %}">Products</a></li>
-                                    <!-- <li><a class="dropdown-item" href="{% url 'notes:note_list' %}">Notes</a></li> -->
-                                {% endif %}
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == 'projects_url' %}active{% endif %}" aria-current="page"
+                            href="{% url 'projects' %}">My Projects</a>
                         </li>
-        
-                        <!-- Authentication Links -->
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == contact_url %}active{% endif %}" aria-current="page"
+                            href="{% url 'contact' %}?next={{ request.path }}">Contact Me</a>
+                        </li>                    
+                        <!-- Behind password login -->
                         {% if request.user.is_authenticated %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Profile
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
-                                    {% if is_tester %}
-                                        <li><a class="dropdown-item" href="{% url 'beta_features' %}">Beta Features</a></li>
-                                    {% else %}
-                                        <li><a class="dropdown-item" href="{% url 'apply_for_beta_access' %}">Apply for Beta Access</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page"
+                            href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a>
+                        </li>
+                            {% if is_tester %}
+                                <!-- Display Beta Features link if authorised tester -->
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.path == beta_features_url %}active{% endif %}" aria-current="page"
+                                    href="{% url 'beta_features' %}">Beta Features</a>
+                                </li>
+                            {% else %}
+                                <!-- Logged in Invite; apply for access -->
+                                <li class="nav-item">
+                                <a class="nav-link {% if request.path == apply_for_beta_access_url %}active{% endif %}" aria-current="page"
+                                href="{% url 'apply_for_beta_access' %}">Apply for Beta Access</a>
+                                </li>
+                            {% endif %}
                         {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.path == signup_url %}active{% endif %}" href="{% url 'account_signup' %}?next={{ request.path }}">Register</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.path == login_url %}active{% endif %}" href="{% url 'account_login' %}?next={{ request.path }}">Login</a>
-                            </li>
+                        <!-- User not logged in, show register and login links -->
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == signup_url %}active{% endif %}" aria-current="page"
+                                href="{% url 'account_signup' %}?next={{ request.path }}">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == login_url %}active{% endif %}" aria-current="page"
+                                href="{% url 'account_login' %}?next={{ request.path }}">Login</a>
+                        </li>
                         {% endif %}
                     </ul>
-        
-                    <!-- CTA Link -->
                     <div class="navbar-text nav-link">
                         <a href="{% url 'email_signup' %}?next={{ request.path }}">
-                            <span class="lead">Join me on a Full Stack Adventure!</span>
-                        </a>
+                            <span class="lead">Join me on a Full Stack Adventure!</span></a>
                     </div>
                 </div>
             </div>
         </nav>
-        
 
         <!-- displaying Django messages -->
         <div class="container django_msg">
