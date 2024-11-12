@@ -5,58 +5,48 @@
     <h1>{{ product.title }}</h1>
 
     <hr>
-    <!-- If the product is free, display full content for all users -->
-    {% if product.price == 0.00 %}
+    <!-- If the product is free, or purchased display full content for all users -->
+    {% if is_purchased or product.price == 0.00 %}
         <p>{{ product.content | safe }}</p> <!-- Free guide content for all users -->
 
     {% else %}
-        <!-- If the product is not free check the user is logged in -->
-        {% if user.is_authenticated %}
-
-            <!-- Check if logged in user has purchased -->
-            {% if is_purchased %}
-                <p>{{ product.content | safe }}</p> <!-- Full guide for purchased users -->
-
-            {% else %}
-                <p>You have not purchased this product.</p>
-                <a href="#" id="checkout-button" class="btn btn-primary">Purchase Now!</a>
-                <script>
-                    const stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
-                    document.getElementById("checkout-button").addEventListener("click", async () => {
-                        const response = await fetch("{% url 'create_checkout_session' product.id %}");
-                        const { id } = await response.json();
-                        stripe.redirectToCheckout({ sessionId: id });
-                    });
-                </script>                <!-- If user is not logged in, show excerpt and prompt to log in -->
-                <!-- Check where this shows up, we want all users except those who have
-                 logged in and purchased to see this -->
-                <h2>Public Summary</h2>
-                <p>{{ product.excerpt | safe }}</p> <!-- Public information -->
-                <!-- CTA Buy the product -->
-                <!-- This is misplaced, it should only be shown to authenticated
-                 users who haven't purchased -->
-                <p><strong>To access the full guide, please purchase the product.</strong></p>
-                <p>Price: £{{ product.price }}</p>
-                <!-- <a href="{% url 'fake_payment' product.id %}" class="btn btn-primary">Purchase Now!</a> -->
-                <a href="#" id="checkout-button" class="btn btn-primary">Purchase Now!</a>
-
-            {% endif %}
-            <!-- is logged in and purchased -->
-
-        {% else %}
-        <!-- If user is not logged in, show excerpt and prompt to log in -->
-        <h2>Public Summary</h2>
-        <p>{{ product.excerpt | safe }}</p> <!-- Public information -->
-        <!-- CTA Log in -->
-        <p><strong>To access the full content, please
-            <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-secondary">Log in</a></strong></p>
-<p>Don't have an account?
-    <a href="{% url 'account_signup' %}?next={{ request.path }}" class="btn btn-secondary">Register</a> here</p>
-        {% endif %}
-        <!-- Is authenticated / logged in -->
+        <!-- Include Stripe.js -->
+         <script src="https://js.stripe.com/v3/"></script>
+        <!-- show preview for paid content -->
+        <p>{{ product.excerpt | safe }}</p>
+        <p><strong>Price: £{{ product.price }}</strong></p>
+        <!-- "Purchase Now" button -->
+        <a href="#" id="checkout-button" class="btn btn-primary">Purchase Now!</a>
+        <script>
+            // Initialize Stripe with your public key
+            const stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
+            document.getElementById("checkout-button").addEventListener("click", async (e) => {
+                e.preventDefault();
+        
+                // Make an AJAX POST request to create a checkout session
+                const response = await fetch("{% url 'create_checkout_session' product.id %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"  // Include CSRF token for security
+                    },
+                });
+        
+                // Parse the response
+                const session = await response.json();
+        
+                // Redirect to Stripe's checkout page
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+        
+                if (error) {
+                    console.error("Stripe Checkout error:", error.message);
+                }
+            });
+        </script>
 
     {% endif %}
-    <!-- product is free -->
 
 <hr>
 <!-- Related Products Section -->
@@ -84,7 +74,7 @@
         {% endfor %}
     </ul>
 </div>
-<hr />
+<hr>
 
 <!-- Notes Section -->
 <div class="col-md-8 card mb-4 mt-3">

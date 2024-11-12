@@ -14,6 +14,10 @@ from django.views.decorators.csrf import csrf_exempt
 # Local application imports
 from notes.models import Note
 from products.models import Product, Purchase
+from django.views.decorators.http import require_POST
+# For testing purposes, if CSRF token is not being passed
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Products views
 # def home(request):
@@ -43,33 +47,41 @@ def product_list(request):
 # Product Detail View handles free for all, and purchased for logged in users
 
 
+#  Stripe payment
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
     related_products = product.related_products.all()
 
-    # Get the user's notes for this product if they are authenticated
+    # Check if the user has already purchased the product
+    is_purchased = False
     if request.user.is_authenticated:
-        notes = Note.objects.filter(user=request.user, product=product)
-    else:
-        notes = None  # If not logged in, no notes available
-
-    # Pass the notes to the context
-
-    # Check purchased products for the current user
-    if request.user.is_authenticated:
-        purchased_products = Purchase.objects.filter(
-            user=request.user).values_list('product_id', flat=True)
-        related_products = related_products.exclude(id__in=purchased_products)
-        # create purchased_retlated_products to store related products the user has purchased
-        purchased_related_products = product.related_products.filter(
-            id__in=purchased_products)
         is_purchased = Purchase.objects.filter(
             product=product, user=request.user, status=1).exists()
-    else:
-        # If the user is not authenticated, there will be no purchased products
-        notes = None
-        purchased_related_products = []
-        is_purchased = False
+
+    # Get user's notes for this product if they are authenticated
+    notes = Note.objects.filter(
+        user=request.user, product=product) if request.user.is_authenticated else None
+
+    # Prepare context with all necessary variables
+    context = {
+        'product': product,
+        'is_purchased': is_purchased,
+        'notes': notes,
+        'related_products': related_products,
+        'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
+    }
+
+    # If the product is free or already purchased, show full content
+    if product.price == 0.00 or is_purchased:
+        return render(
+            request, 'products/product_detail.html', context)
+
+    # If the product is paid and not purchased, show the preview
+    # with a "Purchase Now" button
+    return render(request, 'products/product_detail.html', context)
 
     # Initialise context with public content
     context = {
@@ -79,6 +91,7 @@ def product_detail(request, slug):
         # Add the purchased related products here
         'purchased_related_products': purchased_related_products,
         'is_purchased': is_purchased,
+        'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
     }
 
     # Check if the product is free for all users
@@ -194,12 +207,6 @@ def purchase_success(request, product_id):
     messages.success(request, f'Successfully purchased {product.title}!')
     return redirect('purchase_history')
 
-
-#  Stripe payment
-# views.py
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
-
 # @csrf_exempt
 # def create_payment(request):
 #     if request.method == "POST":
@@ -222,6 +229,8 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 #         })
 
 
+@csrf_exempt  # Use only for testing if necessary; ensure CSRF token is being passed in production
+@require_POST  # Restrict to POST requests only
 @login_required
 def create_checkout_session(request, product_id):
     product = get_object_or_404(Product, id=product_id)
