@@ -19,8 +19,15 @@
 
             {% else %}
                 <p>You have not purchased this product.</p>
-                <a href="{% url 'fake_payment' product.id %}" class="btn btn-primary">Purchase Now!</a>
-                <!-- If user is not logged in, show excerpt and prompt to log in -->
+                <a href="#" id="checkout-button" class="btn btn-primary">Purchase Now!</a>
+                <script>
+                    const stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
+                    document.getElementById("checkout-button").addEventListener("click", async () => {
+                        const response = await fetch("{% url 'create_checkout_session' product.id %}");
+                        const { id } = await response.json();
+                        stripe.redirectToCheckout({ sessionId: id });
+                    });
+                </script>                <!-- If user is not logged in, show excerpt and prompt to log in -->
                 <!-- Check where this shows up, we want all users except those who have
                  logged in and purchased to see this -->
                 <h2>Public Summary</h2>
@@ -30,7 +37,8 @@
                  users who haven't purchased -->
                 <p><strong>To access the full guide, please purchase the product.</strong></p>
                 <p>Price: £{{ product.price }}</p>
-                <a href="{% url 'purchase_product' product.id %}" class="btn btn-primary">Purchase Now!</a>
+                <!-- <a href="{% url 'fake_payment' product.id %}" class="btn btn-primary">Purchase Now!</a> -->
+                <a href="#" id="checkout-button" class="btn btn-primary">Purchase Now!</a>
 
             {% endif %}
             <!-- is logged in and purchased -->
@@ -64,6 +72,8 @@
                 {% if related_product.price > 0.00 %} £{{ related_product.price }}
                 {% else %} Free {% endif %}
             </a>
+            <!-- Debugging line -->
+             <p>Generated URL: {% url 'product_detail' related_product.slug %}</p>
             {% if related_product in purchased_related_products %}
             <span>(Already Purchased)</span>  <!-- Add label if already purchased -->
             {% endif %}

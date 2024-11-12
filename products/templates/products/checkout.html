@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Payment for {{ product.title }}</h2>
+<p>Price: £{{ product.price }}</p>
+<!-- Stripe.js  -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- <button id="checkout-button">Pay £{{ product.price }}</button> -->
+
+<script>
+    const stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
+
+    document.getElementById("checkout-button").addEventListener("click", async () => {
+        const response = await fetch("{% url 'create_checkout_session' product.id %}");
+        const { id } = await response.json();
+        stripe.redirectToCheckout({ sessionId: id });
+    });
+</script>
+
+
+{% endblock %}

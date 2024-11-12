@@ -259,8 +259,11 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 SUPPORT_EMAIL = os.getenv('SUPPORT_EMAIL')
 
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
+
 # BEWARE ChatGpt asked me to add this when adding auth and email verification
-# Not sure thisi snecessary, we don't have it in ljmedia.co.uk
+# Not sure this is necessary, we don't have it in ljmedia.co.uk
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
