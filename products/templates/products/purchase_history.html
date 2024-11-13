@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <h1>Purchase History</h1>
 
@@ -7,14 +7,10 @@
 <ul>
     {% for purchase in purchases %}
     <li>
-        <!-- Link the product title to the product detail page using the slug -->
-        <a href="{% url 'product_detail' purchase.product.slug %}">
-            <strong>{{ purchase.product.title }}</strong>
-        </a>
+        <strong><a href="{% url 'product_detail' slug=purchase.product.slug %}">
+            {{ purchase.product.title }}</a>
+        </strong> | £{{ purchase.price_paid }}
         <p>{{ purchase.product.content|truncatewords:20|safe }}</p> <!-- Show a preview of the content -->
-        - {{ purchase.quantity }} purchased at £{{ purchase.price_paid }}
-        on
-        {{ purchase.purchase_date }} ({{ purchase.get_status_display }})
     </li>
     {% endfor %}
 </ul>

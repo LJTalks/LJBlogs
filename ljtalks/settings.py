@@ -261,7 +261,7 @@ SUPPORT_EMAIL = os.getenv('SUPPORT_EMAIL')
 
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
-print("Stripe Public Key:", STRIPE_PUBLIC_KEY)
+# print("Stripe Public Key:", STRIPE_PUBLIC_KEY)
 
 
 # BEWARE ChatGpt asked me to add this when adding auth and email verification

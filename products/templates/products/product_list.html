@@ -1,35 +1,55 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Our Products</h2>
-    <ul class="product-list">
+    <h2 class="text-center mb-4">Digital Products</h2>
+    <div class="row">
+        <!-- Loop through each product -->
         {% for product in page_obj %}
-        <li class="product-card">
-            <a href="{% url 'product_detail' product.slug %}">{{ product.title }}</a>
-            <p>{{ product.content|truncatewords:20|safe }}</p> <!-- Show a preview of the content -->
-            <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary">View Product</a>
-        </li>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <!-- Product Image Placeholder (if you decide to add images later) -->
+                <img src="{% static 'images/default_product.jpg' %}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
+                
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    
+                    <!-- Show whether the product is purchased or recommended -->
+                    {% if product.is_purchased %}
+                    <span class="badge bg-success">Purchased</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Recommended</span>
+                    {% endif %}
+                    
+                    <!-- Display a preview of the product content -->
+                    <p class="card-text">{{ product.content|truncatewords:20|safe }}</p>
+                    
+                    <!-- View Product Button -->
+                    <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary">View Product</a>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
-</div>
-<!-- Pagination Controls -->
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </div>
+    
+    <!-- Pagination Controls -->
+    <div class="pagination text-center">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
         </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
+    </div>
 </div>
-
 {% endblock %}

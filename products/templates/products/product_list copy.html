@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Our Products</h2>
+    <ul class="product-list">
+        {% for product in page_obj %}
+        <li class="product-card">
+            <a href="{% url 'product_detail' product.slug %}">{{ product.title }}</a>
+            <p>{{ product.content|truncatewords:20|safe }}</p> <!-- Show a preview of the content -->
+            <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary">View Product</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<!-- Pagination Controls -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

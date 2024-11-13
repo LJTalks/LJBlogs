@@ -10,7 +10,7 @@ urlpatterns = [
          name='product_detail'),  # Product summary view
     path('purchase/<int:product_id>/', views.purchase_product,
          name='purchase_product'),  # purchase product view
-    path('history/', views.purchase_history,
+    path('purchase/history/', views.purchase_history,
          name='purchase_history'),  # Purchase history view
     path('accounts/', include('allauth.urls')),
     #     path('purchase/checkout/<int:product_id>/',

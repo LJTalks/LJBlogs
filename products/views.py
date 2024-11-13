@@ -4,6 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Exists, OuterRef, BooleanField, Value
+from django.db import models
+from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic import TemplateView
@@ -19,11 +22,6 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
 
-# Products views
-# def home(request):
-#     return render(request, 'products/home.html')
-
-
 def login_or_signup(request):
     """
     Custom view to show login or signup options when accessing paid products
@@ -36,17 +34,26 @@ def login_or_signup(request):
 # Product List View for potential customers/all users
 def product_list(request):
     # Fetch all products in development
-    products = Product.objects.all().order_by('-publish_date')
+    products = Product.objects.filter(status=1).order_by('-publish_date')
+    if request.user.is_authenticated:
+        purchases_subquery = Purchase.objects.filter(
+            product_id=OuterRef('id'), user=request.user, status=1
+        )
+        products = products.annotate(
+            is_purchased=Exists(purchases_subquery)
+        )
+    else:
+        products = products.annotate(is_purchased=models.Value(False))
     # Initialize the paginator, 6 products per page
     paginator = Paginator(products, 6)  # Show 6 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     # Pass the paginated object to the template
-    return render(request, 'products/product_list.html', {'page_obj': page_obj})
+    return render(
+        request, 'products/product_list.html', {'page_obj': page_obj})
+
 
 # Product Detail View handles free for all, and purchased for logged in users
-
-
 #  Stripe payment
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -152,7 +159,7 @@ def purchase_product(request, product_id):
 
     # Add success message
     messages.add_message(request, messages.SUCCESS,
-                         f"Successfully purchased {product.title}!")
+                         f"Thank you for purchasing {product.title}!")
 
     # Redirect to purchase history
     return HttpResponseRedirect(reverse("purchase_history"))
