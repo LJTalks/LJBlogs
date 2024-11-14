@@ -8,12 +8,19 @@
         <!-- Loop through each product -->
         {% for product in page_obj %}
         <div class="col-md-4 mb-4">
-            <div class="card">
+            <div class="card shadow-sm">
                 <!-- Product Image Placeholder (if you decide to add images later) -->
                 <img src="{% static 'images/default_product.jpg' %}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
                 
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ product.title }}</h5>
+                    {% if not product.is_purchased %}
+                        {% if product.price == 0.00 %}
+                            <p class="card-text">Free</p>
+                        {% else %}
+                            <p class="card-text">Price: £{{ product.price }}</p>
+                        {% endif %}
+                    {% endif %}
                     
                     <!-- Show whether the product is purchased or recommended -->
                     {% if product.is_purchased %}
@@ -23,33 +30,40 @@
                     {% endif %}
                     
                     <!-- Display a preview of the product content -->
-                    <p class="card-text">{{ product.content|truncatewords:20|safe }}</p>
+                    <p class="card-text">
+                        {% if product.excerpt %}
+                            {{ product.excerpt|truncatechars_html:20 | safe }}
+                        {% else %}
+                            {{ product.content|truncatechars_html:20 | safe }}
+                        {% endif %}
+                    </p>
                     
                     <!-- View Product Button -->
-                    <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary">View Product</a>
+                    <a href="{% url 'product_detail' product.slug %}" class="btn btn-sm btn-primary visit-site-button">View Product</a>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
     
-    <!-- Pagination Controls -->
-    <div class="pagination text-center">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; First</a>
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-    
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+    <!-- Pagination -->
+    <div>
+        {% if is_paginated %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}" class="page-link-btn">&laquo; PREV</a>
+                </li>
+                {% endif %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}" class="page-link-btn">NEXT &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
 </div>
 {% endblock %}

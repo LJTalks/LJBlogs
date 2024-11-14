@@ -1,11 +1,13 @@
 from django.urls import path, include
 from . import views
+from .views import ProductListView
 
 # app_name = 'products'  # Namespace for clarity
 
 
 urlpatterns = [
-    path('all/', views.product_list, name='product_list'),  # Product list view
+    path('', ProductListView.as_view(),
+         name='product_list'),  # Product list view
     path('<slug:slug>/', views.product_detail,
          name='product_detail'),  # Product summary view
     path('purchase/<int:product_id>/', views.purchase_product,

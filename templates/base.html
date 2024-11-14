@@ -108,10 +108,8 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{% url 'contact' %}?next={{ request.path }}">Contact Me</a></li>
-                                {% if request.user.is_authenticated %}
                                     <li><a class="dropdown-item" href="{% url 'product_list' %}">Products</a></li>
                                     <!-- <li><a class="dropdown-item" href="{% url 'notes:note_list' %}">Notes</a></li> -->
-                                {% endif %}
                             </ul>
                         </li>
         

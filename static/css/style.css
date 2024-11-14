@@ -264,6 +264,10 @@ main {
     transition: all 0.3s ease-in-out!important;
 }
 
+.visit-site-button {
+    font-size: 1rem!important; /* Adjust as needed */
+}
+
 /* Pink Button Hover Effect */
 .btn-primary:hover,
 .btn-contact:hover,
@@ -390,6 +394,11 @@ main {
 
 
 /* Other Styling */
+.related-products.a {
+    text-decoration: none;
+}
+
+
 .faded {
     color: var(--text-muted-color);
 }

@@ -9,10 +9,9 @@ from django_summernote.admin import SummernoteModelAdmin
 
 # Product Admin View
 class ProductAdmin(SummernoteModelAdmin):
-    # Apply Summernote to these fields
     summernote_fields = ('content', 'excerpt',)
-    # removed stock and tier refs
-    list_display = ('title', 'slug', 'price', 'category')
+    list_display = ('title', 'slug', 'price', 'category',
+                    'get_status_display')
     search_fields = ('title', 'content')
     ordering = ('title',)
     # Auto Generates slug from title
@@ -63,7 +62,7 @@ class ProductAdmin(SummernoteModelAdmin):
     duplicate_button.short_description = "Duplicate Button"
     duplicate_button.allow_tags = True
 
-    list_display = ('title', 'slug', 'price', 'category', 'duplicate_button')
+    list_display = ('title', 'slug', 'price', 'category', 'get_status_display')
 
 
 # Purchase Admin View

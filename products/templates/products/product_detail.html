@@ -1,20 +1,26 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
-    <h1>{{ product.title }}</h1>
+<div class="container mt-5">
+    <h2>{{ product.title }}</h2>
 
     <hr>
     <!-- If the product is free, or purchased display full content for all users -->
-    {% if is_purchased or product.price == 0.00 %}
-        <p>{{ product.content | safe }}</p> <!-- Free guide content for all users -->
-
+    {% if show_full_content %}
+        <p>{{ product.content | safe }}</p>
     {% else %}
-        <!-- Include Stripe.js -->
-         <script src="https://js.stripe.com/v3/"></script>
+    <!-- Include Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
         <!-- show preview for paid content -->
-        <p>{{ product.excerpt | safe }}</p>
+        {% if product.excerpt %}
+            {{ product.excerpt | safe }}
+        {% else %}
+            {{ product.content|truncatechars_html:200 | safe }}
+        {% endif %}
         <p><strong>Price: £{{ product.price }}</strong></p>
+        {% if show_buy_now %}
         <!-- "Purchase Now" button -->
         <a href="#" id="checkout-button" class="btn btn-primary">Purchase Now!</a>
         <script>
@@ -45,9 +51,8 @@
                 }
             });
         </script>
-
+        {% endif %}
     {% endif %}
-
 <hr>
 <!-- Related Products Section -->
 <div class="related-products">
@@ -77,39 +82,42 @@
 <hr>
 
 <!-- Notes Section -->
-<div class="col-md-8 card mb-4 mt-3">
-    <h3>Your Notes</h3>
-    <!-- Check if the user is authenticated -->
-    {% if user.is_authenticated %}
-        <!-- Check if there are any notes -->
-        {% if notes %}
-        <!-- Loop through each note and display it (only for the logged-in user) -->
-        <div class="card-body">
-            <ul class="list-unstyled">
-                {% for note in notes %}
-                <li class="p-2 note-item">
-                    <strong>{{ note.content }}</strong>
-                    <br>
-                    <em>{{ note.created_at }}</em>
-                    <div class="mt-2">
-                        <!-- Edit and delete buttons, since only the user sees their own notes -->
-                        <a href="{% url 'notes:edit_note' note.id %}?next={% url 'product_detail' product.slug %}" class="btn btn-sm btn-warning">Edit</a>
-                        <a href="{% url 'notes:delete_note' note.id %}?next={% url 'product_detail' product.slug %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this note?');">Delete</a>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 card mb-4 mt-3">
+            <h3>Your Notes</h3>
+            <!-- Check if the user is authenticated -->
+            {% if user.is_authenticated %}
+                <!-- Check if there are any notes -->
+                {% if notes %}
+                <!-- Loop through each note and display it (only for the logged-in user) -->
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for note in notes %}
+                        <li class="p-2 note-item">
+                            <strong>{{ note.content }}</strong>
+                            <br>
+                            <em>{{ note.created_at }}</em>
+                            <div class="mt-2">
+                                <!-- Edit and delete buttons, since only the user sees their own notes -->
+                                <a href="{% url 'notes:edit_note' note.id %}?next={% url 'product_detail' product.slug %}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{% url 'notes:delete_note' note.id %}?next={% url 'product_detail' product.slug %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this note?');">Delete</a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                <!-- Message displayed if there are no notes yet -->
+                <p>You have no notes for this product yet.</p>
+                {% endif %}
+                <a href="{% url 'notes:create' product.id %}" class="btn btn-primary mt-3">Add a Note</a>
+            {% else %}
+            <!-- Prompt for users to log in if they aren't authenticated -->
+            <p>You must be <a href="{% url 'account_login' %}?next={{ request.path }}">logged in</a> to view and add notes. Don't have an account? <a href="{% url 'account_signup' %}?next={{ request.path }}">Sign up here</a></p>
+            {% endif %}
         </div>
-        {% else %}
-        <!-- Message displayed if there are no notes yet -->
-        <p>You have no notes for this product yet.</p>
-        {% endif %}
-        <a href="{% url 'notes:create' product.id %}" class="btn btn-primary mt-3">Add a Note</a>
-    {% else %}
-    <!-- Prompt for users to log in if they aren't authenticated -->
-    <p>You must be <a href="{% url 'account_login' %}?next={{ request.path }}">logged in</a> to view and add notes. Don't have an account? <a href="{% url 'account_signup' %}?next={{ request.path }}">Sign up here</a></p>
-    {% endif %}
+    </div>
 </div>
-
 
 {% endblock %}

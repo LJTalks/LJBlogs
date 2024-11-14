@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Exists, OuterRef, BooleanField, Value
+from django.db.models import Exists, OuterRef, Q, Value
 from django.db import models
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, redirect, render
@@ -13,11 +13,14 @@ from django.views.generic import TemplateView
 import stripe
 from django.conf import settings
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 # Local application imports
 from notes.models import Note
 from products.models import Product, Purchase
 from django.views.decorators.http import require_POST
+from django.views import generic
+from django.template.loader import render_to_string
+import os
+
 # For testing purposes, if CSRF token is not being passed
 from django.views.decorators.csrf import csrf_exempt
 
@@ -32,25 +35,49 @@ def login_or_signup(request):
 
 
 # Product List View for potential customers/all users
-def product_list(request):
-    # Fetch all products in development
-    products = Product.objects.filter(status=1).order_by('-publish_date')
-    if request.user.is_authenticated:
-        purchases_subquery = Purchase.objects.filter(
-            product_id=OuterRef('id'), user=request.user, status=1
-        )
-        products = products.annotate(
-            is_purchased=Exists(purchases_subquery)
-        )
-    else:
-        products = products.annotate(is_purchased=models.Value(False))
-    # Initialize the paginator, 6 products per page
-    paginator = Paginator(products, 6)  # Show 6 products per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    # Pass the paginated object to the template
-    return render(
-        request, 'products/product_list.html', {'page_obj': page_obj})
+class ProductListView(generic.ListView):
+    model = Product
+    template_name = "products/product_list.html"
+    paginate_by = 6
+
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by("-publish_date")
+
+        if os.path.exists('env.py'):
+            queryset = queryset.filter(Q(status=1) | Q(status=0))
+        else:
+            queryset = queryset.filter(status=1)
+
+        # Annotate purchase status if user is authenticated
+        if self.request.user.is_authenticated:
+            purchases_subquery = Purchase.objects.filter(
+                product_id=OuterRef('id'), user=self.request.user, status=1
+            )
+            queryset = queryset.annotate(
+                is_purchased=Exists(purchases_subquery))
+        else:
+            queryset = queryset.annotate(is_purchased=Value(False))
+
+        return queryset
+
+    def render_to_response(self, context, **response_kwargs):
+        # Handle AJAX requests for dynamic loading or searching
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            query = self.request.GET.get("q", "")
+            products = context['object_list']
+            products_html = render_to_string(
+                'products/partials/product_list_partial.html', {
+                    'products': products}
+            )
+            if products.exists():
+                message = ""
+            else:
+                message = f'No results found for "{query}"'
+
+            return JsonResponse(
+                {'products_html': products_html, 'message': message})
+
+        return super().render_to_response(context, **response_kwargs)
 
 
 # Product Detail View handles free for all, and purchased for logged in users
@@ -59,8 +86,18 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def product_detail(request, slug):
+    # Include drafts in development
+    if os.path.exists('env.py'):
+        queryset = Product.objects.filter(Q(status=1) | Q(status=0))
+    else:
+        queryset = Product.objects.filter(status=1)
     product = get_object_or_404(Product, slug=slug)
-    related_products = product.related_products.all()
+
+    # Include drafts in development
+    if os.path.exists('env.py'):
+        related_products = product.related_products.all()
+    else:
+        related_products = product.related_products.filter(status=1)
 
     # Check if the user has already purchased the product
     is_purchased = False
@@ -81,14 +118,26 @@ def product_detail(request, slug):
         'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
     }
 
-    # If the product is free or already purchased, show full content
-    if product.price == 0.00 or is_purchased:
-        return render(
-            request, 'products/product_detail.html', context)
+    # Access logic
+    if product.price == 0.00:
+        # If the product is free, show full content to everyone
+        context['show_full_content'] = True
+    else:
+        # If the product is paid
+        if not request.user.is_authenticated:
+            # If the user is not logged in, redirect to login
+            messages.info(request, "Please log in to access this product.")
+            return redirect(f'/accounts/login/?next={request.path}')
 
-    # If the product is paid and not purchased, show the preview
-    # with a "Purchase Now" button
-    return render(request, 'products/product_detail.html', context)
+        elif is_purchased:
+            # If the product is purchased, show full content
+            context['show_full_content'] = True
+        else:
+            # If the product is not purchased, show preview with "Buy Now"
+            context['show_full_content'] = False
+            context['show_buy_now'] = True
+
+        return render(request, 'products/product_detail.html', context)
 
     # Initialise context with public content
     context = {
@@ -96,7 +145,7 @@ def product_detail(request, slug):
         'notes': notes,  # Add user notes
         'related_products': related_products,
         # Add the purchased related products here
-        'purchased_related_products': purchased_related_products,
+        # 'purchased_related_products': purchased_related_products,
         'is_purchased': is_purchased,
         'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
     }
@@ -104,6 +153,11 @@ def product_detail(request, slug):
     # Check if the product is free for all users
     if product.price == 0.00 or is_purchased:
         # If product is free, show full content to all users
+        context['show_full_content'] = True
+    else:
+        # If product is paid and not purchased, preview and buy button
+        context['show_full_content'] = False
+        context['show_buy_now'] = True
         return render(request, 'products/product_detail.html', context)
 
     if not request.user.is_authenticated:
@@ -177,29 +231,6 @@ def purchase_history(request):
         request, 'products/purchase_history.html', {'purchases': purchases})
 
 
-# # Fake payment view
-# @login_required
-# def fake_payment(request, product_id):
-#     product = get_object_or_404(Product, id=product_id)
-
-#     if request.method == 'POST':
-#         # Simulate payment success and create a purchase
-#         Purchase.objects.create(
-#             product=product,
-#             user=request.user,
-#             quantity=1,  # Set default to 1 for simplicity
-#             price_paid=product.price,  # Use current product price
-#             status=1  # Mark as "completed"
-#         )
-#         # Add success message
-#         messages.add_message(request, messages.SUCCESS,
-#                              f'Successfully purchased {product.title}!')
-#         # Redirect to the purchase history page
-#         return redirect('purchase_history')
-#     # If not a POST request, render the fake payment page
-#     return render(request, 'products/fake_payment.html', {'product': product})
-
-
 # Purchase success view
 @login_required
 def purchase_success(request, product_id):
@@ -213,27 +244,6 @@ def purchase_success(request, product_id):
     )
     messages.success(request, f'Successfully purchased {product.title}!')
     return redirect('purchase_history')
-
-# @csrf_exempt
-# def create_payment(request):
-#     if request.method == "POST":
-#         data = json.loads(request.body)
-#         product_id = data.get("product_id")
-#         product = Product.objects.get(id=product_id)
-
-#         # Convert price to cents
-#         # (Stripe requires amounts in the smallest currency unit)
-#         amount = int(product.price * 100)
-
-#         # Create a PaymentIntent with the price and currency
-#         payment_intent = stripe.PaymentIntent.create(
-#             amount=amount,
-#             currency="gbp",
-#         )
-
-#         return JsonResponse({
-#             'clientSecret': payment_intent['client_secret']
-#         })
 
 
 @csrf_exempt  # Use only for testing if necessary; ensure CSRF token is being passed in production
