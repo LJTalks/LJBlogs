@@ -108,6 +108,13 @@ def contact_submit(request):
 def projects(request):
     projects = [
         {
+            "title": "Heartland Hub",
+            "description": "A community-driven platform designed to connect users with local, home-based, and traditional businesses. It offers a directory of authentic, craft-focused enterprises, enabling artisans and small business owners to showcase their work and reach a broader audience.",
+            "link": "https://heartlandhub.co.uk/",
+            "image": "images/projects_heartland.png",
+        },
+
+        {
             "title": "Love Running",
             "description": "A Fictional Running/Social club advertising regular meets. Responsive HTML & CSS. A Code Institute Tutorial, for a social/running club. Hosted on GitHub Pages.",
             "link": "https://ljtalks.github.io/love-running/",
