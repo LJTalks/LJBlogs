@@ -124,6 +124,7 @@ INSTALLED_APPS = [
     'member.apps.MemberConfig',
     'notes',
     'products',
+    'projects',
     'ytapi',
     # 'services',
     # 'booking',
@@ -355,6 +356,9 @@ SUMMERNOTE_CONFIG = {
     },
 }
 
+# Added this for the project image 3 options, this will store locally
+# (check it works in heroku)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Media file handling (Images and uploads) - Why is this commented out?
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

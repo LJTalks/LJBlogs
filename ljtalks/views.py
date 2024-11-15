@@ -24,6 +24,64 @@ def about_me_view(request):
     })
 
 
+# View to showcase previous projects
+def projects(request):
+    projects = [
+        {
+            "title": "Heartland Hub",
+            "description": "A community-driven platform designed to connect users with local, home-based, and traditional businesses. It offers a directory of authentic, craft-focused enterprises, enabling artisans and small business owners to showcase their work and reach a broader audience.",
+            "link": "https://heartlandhub.co.uk/",
+            "image": "images/projects_heartland.png",
+        },
+
+        {
+            "title": "Love Running",
+            "description": "A Fictional Running/Social club advertising regular meets. Responsive HTML & CSS. A Code Institute Tutorial, for a social/running club. Hosted on GitHub Pages.",
+            "link": "https://ljtalks.github.io/love-running/",
+            "image": "images/projects_love-running.png",
+        },
+        {
+            "title": "Whiskey Store",
+            "description": "A Fictional Online Whiskey Subscription site. Responsive HTML, CSS and JavaScript. A Code Institute tutorial. Hosted on Github Pages.",
+            "link": "https://ljtalks.github.io/whiskey-store/",
+            "image": "images/projects_whiskey-drop.png",
+        },
+        {
+            "title": "Love Rosie; A Resume/CV site",
+            "description": "A Fictional Online Resume/CV. Responsive HTML, CSS, JavaScript, Bootstrap 4. A Code Institute tutorial. Hosted on Github Pages.",
+            "link": "https://ljtalks.github.io/UCD-Resume/",
+            "image": "images/projects_love-rosie.png",
+        },
+        {
+            "title": "Inspire Me Journal; My first JavaScript Project",
+            "description": "JavaScript web application. Responsive HTML, CSS, JavaScript. Personal project. Hosted on Github pages.",
+            "link": "https://ljtalks.github.io/my-new-journal/",
+            "image": "images/inspire_me_journal.png",
+        },
+        {
+            "title": "Codestar Blog; A Full Stack Web App",
+            "description":
+                "Full stack web application using Django, PostgreSQL, Python, Responsive HTML, CSS, JavaScript, Bootstrap 4. A Code Institute tutorial. Hosted on Heroku.",
+            "link": "https://ljtalks-django-blog-5fbe7cf2584e.herokuapp.com/",
+            "image": "images/projects_love-rosie.png",
+        },
+        {
+            "title": "The Fallen; A Simple (free) Landing Page",
+            "description": "Simple one page landing page to promote a young author's new book.",
+            "link": "https://ltjones.carrd.co/",
+            "image": "images/projects_thefallen.png",
+        },
+    ]
+
+    latest_post = Post.objects.filter(status=1).latest('publish_date')
+    return render(
+        request,
+        'projects.html',
+        {"projects": projects,
+            "latest_post": latest_post
+         })
+
+
 # General contact form (for anyone)
 def contact_submit(request):
     if request.method == 'POST':
@@ -102,61 +160,3 @@ def contact_submit(request):
 
     # For a GET request, just render the contact form
     return render(request, 'contact.html', {'form': form})
-
-
-# View to showcase previous projects
-def projects(request):
-    projects = [
-        {
-            "title": "Heartland Hub",
-            "description": "A community-driven platform designed to connect users with local, home-based, and traditional businesses. It offers a directory of authentic, craft-focused enterprises, enabling artisans and small business owners to showcase their work and reach a broader audience.",
-            "link": "https://heartlandhub.co.uk/",
-            "image": "images/projects_heartland.png",
-        },
-
-        {
-            "title": "Love Running",
-            "description": "A Fictional Running/Social club advertising regular meets. Responsive HTML & CSS. A Code Institute Tutorial, for a social/running club. Hosted on GitHub Pages.",
-            "link": "https://ljtalks.github.io/love-running/",
-            "image": "images/projects_love-running.png",
-        },
-        {
-            "title": "Whiskey Store",
-            "description": "A Fictional Online Whiskey Subscription site. Responsive HTML, CSS and JavaScript. A Code Institute tutorial. Hosted on Github Pages.",
-            "link": "https://ljtalks.github.io/whiskey-store/",
-            "image": "images/projects_whiskey-drop.png",
-        },
-        {
-            "title": "Love Rosie; A Resume/CV site",
-            "description": "A Fictional Online Resume/CV. Responsive HTML, CSS, JavaScript, Bootstrap 4. A Code Institute tutorial. Hosted on Github Pages.",
-            "link": "https://ljtalks.github.io/UCD-Resume/",
-            "image": "images/projects_love-rosie.png",
-        },
-        {
-            "title": "Inspire Me Journal; My first JavaScript Project",
-            "description": "JavaScript web application. Responsive HTML, CSS, JavaScript. Personal project. Hosted on Github pages.",
-            "link": "https://ljtalks.github.io/my-new-journal/",
-            "image": "images/inspire_me_journal.png",
-        },
-        {
-            "title": "Codestar Blog; A Full Stack Web App",
-            "description":
-                "Full stack web application using Django, PostgreSQL, Python, Responsive HTML, CSS, JavaScript, Bootstrap 4. A Code Institute tutorial. Hosted on Heroku.",
-            "link": "https://ljtalks-django-blog-5fbe7cf2584e.herokuapp.com/",
-            "image": "images/projects_love-rosie.png",
-        },
-        {
-            "title": "The Fallen; A Simple (free) Landing Page",
-            "description": "Simple one page landing page to promote a young author's new book.",
-            "link": "https://ltjones.carrd.co/",
-            "image": "images/projects_thefallen.png",
-        },
-    ]
-
-    latest_post = Post.objects.filter(status=1).latest('publish_date')
-    return render(
-        request,
-        'projects.html',
-        {"projects": projects,
-         "latest_post": latest_post
-         })

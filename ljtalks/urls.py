@@ -40,7 +40,10 @@ urlpatterns = [
         template_name="ljtalks/privacy.html"), name='privacy_policy'),
 
     path('products/', include('products.urls')),
+    # original projects page
     path('projects/', views.projects, name='projects'),
+    # new projects app
+    # path('projects/', include('projects.urls')),
     # path('services/', include('services.urls')),
     path('terms/', TemplateView.as_view(
         template_name="ljtalks/terms.html"), name='terms_conditions'),

@@ -98,7 +98,7 @@
                             <a class="nav-link {% if request.path == 'about_me_url' %}active{% endif %}" href="{% url 'about_me' %}">About Me</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == 'projects_url' %}active{% endif %}" href="{% url 'projects' %}">My Projects</a>
+                            <a class="nav-link {% if request.path == 'projects_url' %}active{% endif %}" href="{% url 'projects' %}">Portfolio</a>
                         </li>
                         
                         <!-- Dropdown for Extra Links -->
@@ -168,14 +168,6 @@
                     <p class="text-end m-3">Hello {{ user }}, You are logged in</p>
                 {% else %}
                     <p class="text-end m-3">You are not logged in</p>
-                {% endif %}
-            </div>
-            <!-- Banner to display the development database -->
-            <div class="dev-banner">
-                {% if SHOW_DEV_BANNER %}
-                    <div style="background: #ffc; color: #333; text-align: center; padding: 5px;">
-                        <strong>⚠️ You are connected to the Development Database ⚠️</strong>
-                    </div>
                 {% endif %}
             </div>
             

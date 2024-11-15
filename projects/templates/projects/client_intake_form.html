@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Client Intake Form - LJ Talks{% endblock %}
+
+
+<!-- TODO Update Meta tags -->
+{% block robots %}
+<meta name="robots" content="index, follow">
+{% endblock robots %}
+
+{% block meta_description %}
+<meta name="description" content="Explore my portfolio of web development projects, showcasing expertise in Django, Python, JavaScript, and more. See how I've helped bring ideas to life with responsive, user-friendly designs and innovative features">
+{% endblock meta_description %}
+
+{% block seo_tags %}
+<meta name="keywords" content="web development portfolio, Django projects, Python developer, responsive web design, JavaScript projects, Heroku, GitHub Pages, full-stack developer, project showcase, web applications">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="My Web Development Portfolio">
+<meta property="og:description" content="Explore my portfolio of projects, built using Django, Python, JavaScript, and more. Featuring responsive designs and innovative features.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri|slice:':-1' }}{% url 'projects' %}">
+<meta property="og:image" content="{{ request.build_absolute_uri|slice:':-1' }}{% static 'images/portfolio_preview.jpg' %}">  <!-- Replace 'portfolio_preview.jpg' with your actual image -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="My Web Development Portfolio">
+<meta name="twitter:description" content="Check out my projects built with Django, Python, and JavaScript, showcasing modern design and development skills.">
+<meta name="twitter:image" content="{{ request.build_absolute_uri|slice:':-1' }}{% static 'images/portfolio_preview.jpg' %}">  <!-- Replace 'portfolio_preview.jpg' with your actual image -->
+{% endblock seo_tags %}
+
+{% block content %}
+<!-- Projects Section -->
+<div class="container-fluid my-3 col-12">
+    <h2 class="text-center">Client Intake Form</h2>
+    <div class="row">
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>

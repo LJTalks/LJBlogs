@@ -6,49 +6,48 @@
 {% block content %}
 {% load static %}
 
-<div class="container">
+<div class="container mt-5">
+    <h1 class="text-center">Join our Mailing List</h1>
     <div class="row justify-content-center">
-        <div class="col-md-6 mt-5">
-            <div class="card p-4 shadow-sm">
-                <form method="POST" action="{% url 'email_signup' %}?next={{ request.GET.next|default_if_none:'' }}">
-                    {% csrf_token %}
+        <div class="col-md-6">
+            <form method="POST" action="{% url 'email_signup' %}?next={{ request.GET.next|default_if_none:'' }}">
+                {% csrf_token %}
 
-                    <!-- Email field prefilled if user is authenticated -->
-                    <div class="form-group mb-3">
-                        {% if request.user.is_authenticated %}
-                            <p>Email: <strong>{{ form.email.value }}</strong></p>  <!-- Email as plain text for logged-in users -->
-                        {% else %}
-                            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-                            {{ form.email }}<br>  <!-- Allow unregistered users to edit their email -->
-                        {% endif %}
-                    </div>
+                <!-- Email field prefilled if user is authenticated -->
+                <div class="form-group mb-3">
+                    {% if request.user.is_authenticated %}
+                        <p>Email: <strong>{{ form.email.value }}</strong></p>  <!-- Email as plain text for logged-in users -->
+                    {% else %}
+                        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                        {{ form.email }}<br>  <!-- Allow unregistered users to edit their email -->
+                    {% endif %}
+                </div>
 
-                    <!-- List Type checkboxes -->
-                    <div class="form-group mb-3">
-                        <label for="{{ form.list_type.id_for_label }}">{{ form.list_type.label }}</label><br>
-                        {{ form.list_type }}
-                    </div>
+                <!-- List Type checkboxes -->
+                <div class="form-group mb-3">
+                    <label for="{{ form.list_type.id_for_label }}">{{ form.list_type.label }}</label><br>
+                    {{ form.list_type }}
+                </div>
 
-                    <!-- Ensure the "Unsubscribed" option is hidden but remains functional -->
-                    <input type="checkbox" name="list_type" value="3" id="unsubscribedCheckbox" style="display: none;">
+                <!-- Ensure the "Unsubscribed" option is hidden but remains functional -->
+                <input type="checkbox" name="list_type" value="3" id="unsubscribedCheckbox" style="display: none;">
 
-                    <p>We won't share your data, and you can unsubscribe at any time.</p>
+                <p>We won't share your data, and you can unsubscribe at any time.</p>
 
-                    <!-- reCAPTCHA -->
-                     <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
+                <!-- reCAPTCHA -->
+                    <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
 
-                    <!-- Submit button -->
-                    <button type="submit" class="btn btn-warning w-100">
-                        {% if request.user.is_authenticated %}
-                            Update Preferences
-                        {% else %}
-                            Join Mailing List
-                        {% endif %}
-                    </button>
-                </form>
-                <!-- Load the reCAPTCHA script -->
-                 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-            </div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-warning w-100">
+                    {% if request.user.is_authenticated %}
+                        Update Preferences
+                    {% else %}
+                        Join Mailing List
+                    {% endif %}
+                </button>
+            </form>
+            <!-- Load the reCAPTCHA script -->
+                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         </div>
     </div>
 
