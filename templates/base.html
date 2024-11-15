@@ -120,6 +120,7 @@
                                     Profile
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="{% url 'purchase_history' %}">Purchase History</a></li>
                                     <li><a class="dropdown-item" href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
                                     {% if is_tester %}
                                         <li><a class="dropdown-item" href="{% url 'beta_features' %}">Beta Features</a></li>

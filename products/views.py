@@ -121,7 +121,11 @@ def product_detail(request, slug):
     # Access logic
     if product.price == 0.00:
         # If the product is free, show full content to everyone
-        context['show_full_content'] = True
+        context = {
+            'product': product,
+            'show_full_content': True
+        }
+        return render(request, 'products/product_detail.html', context)
     else:
         # If the product is paid
         if not request.user.is_authenticated:
