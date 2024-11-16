@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from .forms import CustomSignupForm
 from .models import UserProfile
+from emails.models import EmailListSubscriber
+from ljtalks.models import ContactSubmission
 from django.conf import settings
 import logging
 from django.contrib.auth.forms import PasswordChangeForm
@@ -17,6 +19,26 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from django_ratelimit.decorators import ratelimit
+
+
+def get_user_profile_details(user_id):
+    profile = get_object_or_404(UserProfile, user__id=user_id)
+    email_subscription = EmailListSubscriber.objects.filter(
+        user=profile.user).first()
+    contact_submissions = ContactSubmission.objects.filter(
+        email=profile.user.email)
+
+    profile_data = {
+        "user": profile.user.username,
+        "source": profile.source,
+        "is_email_subscriber": bool(email_subscription),
+        "email_subscription_type": email_subscription.subscribed_list_tyes if email_subscription else None,
+        "contact_submissions": [
+            submission.message for submission in contact_submissions
+        ],
+    }
+
+    return profile_data
 
 
 # Limit to 5 requests per minute per IP

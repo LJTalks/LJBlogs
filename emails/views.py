@@ -19,7 +19,7 @@ def send_newsletter(list_type_name):
     # Get the latest newsletter
     newsletter = NewsletterEmail.objects.latest('created_at')
     contact_info = SiteContactInfo.objects.first()
-    
+
     # Prepare email recipients: Subscribers on chosen list type
     recipients = EmailListSubscriber.objects.filter(
         list_type=list_type).values_list('list_email', flat=True)
@@ -38,7 +38,7 @@ def email_signup(request):
     next_url = request.GET.get('next', '/') or reverse('home')
 
     if request.method == 'POST':
-        
+
         print(f"Form Data: {request.POST}")
         # Get reCAPTCHA token from the POST data
         recaptcha_response = request.POST.get('g-recaptcha-response')
@@ -57,10 +57,10 @@ def email_signup(request):
         if not result['success']:
             messages.error(request, 'Invalid reCAPTCHA. Please try again.')
             return redirect('email_signup')
-        
+
         # Form validation and processing continues here...
         form = EmailSignupForm(request.POST, user=request.user)
-        print(f"Is form valid? {form.is_valid()}")
+        # print(f"Is form valid? {form.is_valid()}")
 
         if form.is_valid():
             list_types = form.cleaned_data['list_type']
@@ -75,12 +75,15 @@ def email_signup(request):
                     EmailListSubscriber.objects.get_or_create(
                         user=request.user,
                         defaults={
-                            'list_email': request.user.email, 'source': source
-                            }
-                        )
+                            'list_email': request.user.email,
+                            'name': request.user.get_full_name(),
+                            'source': source
+                        }
                     )
+                )
             else:
                 email = form.cleaned_data['email']
+                name = form.cleaned_data['name']
                 subscriber, created = (
                     EmailListSubscriber.objects.get_or_create(
                         list_email=email,
@@ -95,7 +98,8 @@ def email_signup(request):
                     list_types = [
                         lt for lt in list_types if lt != unsubscribed_type]
                 subscriber.list_type.set(list_types)
-                messages.success(request, "Your preferences have been updated!")
+                messages.success(
+                    request, "Your preferences have been updated!")
             else:
                 # No lists selected: automatically set 'Unsubscribed'
                 subscriber.list_type.clear()
@@ -103,6 +107,7 @@ def email_signup(request):
                 messages.info(
                     request, "You've been unsubscribed from all lists.")
 
+            subscriber.name = form.cleaned_data.get('name', subscriber.name)
             subscriber.save()
             return redirect(next_url)
 

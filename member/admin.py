@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.utils.dateformat import format
 from emails.models import EmailListSubscriber
 from .models import UserProfile
+from emails.models import EmailListSubscriber
+from ljtalks.models import ContactSubmission
 
 
 class UserProfileAdmin(admin.ModelAdmin):

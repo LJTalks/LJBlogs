@@ -67,8 +67,6 @@
                 {% if related_product.price > 0.00 %} £{{ related_product.price }}
                 {% else %} Free {% endif %}
             </a>
-            <!-- Debugging line -->
-             <p>Generated URL: {% url 'product_detail' related_product.slug %}</p>
             {% if related_product in purchased_related_products %}
             <span>(Already Purchased)</span>  <!-- Add label if already purchased -->
             {% endif %}
