@@ -1,5 +1,10 @@
 # Standard library imports
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+    HttpResponseForbidden,
+    HttpResponseBadRequest
+)
 # Third-party imports
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -21,8 +26,8 @@ from django.views import generic
 from django.template.loader import render_to_string
 import os
 
-# For testing purposes, if CSRF token is not being passed
-from django.views.decorators.csrf import csrf_exempt
+# # For testing purposes, if CSRF token is not being passed
+# from django.views.decorators.csrf import csrf_exempt
 
 
 def login_or_signup(request):
@@ -250,7 +255,7 @@ def purchase_success(request, product_id):
     return redirect('purchase_history')
 
 
-@csrf_exempt  # Use only for testing if necessary; ensure CSRF token is being passed in production
+# @csrf_exempt  # Use only for testing if necessary; ensure CSRF token is being passed in production
 @require_POST  # Restrict to POST requests only
 @login_required
 def create_checkout_session(request, product_id):

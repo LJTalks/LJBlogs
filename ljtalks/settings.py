@@ -82,6 +82,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://ljblogs-fcdcaa00fdda.herokuapp.com",
     "https://ljtalks.com",
     "https://www.ljtalks.com",
+    "https://*.stripe.com",
     "https://*.codeinstitute-ide.net",
 ]
 
