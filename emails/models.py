@@ -10,9 +10,25 @@ class ListType(models.Model):
         return self.name
 
 
+# Simple mailing list sign up for MVP
+class SimpleMailingList(models.Model):
+    email = models.EmailField(unique=True)  # Ensure each email is unique
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    subscribed = models.BooleanField(
+        default=True)  # Allow users to unsubscribe
+    date_subscribed = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+
+
+# This is the complicated one that needs work
 class EmailListSubscriber(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True)  # Tied to User for registered users
+        # Tied to User for registered users
+        User, on_delete=models.CASCADE, null=True, blank=True)
     list_email = models.EmailField(null=True, blank=True)  # For unregistered
     list_type = models.ManyToManyField(ListType)
     source = models.CharField(max_length=255, null=True, blank=True)
@@ -22,21 +38,21 @@ class EmailListSubscriber(models.Model):
         return f"{
             self.list_email or self.user.email} - {
                 ', '.join([lt.name for lt in self.list_type.all()])}"
-                
+
 
 class SiteContactInfo(models.Model):
     email = models.EmailField()
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
-    
+
     def __str__(self):
         return self.email
-    
+
     class Meta:
         verbose_name = "Site Contact Info"
         verbose_name_plural = "Site Contact Info"
-       
-       
+
+
 class NewsletterEmail(models.Model):
     subject = models.CharField(max_length=255)
     body = models.TextField()
@@ -45,4 +61,3 @@ class NewsletterEmail(models.Model):
 
     def __str__(self):
         return self.subject
-    

@@ -7,6 +7,14 @@ from .models import (
 )
 from django_summernote.admin import SummernoteModelAdmin
 from django.db import models
+from .models import SimpleMailingList
+
+
+@admin.register(SimpleMailingList)
+class SimpleMailingListAdmin(admin.ModelAdmin):
+    list_display = ("email", "subscribed", "date_subscribed")
+    search_fields = ("email",)
+    list_filter = ("subscribed",)
 
 
 @admin.register(EmailListSubscriber)
@@ -14,12 +22,12 @@ class EmailListSubscriberAdmin(admin.ModelAdmin):
     list_display = ('user_email', 'get_list_types', 'date_joined', 'source')
     list_filter = ('list_type', 'date_joined')  # Optional filtering options
     search_fields = ('user__email', 'list_email')
-    
+
     # Show user email if the user exists
     def user_email(self, obj):
         return obj.user.email if obj.user else obj.list_email
     user_email.short_description = 'User Email'
-    
+
     def get_list_types(self, obj):
         return ", ".join([lt.name for lt in obj.list_type.all()])
     get_list_types.short_description = "Subscribed List Types"

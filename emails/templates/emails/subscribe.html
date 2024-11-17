@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Subscribe to Our Mailing List - LJ Talks{% endblock %}
+
+{% block robots %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock robots %}
+
+{% block content %}
+<!-- Ithink the message coime in the base anyway -->
+{% if success_message %}
+<div class="alert alert-success text-center" role="alert">
+    {{ success_message }}
+</div>
+{% endif %}
+<div class="container mt-5">
+    <h1 class="text-center">Join Our Mailing List</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" action="{% url 'subscribe' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="g-recaptcha mb-3" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock content %}
+

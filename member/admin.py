@@ -35,7 +35,7 @@ class CustomUserAdmin(UserAdmin):
         'is_tester',
         'is_staff',         # Added field for staff status
         'is_superuser',      # Added field for superuser status
-        'is_email_subscriber'
+        # 'is_email_subscriber'
     )
 
     def get_source(self, obj):
@@ -68,12 +68,12 @@ class CustomUserAdmin(UserAdmin):
     # list_display = UserAdmin.list_display + ("is_tester",)
 
     # Method to check if user is subscribed to the email list
-    def is_email_subscriber(self, obj):
-        return EmailListSubscriber.objects.filter(
-            user=obj).exists()
+    # def is_email_subscriber(self, obj):
+    #     return EmailListSubscriber.objects.filter(
+    #         user=obj).exists()
 
-    is_email_subscriber.boolean = True
-    is_email_subscriber.short_description = "Email List Subscriber"
+    # is_email_subscriber.boolean = True
+    # is_email_subscriber.short_description = "Email List Subscriber"
 
 
 # Unregister the old UserAdmin

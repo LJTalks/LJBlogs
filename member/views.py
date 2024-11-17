@@ -31,8 +31,8 @@ def get_user_profile_details(user_id):
     profile_data = {
         "user": profile.user.username,
         "source": profile.source,
-        "is_email_subscriber": bool(email_subscription),
-        "email_subscription_type": email_subscription.subscribed_list_tyes if email_subscription else None,
+        # "is_email_subscriber": bool(email_subscription),
+        # "email_subscription_type": email_subscription.subscribed_list_tyes if email_subscription else None,
         "contact_submissions": [
             submission.message for submission in contact_submissions
         ],

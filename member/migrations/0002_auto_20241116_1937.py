@@ -6,20 +6,20 @@ from django.db import migrations
 def populate_user_profiles(apps, schema_editor):
     User = apps.get_model('auth', 'User')
     UserProfile = apps.get_model('member', 'UserProfile')
-    EmailListSubscriber = apps.get_model('emails', 'EmailListSubscriber')
+    # EmailListSubscriber = apps.get_model('emails', 'EmailListSubscriber')
     ContactSubmission = apps.get_model('ljtalks', 'ContactSubmission')
 
     for user in User.objects.all():
         profile, created = UserProfile.objects.get_or_create(user=user)
 
         # Link Email Subscription
-        email_subscriber = EmailListSubscriber.objects.filter(
-            user=user).first()
-        if email_subscriber:
-            profile.is_email_subscriber = True
-            profile.email_subscription_type = ", ".join(
-                [lt.name for lt in email_subscriber.list_type.all()]
-            ) if email_subscriber else None
+        # email_subscriber = EmailListSubscriber.objects.filter(
+        #     user=user).first()
+        # if email_subscriber:
+        #     profile.is_email_subscriber = True
+        #     profile.email_subscription_type = ", ".join(
+        #         [lt.name for lt in email_subscriber.list_type.all()]
+        #     ) if email_subscriber else None
 
         # Link Contact Submissions
         contact_submissions = ContactSubmission.objects.filter(
