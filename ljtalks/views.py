@@ -28,18 +28,23 @@ def about_me_view(request):
 def projects(request):
     projects = [
         {
+            "title": "Berkshire Printmakers",
+            "description": "Berkshire Printmakers delivers bespoke silk screen printing workshops designed to inspire creativity and connection. Whether in art centers, schools, or corporate settings, our workshops offer engaging, hands-on experiences tailored for children, adults, and teams. As members of Heritage Crafts, we combine traditional techniques with modern applications, providing a unique opportunity to learn and create. Perfect for team-building events, creative retreats, or unique experiences, our workshops bring art and collaboration to life.",
+            "link": "https://berkshireprintmakers.com/",
+            "image": "images/project_images/berkshireprintmakers.png",
+        },
+        {
             "title": "Heartland Hub",
             "description": "A community-driven platform designed to connect users with local, home-based, and traditional businesses. It offers a directory of authentic, craft-focused enterprises, enabling artisans and small business owners to showcase their work and reach a broader audience.",
             "link": "https://heartlandhub.co.uk/",
             "image": "images/projects_heartland.png",
         },
         {
-            "title": "Berkshire Printmakers",
-            "description": "Berkshire Printmakers delivers bespoke silk screen printing workshops designed to inspire creativity and connection. Whether in art centers, schools, or corporate settings, our workshops offer engaging, hands-on experiences tailored for children, adults, and teams. As members of Heritage Crafts, we combine traditional techniques with modern applications, providing a unique opportunity to learn and create. Perfect for team-building events, creative retreats, or unique experiences, our workshops bring art and collaboration to life.",
-            "link": "https://berkshireprintmakers.com/",
-            "image": "images/project_images/berkshireprintmakers.png",
+            "title": "The Fallen; A Simple (free) Landing Page",
+            "description": "Simple one page landing page to promote a young author's new book.",
+            "link": "https://ltjones.carrd.co/",
+            "image": "images/projects_thefallen.png",
         },
-
         {
             "title": "Love Running",
             "description": "A Fictional Running/Social club advertising regular meets. Responsive HTML & CSS. A Code Institute Tutorial, for a social/running club. Hosted on GitHub Pages.",
@@ -70,12 +75,6 @@ def projects(request):
                 "Full stack web application using Django, PostgreSQL, Python, Responsive HTML, CSS, JavaScript, Bootstrap 4. A Code Institute tutorial. Hosted on Heroku.",
             "link": "https://ljtalks-django-blog-5fbe7cf2584e.herokuapp.com/",
             "image": "images/projects_love-rosie.png",
-        },
-        {
-            "title": "The Fallen; A Simple (free) Landing Page",
-            "description": "Simple one page landing page to promote a young author's new book.",
-            "link": "https://ltjones.carrd.co/",
-            "image": "images/projects_thefallen.png",
         },
     ]
 
