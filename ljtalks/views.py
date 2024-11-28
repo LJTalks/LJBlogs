@@ -28,16 +28,16 @@ def about_me_view(request):
 def projects(request):
     projects = [
         {
-            "title": "Berkshire Printmakers",
-            "description": "Berkshire Printmakers delivers bespoke silk screen printing workshops designed to inspire creativity and connection. Whether in art centers, schools, or corporate settings, our workshops offer engaging, hands-on experiences tailored for children, adults, and teams. As members of Heritage Crafts, we combine traditional techniques with modern applications, providing a unique opportunity to learn and create. Perfect for team-building events, creative retreats, or unique experiences, our workshops bring art and collaboration to life.",
-            "link": "https://berkshireprintmakers.com/",
-            "image": "images/project_images/berkshireprintmakers.png",
-        },
-        {
             "title": "Heartland Hub",
             "description": "A community-driven platform designed to connect users with local, home-based, and traditional businesses. It offers a directory of authentic, craft-focused enterprises, enabling artisans and small business owners to showcase their work and reach a broader audience.",
             "link": "https://heartlandhub.co.uk/",
             "image": "images/projects_heartland.png",
+        },
+        {
+            "title": "Berkshire Printmakers",
+            "description": "Berkshire Printmakers deliver bespoke silk screen printing workshops to inspire creativity and connection. The workshops offer engaging, hands-on experiences for all ages. Combining traditional techniques with modern applications. Perfect for team-building events, creative retreats, or unique experiences, bringing art and collaboration to life.",
+            "link": "https://berkshireprintmakers.com/",
+            "image": "images/project_images/berkshireprintmakers.png",
         },
         {
             "title": "The Fallen; A Simple (free) Landing Page",
