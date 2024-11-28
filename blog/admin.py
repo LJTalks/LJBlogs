@@ -21,9 +21,6 @@ class PostAdmin(SummernoteModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     summernote_fields = ('content',)
 
-    # class Media:
-    #     js = ('js/summernote-custom.js',)
-
     # Custom action to bulk publish posts
     actions = ['publish_blog_posts']
 

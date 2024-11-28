@@ -33,6 +33,12 @@ def projects(request):
             "link": "https://heartlandhub.co.uk/",
             "image": "images/projects_heartland.png",
         },
+        {
+            "title": "Berkshire Printmakers",
+            "description": "Berkshire Printmakers delivers bespoke silk screen printing workshops designed to inspire creativity and connection. Whether in art centers, schools, or corporate settings, our workshops offer engaging, hands-on experiences tailored for children, adults, and teams. As members of Heritage Crafts, we combine traditional techniques with modern applications, providing a unique opportunity to learn and create. Perfect for team-building events, creative retreats, or unique experiences, our workshops bring art and collaboration to life.",
+            "link": "https://berkshireprintmakers.com/",
+            "image": "images/project_images/berkshireprintmakers.png",
+        },
 
         {
             "title": "Love Running",
