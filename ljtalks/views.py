@@ -28,6 +28,13 @@ def about_me_view(request):
 def projects(request):
     projects = [
         {
+            "title": "MTB Hub",
+            "description": "MTB Hub: Your Go-To Platform for Mountain Biking Events and Connections. Discover, share, and join mountain biking events across the UK. MTB Hub is a member-driven site where enthusiasts can find group rides, explore trails, and connect with the biking community—all in one place.",
+            "link": "https://mtbhub.co.uk/",
+            "image": "images/project_images/mtbhub.png",
+        },
+
+        {
             "title": "Heartland Hub",
             "description": "A community-driven platform designed to connect users with local, home-based, and traditional businesses. It offers a directory of authentic, craft-focused enterprises, enabling artisans and small business owners to showcase their work and reach a broader audience.",
             "link": "https://heartlandhub.co.uk/",
