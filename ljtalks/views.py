@@ -33,7 +33,6 @@ def projects(request):
             "link": "https://mtbhub.co.uk/",
             "image": "images/project_images/mtbhub.png",
         },
-
         {
             "title": "Heartland Hub",
             "description": "A community-driven platform designed to connect users with local, home-based, and traditional businesses. It offers a directory of authentic, craft-focused enterprises, enabling artisans and small business owners to showcase their work and reach a broader audience.",
