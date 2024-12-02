@@ -29,14 +29,16 @@
 {% block content %}
 <!-- Projects Section -->
 <div class="container-fluid my-3 col-12">
-    <h2 class="text-center">My Projects</h2>
+    <h2 class="text-center py-3">My Projects</h2>
     <div class="row">
-        <p>Welcome to LJTalks! I’ve been working on a range of exciting projects that I can’t wait to share with you.</p>
-        <p>Subscribe for updates to stay in the loop.</p>
-        <p>Thank you for your interest!</p>
+        <p class="text-center py-1">Welcome to LJTalks! I’ve been working on a range of exciting projects that I can’t wait to share with you.</p>
+        <!-- Call-to-Action Button -->
+         <div class="text-center py-1 mb-2">
+            <a href="{% url 'help_page' %}" class="btn btn-journey btn-lg">Work With Me</a>
+        </div>
         <!-- Project Card Template -->
         {% for project in projects %}
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-4 mt-1">
             <div class="card">
                 <img src="{% static project.image %}" class="card-img-top" alt="{{ project.title }}" style="height: 200px; object-fit: cover;">
                 <div class="card-body text-center">

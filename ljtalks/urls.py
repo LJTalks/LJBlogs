@@ -43,10 +43,12 @@ urlpatterns = [
     # original projects page
     path('projects/', views.projects, name='projects'),
     # new projects app
-    # path('projects/', include('projects.urls')),
+    path('projects/', include('projects.urls')),
     # path('services/', include('services.urls')),
     path('terms/', TemplateView.as_view(
         template_name="ljtalks/terms.html"), name='terms_conditions'),
+    path('thank-you/', TemplateView.as_view(template_name="thank_you.html"),
+         name='thank_you'),
     path('youtube/', include('ytapi.urls')),
     # path('info/', views.youtube_info_view, name='youtube-data-checker'),
     path('summernote/', include('django_summernote.urls')),
