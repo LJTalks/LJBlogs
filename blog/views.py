@@ -38,7 +38,8 @@ class PostList(generic.ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by("-publish_date", "-created_on")
+        queryset = super().get_queryset().order_by(
+            "-publish_date", "-created_on")
 
         # Include drafts in development
         if os.path.exists('env.py'):
