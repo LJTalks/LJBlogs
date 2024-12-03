@@ -1,5 +1,6 @@
 # views.py
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from .forms import ClientIntakeForm
@@ -34,7 +35,9 @@ def client_intake_view(request):
         if form.is_valid():
             # Process the form data here
             # e.g., save it to the database, send an email, etc.
-            return redirect('thank_you')
+            next_url = request.GET.get('next', reverse('projects'))
+            thank_you_url = f'{reverse('thank_you')}?next={next_url}'
+            return redirect(thank_you_url)
     else:
         form = ClientIntakeForm()
     return render(request, 'projects/client_intake_form.html', {'form': form})

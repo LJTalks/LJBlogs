@@ -31,9 +31,12 @@
 <div class="container-fluid my-3 col-12">
     <h2 class="text-center">Client Intake Form</h2>
     <div class="row">
-<form method="post">
+<form method="post" action="?next={{ request.GET.next }}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-journey btn-lg">Submit</button>
+    {% if request.GET.next %}
+        <a href="{{ request.GET.next }}" class="'btn btn-journey btn-lg">Back</a>
+    {% endif %}
 </form>
 {% endblock content %}

@@ -1,10 +1,15 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}Thank You - LJ Talks{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5 text-center">
     <h1 class="text-center">Thank You for your submission!</h1>
     <p class="text-center">We will be in touch soon.</p>
+    {% if request.GET.next %}
+        <a href="{{ request.GET.next }}" class="btn btn-primary mt-4">Go Back</a>
+    {% else %}
+        <a href="/" class="btn btn-primary mt-4">Go to Homepage</a>
+    {% endif %}
 </div>
 {% endblock %}

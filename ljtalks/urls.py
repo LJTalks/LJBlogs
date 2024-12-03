@@ -38,7 +38,6 @@ urlpatterns = [
     path('notes/', include('notes.urls', namespace='notes')),
     path('privacy/', TemplateView.as_view(
         template_name="ljtalks/privacy.html"), name='privacy_policy'),
-
     path('products/', include('products.urls')),
     # original projects page
     path('projects/', views.projects, name='projects'),
