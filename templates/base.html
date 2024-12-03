@@ -95,21 +95,18 @@
                             <a class="nav-link {% if request.path == home_url %}active{% endif %}" href="{% url 'home' %}">Home</a>
                         </li> -->
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == 'about_me_url' %}active{% endif %}" href="{% url 'about_me' %}">About Me</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link {% if request.path == 'projects_url' %}active{% endif %}" href="{% url 'projects' %}">Portfolio</a>
                         </li>
-                        
-                        <!-- Dropdown for Extra Links -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Explore
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'about_me' %}">About Me</a></li>
                                 <li><a class="dropdown-item" href="{% url 'contact' %}?next={{ request.path }}">Contact Me</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'product_list' %}">Products</a></li>
-                                    <!-- <li><a class="dropdown-item" href="{% url 'notes:note_list' %}">Notes</a></li> -->
+                                <li><a class="dropdown-item" href="{% url 'product_list' %}">Products</a></li>
+                                <li><a class="dropdown-item" href="{% url 'home' %}">Blog</a></li>
+                                <!-- <li><a class="dropdown-item" href="{% url 'notes:note_list' %}">Notes</a></li> -->
                             </ul>
                         </li>
         
