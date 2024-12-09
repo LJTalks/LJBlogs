@@ -90,25 +90,21 @@ class ProductListView(generic.ListView):
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
+# If error it's in here; changing view logic from free or paid, to category inc free or paid.
 def product_detail(request, slug):
-    # Include drafts in development
+    # Fetch the product (include drafts in development)
     if os.path.exists('env.py'):
-        queryset = Product.objects.filter(Q(status=1) | Q(status=0))
-    else:
-        queryset = Product.objects.filter(status=1)
-    product = get_object_or_404(Product, slug=slug)
-
-    # Include drafts in development
-    if os.path.exists('env.py'):
+        product = get_object_or_404(Product.objects.filter(
+            Q(status=1) | Q(status=0)), slug=slug)
         related_products = product.related_products.all()
     else:
+        product = get_object_or_404(
+            Product.objects.filter(status=1), slug=slug)
         related_products = product.related_products.filter(status=1)
 
     # Check if the user has already purchased the product
-    is_purchased = False
-    if request.user.is_authenticated:
-        is_purchased = Purchase.objects.filter(
-            product=product, user=request.user, status=1).exists()
+    is_purchased = request.user.is_authenticated and Purchase.objects.filter(
+        product=product, user=request.user, status=1).exists()
 
     # Get user's notes for this product if they are authenticated
     notes = Note.objects.filter(
@@ -124,56 +120,33 @@ def product_detail(request, slug):
     }
 
     # Access logic
-    if product.price == 0.00:
-        # If the product is free, show full content to everyone
-        context = {
-            'product': product,
-            'show_full_content': True
-        }
-        return render(request, 'products/product_detail.html', context)
-    else:
-        # If the product is paid
-        if not request.user.is_authenticated:
-            # If the user is not logged in, redirect to login
-            messages.info(request, "Please log in to access this product.")
-            return redirect(f'/accounts/login/?next={request.path}')
-
-        elif is_purchased:
-            # If the product is purchased, show full content
-            context['show_full_content'] = True
-        else:
-            # If the product is not purchased, show preview with "Buy Now"
-            context['show_full_content'] = False
-            context['show_buy_now'] = True
-
-        return render(request, 'products/product_detail.html', context)
-
-    # Initialise context with public content
-    context = {
-        'product': product,
-        'notes': notes,  # Add user notes
-        'related_products': related_products,
-        # Add the purchased related products here
-        # 'purchased_related_products': purchased_related_products,
-        'is_purchased': is_purchased,
-        'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
-    }
-
-    # Check if the product is free for all users
-    if product.price == 0.00 or is_purchased:
-        # If product is free, show full content to all users
-        context['show_full_content'] = True
-    else:
-        # If product is paid and not purchased, preview and buy button
-        context['show_full_content'] = False
-        context['show_buy_now'] = True
-        return render(request, 'products/product_detail.html', context)
-
-    if not request.user.is_authenticated:
-        messages.warning(request, "Please log in to access this product.")
+    if product.category == 'email required' and not request.user.is_authenticated:
+        # Email-required products need login
+        messages.info(
+            request, "Please log in or create an account to access this product.")
         return redirect(f'/accounts/login/?next={request.path}')
 
-    return redirect('create_checkout_session', product_id=product.id)
+    if product.price == 0.00 or is_purchased:
+        # Free or purchased product: show full content
+        context = {
+            'product': product,
+            'show_full_content': True,
+            'notes': notes,
+            'related_products': related_products,
+        }
+    else:
+        # Paid but not purchased: show preview and Buy Now button
+        context = {
+            'product': product,
+            'show_full_content': False,
+            'show_buy_now': True,
+            'notes': notes,
+            'related_products': related_products,
+            'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
+        }
+
+    # Render the appropriate template
+    return render(request, 'products/product_detail.html', context)
 
     # # If the product is not free, check user logged in and purchased
     # if request.user.is_authenticated:
