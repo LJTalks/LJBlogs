@@ -106,6 +106,9 @@ def product_detail(request, slug):
     is_purchased = request.user.is_authenticated and Purchase.objects.filter(
         product=product, user=request.user, status=1).exists()
 
+    # Debug category
+    print(f"Product category: {product.category}")
+
     # Get user's notes for this product if they are authenticated
     notes = Note.objects.filter(
         user=request.user, product=product) if request.user.is_authenticated else None
@@ -119,11 +122,11 @@ def product_detail(request, slug):
         'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
     }
 
-    # Access logic
+    # Email-required products need login
     if product.category == 'email required' and not request.user.is_authenticated:
-        # Email-required products need login
         messages.info(
-            request, "Please log in or create an account to access this product.")
+            request, "Please log in or create an account to access this product."
+        )
         return redirect(f'/accounts/login/?next={request.path}')
 
     if product.price == 0.00 or is_purchased:
