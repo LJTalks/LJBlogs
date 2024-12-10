@@ -13,6 +13,12 @@ PRODUCT_STATUS_CHOICES = [
     (1, "Published")
 ]
 
+CATEGORY_CHOICES = [
+    ('free', 'Free'),
+    ('mini', 'Mini'),
+    ('email required', 'Email Required'),
+]
+
 
 class Product(models.Model):
     title = models.CharField(max_length=200)
@@ -24,7 +30,7 @@ class Product(models.Model):
     content = models.TextField()
     excerpt = models.TextField(blank=True)  # Short summary for public view
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    category = models.CharField(max_length=100)
+    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
     related_products = models.ManyToManyField(
         'self', blank=True)  # New field to link related products
     created_on = models.DateTimeField(auto_now_add=True)
